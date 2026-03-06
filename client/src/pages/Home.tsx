@@ -3,17 +3,32 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { motion } from "framer-motion";
-import { Wallet, Home as HomeIcon, Car, CreditCard, Sparkles, AlertCircle } from "lucide-react";
+import {
+  Wallet,
+  Home as HomeIcon,
+  Car,
+  CreditCard,
+  Sparkles,
+  AlertCircle,
+} from "lucide-react";
 import { ScoreDisplay } from "@/components/ScoreDisplay";
 import { HistoryList } from "@/components/HistoryList";
 import { useCreateCalculation } from "@/hooks/use-calculations";
 
 // Local form schema for UI validation and string coercion
 const formSchema = z.object({
-  income: z.coerce.number({ invalid_type_error: "Required" }).min(0, "Cannot be negative"),
-  rent: z.coerce.number({ invalid_type_error: "Required" }).min(0, "Cannot be negative"),
-  carPayment: z.coerce.number({ invalid_type_error: "Required" }).min(0, "Cannot be negative"),
-  otherExpenses: z.coerce.number({ invalid_type_error: "Required" }).min(0, "Cannot be negative"),
+  income: z.coerce
+    .number({ invalid_type_error: "Required" })
+    .min(0, "Cannot be negative"),
+  rent: z.coerce
+    .number({ invalid_type_error: "Required" })
+    .min(0, "Cannot be negative"),
+  carPayment: z.coerce
+    .number({ invalid_type_error: "Required" })
+    .min(0, "Cannot be negative"),
+  otherExpenses: z.coerce
+    .number({ invalid_type_error: "Required" })
+    .min(0, "Cannot be negative"),
 });
 
 type FormData = z.infer<typeof formSchema>;
@@ -38,7 +53,7 @@ export default function Home() {
 
   const onSubmit = (data: FormData) => {
     const { income, rent, carPayment, otherExpenses } = data;
-    
+
     // Calculate Score
     let score = 0;
     if (income > 0) {
@@ -64,7 +79,7 @@ export default function Home() {
     <div className="min-h-screen bg-[#F8FAFC] py-12 px-4 sm:px-6 lg:px-8">
       <div className="max-w-7xl mx-auto">
         {/* Header */}
-        <motion.div 
+        <motion.div
           initial={{ opacity: 0, y: -20 }}
           animate={{ opacity: 1, y: 0 }}
           className="text-center mb-16"
@@ -76,14 +91,14 @@ export default function Home() {
             Wealth IQ <span className="text-primary">Calculator</span>
           </h1>
           <p className="text-lg text-slate-500 max-w-2xl mx-auto">
-            Discover your financial health in seconds. Enter your monthly metrics below to calculate your personalized Wealth IQ score.
+            Discover your financial health in seconds. Enter your monthly
+            metrics below to calculate your personalized Wealth IQ score.
           </p>
         </motion.div>
 
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-start">
-          
           {/* Left Column: Form */}
-          <motion.div 
+          <motion.div
             initial={{ opacity: 0, x: -20 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ delay: 0.2 }}
@@ -91,11 +106,12 @@ export default function Home() {
           >
             <div className="glass-card p-8 sm:p-10 rounded-[2rem] relative overflow-hidden">
               <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-primary to-emerald-300" />
-              
-              <h2 className="text-2xl font-bold mb-8 font-display text-slate-800">Your Monthly Metrics</h2>
-              
+
+              <h2 className="text-2xl font-bold mb-8 font-display text-slate-800">
+                Your Monthly Metrics
+              </h2>
+
               <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
-                
                 {/* Income */}
                 <div className="space-y-2 relative">
                   <label className="text-sm font-semibold text-slate-700 flex items-center gap-2">
@@ -103,7 +119,9 @@ export default function Home() {
                     Monthly Income
                   </label>
                   <div className="relative">
-                    <span className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 font-medium">$</span>
+                    <span className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 font-medium">
+                      $
+                    </span>
                     <input
                       type="number"
                       placeholder="0.00"
@@ -113,7 +131,8 @@ export default function Home() {
                   </div>
                   {errors.income && (
                     <p className="text-sm text-red-500 flex items-center gap-1 mt-1">
-                      <AlertCircle className="w-3 h-3" /> {errors.income.message}
+                      <AlertCircle className="w-3 h-3" />{" "}
+                      {errors.income.message}
                     </p>
                   )}
                 </div>
@@ -129,7 +148,9 @@ export default function Home() {
                       Rent / Mortgage
                     </label>
                     <div className="relative">
-                      <span className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 font-medium">$</span>
+                      <span className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 font-medium">
+                        $
+                      </span>
                       <input
                         type="number"
                         placeholder="0.00"
@@ -139,7 +160,8 @@ export default function Home() {
                     </div>
                     {errors.rent && (
                       <p className="text-sm text-red-500 flex items-center gap-1 mt-1">
-                        <AlertCircle className="w-3 h-3" /> {errors.rent.message}
+                        <AlertCircle className="w-3 h-3" />{" "}
+                        {errors.rent.message}
                       </p>
                     )}
                   </div>
@@ -152,7 +174,9 @@ export default function Home() {
                         Car Payment
                       </label>
                       <div className="relative">
-                        <span className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 font-medium">$</span>
+                        <span className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 font-medium">
+                          $
+                        </span>
                         <input
                           type="number"
                           placeholder="0.00"
@@ -162,7 +186,8 @@ export default function Home() {
                       </div>
                       {errors.carPayment && (
                         <p className="text-sm text-red-500 flex items-center gap-1 mt-1">
-                          <AlertCircle className="w-3 h-3" /> {errors.carPayment.message}
+                          <AlertCircle className="w-3 h-3" />{" "}
+                          {errors.carPayment.message}
                         </p>
                       )}
                     </div>
@@ -174,7 +199,9 @@ export default function Home() {
                         Other Expenses
                       </label>
                       <div className="relative">
-                        <span className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 font-medium">$</span>
+                        <span className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 font-medium">
+                          $
+                        </span>
                         <input
                           type="number"
                           placeholder="0.00"
@@ -184,7 +211,8 @@ export default function Home() {
                       </div>
                       {errors.otherExpenses && (
                         <p className="text-sm text-red-500 flex items-center gap-1 mt-1">
-                          <AlertCircle className="w-3 h-3" /> {errors.otherExpenses.message}
+                          <AlertCircle className="w-3 h-3" />{" "}
+                          {errors.otherExpenses.message}
                         </p>
                       )}
                     </div>
@@ -203,7 +231,7 @@ export default function Home() {
           </motion.div>
 
           {/* Right Column: Display & History */}
-          <motion.div 
+          <motion.div
             initial={{ opacity: 0, x: 20 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ delay: 0.4 }}
@@ -214,11 +242,12 @@ export default function Home() {
 
             {/* History Area */}
             <div className="p-8 rounded-[2rem] glass-card">
-              <h3 className="text-xl font-bold text-slate-800 font-display mb-6">Recent Calculations</h3>
+              <h3 className="text-xl font-bold text-slate-800 font-display mb-6">
+                Recent Calculations
+              </h3>
               <HistoryList />
             </div>
           </motion.div>
-
         </div>
       </div>
     </div>
