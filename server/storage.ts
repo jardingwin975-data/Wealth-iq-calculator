@@ -1,37 +1,22 @@
-import { type User, type InsertUser } from "@shared/schema";
-import { randomUUID } from "crypto";
-
-// modify the interface with any CRUD methods
-// you might need
+import { type Calculation, type InsertCalculation } from "@shared/schema";
 
 export interface IStorage {
-  getUser(id: string): Promise<User | undefined>;
-  getUserByUsername(username: string): Promise<User | undefined>;
-  createUser(user: InsertUser): Promise<User>;
+  getCalculations(): Promise<Calculation[]>;
+  createCalculation(calc: InsertCalculation): Promise<Calculation>;
 }
 
 export class MemStorage implements IStorage {
-  private users: Map<string, User>;
+  private calculations: Calculation[] = [];
+  private currentId = 1;
 
-  constructor() {
-    this.users = new Map();
+  async getCalculations(): Promise<Calculation[]> {
+    return this.calculations;
   }
 
-  async getUser(id: string): Promise<User | undefined> {
-    return this.users.get(id);
-  }
-
-  async getUserByUsername(username: string): Promise<User | undefined> {
-    return Array.from(this.users.values()).find(
-      (user) => user.username === username,
-    );
-  }
-
-  async createUser(insertUser: InsertUser): Promise<User> {
-    const id = randomUUID();
-    const user: User = { ...insertUser, id };
-    this.users.set(id, user);
-    return user;
+  async createCalculation(insertCalc: InsertCalculation): Promise<Calculation> {
+    const calc: Calculation = { ...insertCalc, id: this.currentId++ };
+    this.calculations.push(calc);
+    return calc;
   }
 }
 
