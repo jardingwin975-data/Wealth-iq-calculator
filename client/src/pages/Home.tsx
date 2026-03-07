@@ -369,12 +369,20 @@ export default function Home() {
               transportRatio={transportRatio}
             />
 
-            <FinanceCharts
-              income={watchedIncome}
-              rent={watchedRent}
-              carPayment={watchedCarPayment}
-              otherExpenses={watchedOtherExpenses}
-            />
+          {currentScore !== null && (
+  <motion.div
+    initial={{ opacity: 0, y: 20 }}
+    animate={{ opacity: 1, y: 0 }}
+    transition={{ duration: 0.4 }}
+  >
+    <FinanceCharts
+      income={watchedIncome}
+      rent={watchedRent}
+      carPayment={watchedCarPayment}
+      otherExpenses={watchedOtherExpenses}
+    />
+  </motion.div>
+)}
 
             <div className="premium-card rounded-[2rem] p-7 sm:p-9">
               <div className="flex items-center justify-between gap-4 mb-6">
