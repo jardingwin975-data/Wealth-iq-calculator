@@ -153,7 +153,7 @@ export default function FinanceCharts({
             <BarChart
               data={incomeData}
               margin={{ top: 10, right: 10, bottom: 10, left: 10 }}
-              barCategoryGap={30}
+              barCategoryGap={50}
             >
               <CartesianGrid strokeDasharray="3 3" stroke="#E2E8F0" />
               <XAxis dataKey="name" stroke="#64748B" tick={{ fontSize: 14 }} />
