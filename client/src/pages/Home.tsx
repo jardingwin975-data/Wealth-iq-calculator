@@ -62,6 +62,11 @@ export default function Home() {
     },
   });
 
+  const watchedIncome = Number(watch("income") || 0);
+  const watchedRent = Number(watch("rent") || 0);
+  const watchedCarPayment = Number(watch("carPayment") || 0);
+  const watchedOtherExpenses = Number(watch("otherExpenses") || 0);
+
   const onSubmit = (data: FormData) => {
     const { income, rent, carPayment, otherExpenses } = data;
 
@@ -131,7 +136,6 @@ export default function Home() {
   return (
     <div className="min-h-screen app-shell px-4 py-8 sm:px-6 lg:px-8">
       <div className="mx-auto max-w-7xl">
-        {/* HERO */}
         <motion.section
           initial={{ opacity: 0, y: 18 }}
           animate={{ opacity: 1, y: 0 }}
@@ -206,9 +210,7 @@ export default function Home() {
           </div>
         </motion.section>
 
-        {/* MAIN GRID */}
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 items-start">
-          {/* LEFT: FORM */}
           <motion.section
             initial={{ opacity: 0, x: -18 }}
             animate={{ opacity: 1, x: 0 }}
@@ -351,7 +353,6 @@ export default function Home() {
             </div>
           </motion.section>
 
-          {/* RIGHT: RESULTS */}
           <motion.section
             initial={{ opacity: 0, x: 18 }}
             animate={{ opacity: 1, x: 0 }}
@@ -369,10 +370,10 @@ export default function Home() {
             />
 
             <FinanceCharts
-              income={watch("income") || 0}
-              rent={watch("rent") || 0}
-              carPayment={watch("carPayment") || 0}
-              otherExpenses={watch("otherExpenses") || 0}
+              income={watchedIncome}
+              rent={watchedRent}
+              carPayment={watchedCarPayment}
+              otherExpenses={watchedOtherExpenses}
             />
 
             <div className="premium-card rounded-[2rem] p-7 sm:p-9">
