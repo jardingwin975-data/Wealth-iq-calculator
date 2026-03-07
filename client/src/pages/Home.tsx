@@ -1,3 +1,4 @@
+import FinanceCharts from "@/components/FinanceCharts";
 import { useMemo, useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -17,7 +18,12 @@ import {
 import { ScoreDisplay } from "@/components/ScoreDisplay";
 import { HistoryList } from "@/components/HistoryList";
 import { useCreateCalculation } from "@/hooks/use-calculations";
-
+<FinanceCharts
+  income={watch("income") || 0}
+  rent={watch("rent") || 0}
+  carPayment={watch("carPayment") || 0}
+  otherExpenses={watch("otherExpenses") || 0}
+/>
 const formSchema = z.object({
   income: z.coerce
     .number({ invalid_type_error: "Required" })
@@ -47,10 +53,11 @@ export default function Home() {
   const { mutate: saveCalculation, isPending } = useCreateCalculation();
 
   const {
-    register,
-    handleSubmit,
-    formState: { errors },
-  } = useForm<FormData>({
+  register,
+  handleSubmit,
+  watch,
+  formState: { errors },
+} = useForm<FormData>({
     resolver: zodResolver(formSchema),
     defaultValues: {
       income: undefined,
