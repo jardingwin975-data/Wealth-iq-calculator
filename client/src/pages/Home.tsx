@@ -133,73 +133,44 @@ export default function Home() {
       <div className="mx-auto max-w-7xl">
         {/* HERO */}
         <motion.section
-          initial={{ opacity: 0, y: -18 }}
-          animate={{ opacity: 1, y: 0 }}
-          className="relative overflow-hidden rounded-[2rem] premium-card p-8 sm:p-10 lg:p-14 mb-10"
-        >
-          <div className="absolute inset-0 pointer-events-none">
-            <div className="absolute -top-16 -right-10 h-48 w-48 rounded-full bg-emerald-400/15 blur-3xl" />
-            <div className="absolute bottom-0 left-0 h-40 w-40 rounded-full bg-blue-400/10 blur-3xl" />
-          </div>
+  initial={{ opacity: 0, x: 18 }}
+  animate={{ opacity: 1, x: 0 }}
+  transition={{ delay: 0.2 }}
+  className="lg:col-span-7 flex flex-col gap-8"
+>
+  <ScoreDisplay
+    score={currentScore}
+    expenseRatio={expenseRatio}
+    savingsRate={savingsRate}
+    totalExpenses={totalExpenses}
+    disposableIncome={disposableIncome}
+    housingRatio={housingRatio}
+    transportRatio={transportRatio}
+  />
 
-          <div className="relative z-10 grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
-            <div className="lg:col-span-7">
-              <div className="inline-flex items-center gap-2 rounded-full border border-emerald-200 bg-emerald-50 px-4 py-2 text-sm font-semibold text-emerald-700 mb-5">
-                <Sparkles className="h-4 w-4" />
-                Financial health scoring, simplified
-              </div>
+  <FinanceCharts
+    income={watch("income") || 0}
+    rent={watch("rent") || 0}
+    carPayment={watch("carPayment") || 0}
+    otherExpenses={watch("otherExpenses") || 0}
+  />
 
-              <h1 className="text-4xl md:text-5xl lg:text-6xl font-extrabold text-slate-950 leading-tight font-display">
-                Wealth IQ{" "}
-                <span className="bg-gradient-to-r from-emerald-500 to-cyan-500 bg-clip-text text-transparent">
-                  Calculator
-                </span>
-              </h1>
+  <div className="premium-card rounded-[2rem] p-7 sm:p-9">
+    <div className="flex items-center justify-between gap-4 mb-6">
+      <div>
+        <p className="text-sm font-semibold uppercase tracking-[0.18em] text-slate-400">
+          History
+        </p>
+        <h3 className="text-2xl font-bold text-slate-900 font-display mt-1">
+          Recent Calculations
+        </h3>
+      </div>
+    </div>
 
-              <p className="mt-5 text-lg md:text-xl text-slate-600 max-w-3xl leading-relaxed">
-                A clean financial score tool that turns your monthly income and
-                expenses into a simple, visual health snapshot. See your score,
-                spending ratios, cash flow, and history in one place.
-              </p>
+    <HistoryList />
+  </div>
 
-              <div className="mt-8 flex flex-wrap gap-3">
-                <div className="soft-pill">Live score analysis</div>
-                <div className="soft-pill">Expense ratio tracking</div>
-                <div className="soft-pill">Savings health insights</div>
-                <div className="soft-pill">Calculation history</div>
-              </div>
-            </div>
-
-            <div className="lg:col-span-5 grid grid-cols-1 sm:grid-cols-3 lg:grid-cols-1 gap-4">
-              {statCards.map((card, idx) => (
-                <motion.div
-                  key={card.title}
-                  initial={{ opacity: 0, y: 16 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: 0.15 + idx * 0.08 }}
-                  className="rounded-3xl border border-white/70 bg-white/80 shadow-[0_12px_40px_rgba(15,23,42,0.06)] backdrop-blur p-5"
-                >
-                  <div className="flex items-start gap-4">
-                    <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-slate-900 text-white shadow-sm">
-                      <card.icon className="h-5 w-5" />
-                    </div>
-                    <div>
-                      <p className="text-sm font-semibold uppercase tracking-wide text-slate-400">
-                        {card.title}
-                      </p>
-                      <p className="text-2xl font-bold text-slate-900 mt-1">
-                        {card.value}
-                      </p>
-                      <p className="text-sm text-slate-500 mt-1 leading-relaxed">
-                        {card.desc}
-                      </p>
-                    </div>
-                  </div>
-                </motion.div>
-              ))}
-            </div>
-          </div>
-        </motion.section>
+</motion.section>
 
         {/* MAIN GRID */}
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 items-start">
