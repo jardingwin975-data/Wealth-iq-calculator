@@ -28,11 +28,15 @@ export default function FinanceCharts({
   const totalExpenses = rent + carPayment + otherExpenses;
   const savings = Math.max(income - totalExpenses, 0);
 
-  const expenseData = [
-    { name: "Rent / Mortgage", value: rent },
-    { name: "Car Payment", value: carPayment },
-    { name: "Other Expenses", value: otherExpenses },
-  ];
+  const hasExpenseData = totalExpenses > 0;
+
+  const expenseData = hasExpenseData
+    ? [
+        { name: "Rent / Mortgage", value: rent },
+        { name: "Car Payment", value: carPayment },
+        { name: "Other Expenses", value: otherExpenses },
+      ].filter((item) => item.value > 0)
+    : [{ name: "No expenses entered", value: 1 }];
 
   const incomeData = [
     { name: "Income", amount: income },
@@ -40,7 +44,11 @@ export default function FinanceCharts({
     { name: "Savings", amount: savings },
   ];
 
-  const COLORS = ["#3B82F6", "#F59E0B", "#8B5CF6"];
+  const COLORS = hasExpenseData
+    ? ["#3B82F6", "#F59E0B", "#8B5CF6"]
+    : ["#CBD5E1"];
+
+  const currencyFormatter = (value: number) => `$${value.toLocaleString()}`;
 
   return (
     <div className="grid grid-cols-1 xl:grid-cols-2 gap-8">
@@ -59,15 +67,16 @@ export default function FinanceCharts({
 
         <div className="h-[320px]">
           <ResponsiveContainer width="100%" height="100%">
-            <PieChart>
+            <PieChart margin={{ top: 10, right: 10, bottom: 10, left: 10 }}>
               <Pie
                 data={expenseData}
                 cx="50%"
-                cy="50%"
-                innerRadius={70}
-                outerRadius={110}
+                cy="45%"
+                innerRadius={55}
+                outerRadius={90}
                 paddingAngle={4}
                 dataKey="value"
+                stroke="none"
               >
                 {expenseData.map((entry, index) => (
                   <Cell
@@ -76,10 +85,19 @@ export default function FinanceCharts({
                   />
                 ))}
               </Pie>
+
               <Tooltip
-                formatter={(value: number) => [`$${value.toLocaleString()}`, "Amount"]}
+                formatter={(value: number) => [currencyFormatter(value), "Amount"]}
               />
-              <Legend />
+
+              <Legend
+                verticalAlign="bottom"
+                align="center"
+                iconType="circle"
+                formatter={(value) => (
+                  <span className="text-slate-600 text-sm">{value}</span>
+                )}
+              />
             </PieChart>
           </ResponsiveContainer>
         </div>
@@ -100,12 +118,24 @@ export default function FinanceCharts({
 
         <div className="h-[320px]">
           <ResponsiveContainer width="100%" height="100%">
-            <BarChart data={incomeData} barCategoryGap={30}>
+            <BarChart
+              data={incomeData}
+              margin={{ top: 10, right: 10, bottom: 10, left: 10 }}
+              barCategoryGap={30}
+            >
               <CartesianGrid strokeDasharray="3 3" stroke="#E2E8F0" />
-              <XAxis dataKey="name" stroke="#64748B" />
-              <YAxis stroke="#64748B" />
+              <XAxis
+                dataKey="name"
+                stroke="#64748B"
+                tick={{ fontSize: 14 }}
+              />
+              <YAxis
+                stroke="#64748B"
+                tickFormatter={(value) => `$${value}`}
+                tick={{ fontSize: 13 }}
+              />
               <Tooltip
-                formatter={(value: number) => [`$${value.toLocaleString()}`, "Amount"]}
+                formatter={(value: number) => [currencyFormatter(value), "Amount"]}
               />
               <Bar dataKey="amount" radius={[12, 12, 0, 0]}>
                 <Cell fill="#10B981" />
