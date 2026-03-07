@@ -48,11 +48,11 @@ export default function Home() {
   const { mutate: saveCalculation, isPending } = useCreateCalculation();
 
   const {
-  register,
-  handleSubmit,
-  watch,
-  formState: { errors },
-} = useForm<FormData>({
+    register,
+    handleSubmit,
+    watch,
+    formState: { errors },
+  } = useForm<FormData>({
     resolver: zodResolver(formSchema),
     defaultValues: {
       income: undefined,
@@ -81,7 +81,7 @@ export default function Home() {
       calculatedExpenseRatio = Math.round((expenses / income) * 100);
       calculatedSavingsRate = Math.max(
         0,
-        Math.min(100, Math.round((leftover / income) * 100))
+        Math.min(100, Math.round((leftover / income) * 100)),
       );
       calculatedHousingRatio = Math.round((rent / income) * 100);
       calculatedTransportRatio = Math.round((carPayment / income) * 100);
@@ -125,7 +125,7 @@ export default function Home() {
         desc: "See how your income supports your lifestyle.",
       },
     ],
-    []
+    [],
   );
 
   return (
@@ -133,44 +133,78 @@ export default function Home() {
       <div className="mx-auto max-w-7xl">
         {/* HERO */}
         <motion.section
-  initial={{ opacity: 0, x: 18 }}
-  animate={{ opacity: 1, x: 0 }}
-  transition={{ delay: 0.2 }}
-  className="lg:col-span-7 flex flex-col gap-8"
->
-  <ScoreDisplay
-    score={currentScore}
-    expenseRatio={expenseRatio}
-    savingsRate={savingsRate}
-    totalExpenses={totalExpenses}
-    disposableIncome={disposableIncome}
-    housingRatio={housingRatio}
-    transportRatio={transportRatio}
-  />
+          initial={{ opacity: 0, y: 18 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="premium-card rounded-[2.25rem] p-7 sm:p-10 mb-10 overflow-hidden relative"
+        >
+          <div className="absolute inset-0 pointer-events-none bg-[radial-gradient(circle_at_top_left,rgba(16,185,129,0.08),transparent_32%),radial-gradient(circle_at_top_right,rgba(59,130,246,0.08),transparent_28%)]" />
 
-  <FinanceCharts
-    income={watch("income") || 0}
-    rent={watch("rent") || 0}
-    carPayment={watch("carPayment") || 0}
-    otherExpenses={watch("otherExpenses") || 0}
-  />
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start relative">
+            <div className="lg:col-span-7">
+              <div className="inline-flex items-center gap-2 rounded-full border border-emerald-200 bg-emerald-50 px-4 py-2 text-sm font-semibold text-emerald-700 mb-6">
+                <Sparkles className="h-4 w-4" />
+                Financial health scoring, simplified
+              </div>
 
-  <div className="premium-card rounded-[2rem] p-7 sm:p-9">
-    <div className="flex items-center justify-between gap-4 mb-6">
-      <div>
-        <p className="text-sm font-semibold uppercase tracking-[0.18em] text-slate-400">
-          History
-        </p>
-        <h3 className="text-2xl font-bold text-slate-900 font-display mt-1">
-          Recent Calculations
-        </h3>
-      </div>
-    </div>
+              <h1 className="text-4xl md:text-6xl font-extrabold text-slate-950 leading-tight font-display">
+                Wealth IQ <span className="text-primary">Calculator</span>
+              </h1>
 
-    <HistoryList />
-  </div>
+              <p className="mt-6 max-w-3xl text-lg md:text-[1.45rem] leading-8 text-slate-600">
+                A clean financial score tool that turns your monthly income and
+                expenses into a simple, visual health snapshot. See your score,
+                spending ratios, cash flow, and history in one place.
+              </p>
 
-</motion.section>
+              <div className="mt-8 flex flex-wrap gap-3">
+                {[
+                  "Live score analysis",
+                  "Expense ratio tracking",
+                  "Savings health insights",
+                  "Calculation history",
+                ].map((item) => (
+                  <span
+                    key={item}
+                    className="rounded-full border border-slate-200 bg-white/80 px-4 py-2 text-sm font-medium text-slate-600 shadow-sm"
+                  >
+                    {item}
+                  </span>
+                ))}
+              </div>
+            </div>
+
+            <div className="lg:col-span-5 grid gap-4">
+              {statCards.map((card) => {
+                const Icon = card.icon;
+
+                return (
+                  <div
+                    key={card.title}
+                    className="rounded-[1.75rem] border border-slate-100 bg-white/80 p-6 shadow-sm"
+                  >
+                    <div className="flex items-start gap-4">
+                      <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-slate-950 text-white">
+                        <Icon className="h-5 w-5" />
+                      </div>
+
+                      <div>
+                        <p className="text-sm font-semibold uppercase tracking-[0.16em] text-slate-400">
+                          {card.title}
+                        </p>
+                        <h3 className="mt-1 text-2xl font-bold text-slate-900 font-display">
+                          {card.value}
+                        </h3>
+                        <p className="mt-2 text-base leading-7 text-slate-500">
+                          {card.desc}
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+        </motion.section>
 
         {/* MAIN GRID */}
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 items-start">
@@ -183,6 +217,7 @@ export default function Home() {
           >
             <div className="premium-card rounded-[2rem] p-7 sm:p-9 relative overflow-hidden">
               <div className="absolute top-0 left-0 h-1.5 w-full bg-gradient-to-r from-emerald-500 via-cyan-400 to-blue-500" />
+
               <div className="flex items-center justify-between gap-4 mb-8">
                 <div>
                   <p className="text-sm font-semibold uppercase tracking-[0.18em] text-slate-400">
@@ -192,13 +227,13 @@ export default function Home() {
                     Your Monthly Metrics
                   </h2>
                 </div>
+
                 <div className="hidden sm:flex h-12 w-12 items-center justify-center rounded-2xl bg-emerald-50 text-emerald-600">
                   <Wallet className="h-6 w-6" />
                 </div>
               </div>
 
               <form onSubmit={handleSubmit(onSubmit)} className="space-y-7">
-                {/* Income */}
                 <div className="space-y-2">
                   <label className="text-sm font-semibold text-slate-700 flex items-center gap-2">
                     <Wallet className="w-4 h-4 text-emerald-500" />
@@ -225,7 +260,6 @@ export default function Home() {
 
                 <div className="section-divider" />
 
-                {/* Rent */}
                 <div className="space-y-2">
                   <label className="text-sm font-semibold text-slate-700 flex items-center gap-2">
                     <HomeIcon className="w-4 h-4 text-blue-500" />
@@ -325,33 +359,39 @@ export default function Home() {
             className="lg:col-span-7 flex flex-col gap-8"
           >
             <ScoreDisplay
-  score={currentScore}
-  expenseRatio={expenseRatio}
-  savingsRate={savingsRate}
-  totalExpenses={totalExpenses}
-  disposableIncome={disposableIncome}
-  housingRatio={housingRatio}
-  transportRatio={transportRatio}
-/>
+              score={currentScore}
+              expenseRatio={expenseRatio}
+              savingsRate={savingsRate}
+              totalExpenses={totalExpenses}
+              disposableIncome={disposableIncome}
+              housingRatio={housingRatio}
+              transportRatio={transportRatio}
+            />
 
-<FinanceCharts
-  income={watch("income") || 0}
-  rent={watch("rent") || 0}
-  carPayment={watch("carPayment") || 0}
-  otherExpenses={watch("otherExpenses") || 0}
-/>
+            <FinanceCharts
+              income={watch("income") || 0}
+              rent={watch("rent") || 0}
+              carPayment={watch("carPayment") || 0}
+              otherExpenses={watch("otherExpenses") || 0}
+            />
 
-<div className="premium-card rounded-[2rem] p-7 sm:p-9">
-  <div className="flex items-center justify-between gap-4 mb-6">
-    <div>
-      <p className="text-sm font-semibold uppercase tracking-[0.18em] text-slate-400">
-        History
-      </p>
-      <h3 className="text-2xl font-bold text-slate-900 font-display mt-1">
-        Recent Calculations
-      </h3>
+            <div className="premium-card rounded-[2rem] p-7 sm:p-9">
+              <div className="flex items-center justify-between gap-4 mb-6">
+                <div>
+                  <p className="text-sm font-semibold uppercase tracking-[0.18em] text-slate-400">
+                    History
+                  </p>
+                  <h3 className="text-2xl font-bold text-slate-900 font-display mt-1">
+                    Recent Calculations
+                  </h3>
+                </div>
+              </div>
+
+              <HistoryList />
+            </div>
+          </motion.section>
+        </div>
+      </div>
     </div>
-  </div>
-
-  <HistoryList />
-</div>
+  );
+}
