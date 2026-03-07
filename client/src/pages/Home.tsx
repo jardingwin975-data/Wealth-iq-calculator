@@ -18,12 +18,7 @@ import {
 import { ScoreDisplay } from "@/components/ScoreDisplay";
 import { HistoryList } from "@/components/HistoryList";
 import { useCreateCalculation } from "@/hooks/use-calculations";
-<FinanceCharts
-  income={watch("income") || 0}
-  rent={watch("rent") || 0}
-  carPayment={watch("carPayment") || 0}
-  otherExpenses={watch("otherExpenses") || 0}
-/>
+
 const formSchema = z.object({
   income: z.coerce
     .number({ invalid_type_error: "Required" })
@@ -359,14 +354,24 @@ export default function Home() {
             className="lg:col-span-7 flex flex-col gap-8"
           >
             <ScoreDisplay
-              score={currentScore}
-              expenseRatio={expenseRatio}
-              savingsRate={savingsRate}
-              totalExpenses={totalExpenses}
-              disposableIncome={disposableIncome}
-              housingRatio={housingRatio}
-              transportRatio={transportRatio}
-            />
+  score={currentScore}
+  expenseRatio={expenseRatio}
+  savingsRate={savingsRate}
+  totalExpenses={totalExpenses}
+  disposableIncome={disposableIncome}
+  housingRatio={housingRatio}
+  transportRatio={transportRatio}
+/>
+
+<FinanceCharts
+  income={watch("income") || 0}
+  rent={watch("rent") || 0}
+  carPayment={watch("carPayment") || 0}
+  otherExpenses={watch("otherExpenses") || 0}
+/>
+
+<div className="premium-card rounded-[2rem] p-7 sm:p-9">
+            
 
             <div className="premium-card rounded-[2rem] p-7 sm:p-9">
               <div className="flex items-center justify-between gap-4 mb-6">
