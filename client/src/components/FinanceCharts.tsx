@@ -31,6 +31,8 @@ export default function FinanceCharts({
 
   const totalExpenses = safeRent + safeCarPayment + safeOtherExpenses;
   const savings = Math.max(safeIncome - totalExpenses, 0);
+  const expenseRatio =
+    safeIncome > 0 ? Math.round((totalExpenses / safeIncome) * 100) : 0;
 
   const hasExpenseData = totalExpenses > 0;
 
@@ -54,19 +56,39 @@ export default function FinanceCharts({
 
   const currencyFormatter = (value: number) => `$${value.toLocaleString()}`;
 
+  let riskLabel = "Healthy";
+  let riskClasses = "bg-emerald-50 text-emerald-700 border border-emerald-200";
+
+  if (expenseRatio >= 70) {
+    riskLabel = "High Risk";
+    riskClasses = "bg-red-50 text-red-700 border border-red-200";
+  } else if (expenseRatio >= 50) {
+    riskLabel = "Moderate Risk";
+    riskClasses =
+      "bg-amber-50 text-amber-700 border border-amber-200";
+  }
+
   return (
     <div className="grid grid-cols-1 xl:grid-cols-2 gap-8">
       <div className="rounded-[2rem] glass-card p-8">
-        <div className="mb-6">
-          <p className="text-xs uppercase tracking-[0.2em] text-slate-400 font-semibold">
-            Analytics
-          </p>
-          <h3 className="text-2xl font-bold text-slate-900 font-display mt-2">
-            Expense Breakdown
-          </h3>
-          <p className="text-slate-500 mt-2">
-            See where your monthly expenses are concentrated.
-          </p>
+        <div className="mb-6 flex items-start justify-between gap-4">
+          <div>
+            <p className="text-xs uppercase tracking-[0.2em] text-slate-400 font-semibold">
+              Analytics
+            </p>
+            <h3 className="text-2xl font-bold text-slate-900 font-display mt-2">
+              Expense Breakdown
+            </h3>
+            <p className="text-slate-500 mt-2">
+              See where your monthly expenses are concentrated.
+            </p>
+          </div>
+
+          <span
+            className={`rounded-full px-3 py-1 text-xs font-semibold whitespace-nowrap ${riskClasses}`}
+          >
+            {riskLabel}
+          </span>
         </div>
 
         <div className="h-[320px]">
