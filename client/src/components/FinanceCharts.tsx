@@ -9,7 +9,6 @@ import {
   XAxis,
   YAxis,
   CartesianGrid,
-  Legend,
 } from "recharts";
 
 type FinanceChartsProps = {
@@ -25,21 +24,26 @@ export default function FinanceCharts({
   carPayment,
   otherExpenses,
 }: FinanceChartsProps) {
-  const totalExpenses = rent + carPayment + otherExpenses;
-  const savings = Math.max(income - totalExpenses, 0);
+  const safeIncome = Number(income) || 0;
+  const safeRent = Number(rent) || 0;
+  const safeCarPayment = Number(carPayment) || 0;
+  const safeOtherExpenses = Number(otherExpenses) || 0;
+
+  const totalExpenses = safeRent + safeCarPayment + safeOtherExpenses;
+  const savings = Math.max(safeIncome - totalExpenses, 0);
 
   const hasExpenseData = totalExpenses > 0;
 
   const expenseData = hasExpenseData
     ? [
-        { name: "Rent / Mortgage", value: rent },
-        { name: "Car Payment", value: carPayment },
-        { name: "Other Expenses", value: otherExpenses },
+        { name: "Rent / Mortgage", value: safeRent },
+        { name: "Car Payment", value: safeCarPayment },
+        { name: "Other Expenses", value: safeOtherExpenses },
       ].filter((item) => item.value > 0)
     : [{ name: "No expenses entered", value: 1 }];
 
   const incomeData = [
-    { name: "Income", amount: income },
+    { name: "Income", amount: safeIncome },
     { name: "Expenses", amount: totalExpenses },
     { name: "Savings", amount: savings },
   ];
@@ -67,13 +71,13 @@ export default function FinanceCharts({
 
         <div className="h-[320px]">
           <ResponsiveContainer width="100%" height="100%">
-            <PieChart margin={{ top: 10, right: 10, bottom: 10, left: 10 }}>
+            <PieChart margin={{ top: 10, right: 10, bottom: 20, left: 10 }}>
               <Pie
                 data={expenseData}
                 cx="50%"
-                cy="45%"
+                cy="42%"
                 innerRadius={55}
-                outerRadius={90}
+                outerRadius={95}
                 paddingAngle={4}
                 dataKey="value"
                 stroke="none"
@@ -89,17 +93,23 @@ export default function FinanceCharts({
               <Tooltip
                 formatter={(value: number) => [currencyFormatter(value), "Amount"]}
               />
-
-              <Legend
-                verticalAlign="bottom"
-                align="center"
-                iconType="circle"
-                formatter={(value) => (
-                  <span className="text-slate-600 text-sm">{value}</span>
-                )}
-              />
             </PieChart>
           </ResponsiveContainer>
+        </div>
+
+        <div className="mt-4 flex flex-wrap gap-4">
+          {expenseData.map((item, index) => (
+            <div
+              key={item.name}
+              className="flex items-center gap-2 text-sm text-slate-600"
+            >
+              <span
+                className="inline-block h-3 w-3 rounded-full"
+                style={{ backgroundColor: COLORS[index % COLORS.length] }}
+              />
+              <span>{item.name}</span>
+            </div>
+          ))}
         </div>
       </div>
 
@@ -124,11 +134,7 @@ export default function FinanceCharts({
               barCategoryGap={30}
             >
               <CartesianGrid strokeDasharray="3 3" stroke="#E2E8F0" />
-              <XAxis
-                dataKey="name"
-                stroke="#64748B"
-                tick={{ fontSize: 14 }}
-              />
+              <XAxis dataKey="name" stroke="#64748B" tick={{ fontSize: 14 }} />
               <YAxis
                 stroke="#64748B"
                 tickFormatter={(value) => `$${value}`}
