@@ -447,6 +447,11 @@ export default function Home() {
                   carPayment={watchedCarPayment}
                   otherExpenses={watchedOtherExpenses}
                 />
+                {currentScore !== null && (
+  <AIFinancialAdvisor report={report} />
+)}
+
+                
               </motion.div>
             )}
 
