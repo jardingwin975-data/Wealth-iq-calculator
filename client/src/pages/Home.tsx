@@ -1,3 +1,4 @@
+import AIFinancialAdvisor from "@/components/AIFinancialAdvisor";
 import FinanceCharts from "@/components/FinanceCharts";
 import { useMemo, useState } from "react";
 import { useForm } from "react-hook-form";
