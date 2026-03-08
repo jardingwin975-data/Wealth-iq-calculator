@@ -167,6 +167,20 @@ export default function Home() {
     [],
   );
 
+  const report = {
+  income: watchedIncome,
+  rent: watchedRent,
+  carPayment: watchedCarPayment,
+  otherExpenses: watchedOtherExpenses,
+  totalExpenses,
+  disposableIncome,
+  expenseRatio,
+  savingsRate,
+  housingRatio,
+  transportRatio,
+  score: currentScore,
+};
+
   return (
     <div className="min-h-screen app-shell px-4 py-8 sm:px-6 lg:px-8">
       <div className="mx-auto max-w-7xl">
