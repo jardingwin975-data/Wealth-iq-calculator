@@ -12,3 +12,5 @@ Features:
 
 Tech stack:
 React • TypeScript • Recharts • Tailwind • Render deployment
+
+Built as an independent portfolio project demonstrating financial analytics and interactive data visualization.
