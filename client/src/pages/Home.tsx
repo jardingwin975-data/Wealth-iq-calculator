@@ -14,6 +14,7 @@ import {
   ShieldCheck,
   BarChart3,
   BadgeDollarSign,
+  RotateCcw,
 } from "lucide-react";
 import { ScoreDisplay } from "@/components/ScoreDisplay";
 import { HistoryList } from "@/components/HistoryList";
@@ -44,6 +45,7 @@ export default function Home() {
   const [disposableIncome, setDisposableIncome] = useState<number | null>(null);
   const [housingRatio, setHousingRatio] = useState<number | null>(null);
   const [transportRatio, setTransportRatio] = useState<number | null>(null);
+  const [cashFlowWarning, setCashFlowWarning] = useState<string | null>(null);
 
   const { mutate: saveCalculation, isPending } = useCreateCalculation();
 
@@ -51,14 +53,15 @@ export default function Home() {
     register,
     handleSubmit,
     watch,
+    reset,
     formState: { errors },
   } = useForm<FormData>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      income: undefined,
-      rent: undefined,
-      carPayment: undefined,
-      otherExpenses: undefined,
+      income: 0,
+      rent: 0,
+      carPayment: 0,
+      otherExpenses: 0,
     },
   });
 
@@ -66,6 +69,24 @@ export default function Home() {
   const watchedRent = Number(watch("rent") || 0);
   const watchedCarPayment = Number(watch("carPayment") || 0);
   const watchedOtherExpenses = Number(watch("otherExpenses") || 0);
+
+  const resetDashboard = () => {
+    reset({
+      income: 0,
+      rent: 0,
+      carPayment: 0,
+      otherExpenses: 0,
+    });
+
+    setCurrentScore(null);
+    setExpenseRatio(null);
+    setSavingsRate(null);
+    setTotalExpenses(null);
+    setDisposableIncome(null);
+    setHousingRatio(null);
+    setTransportRatio(null);
+    setCashFlowWarning(null);
+  };
 
   const onSubmit = (data: FormData) => {
     const { income, rent, carPayment, otherExpenses } = data;
@@ -78,6 +99,18 @@ export default function Home() {
     let calculatedSavingsRate = 0;
     let calculatedHousingRatio = 0;
     let calculatedTransportRatio = 0;
+
+    if (income <= 0 && expenses > 0) {
+      setCashFlowWarning(
+        "Please enter monthly income before calculating financial health.",
+      );
+    } else if (expenses > income) {
+      setCashFlowWarning(
+        "Warning: Your expenses exceed your income. This indicates negative cash flow.",
+      );
+    } else {
+      setCashFlowWarning(null);
+    }
 
     if (income > 0) {
       const rawScore = ((income - expenses) / income) * 100;
@@ -336,13 +369,31 @@ export default function Home() {
                   </div>
                 </div>
 
-                <button
-                  type="submit"
-                  disabled={isPending}
-                  className="financial-button w-full mt-3 py-5 px-6 rounded-2xl font-bold text-white text-lg disabled:opacity-70 disabled:cursor-not-allowed"
-                >
-                  {isPending ? "Calculating your score..." : "Calculate Wealth IQ"}
-                </button>
+                {cashFlowWarning && (
+                  <div className="rounded-2xl border border-amber-200 bg-amber-50 px-4 py-3 text-sm text-amber-800 flex items-start gap-2">
+                    <AlertCircle className="w-4 h-4 mt-0.5 shrink-0" />
+                    <span>{cashFlowWarning}</span>
+                  </div>
+                )}
+
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-3">
+                  <button
+                    type="submit"
+                    disabled={isPending}
+                    className="financial-button w-full py-5 px-6 rounded-2xl font-bold text-white text-lg disabled:opacity-70 disabled:cursor-not-allowed"
+                  >
+                    {isPending ? "Calculating your score..." : "Calculate Wealth IQ"}
+                  </button>
+
+                  <button
+                    type="button"
+                    onClick={resetDashboard}
+                    className="w-full py-5 px-6 rounded-2xl font-bold text-slate-700 text-lg border border-slate-200 bg-white hover:bg-slate-50 transition-colors flex items-center justify-center gap-2"
+                  >
+                    <RotateCcw className="w-4 h-4" />
+                    Reset Inputs
+                  </button>
+                </div>
 
                 <p className="text-xs text-center text-slate-400 leading-relaxed">
                   Your score reflects how much of your income remains after your
@@ -369,20 +420,20 @@ export default function Home() {
               transportRatio={transportRatio}
             />
 
-          {currentScore !== null && (
-  <motion.div
-    initial={{ opacity: 0, y: 20 }}
-    animate={{ opacity: 1, y: 0 }}
-    transition={{ duration: 0.4 }}
-  >
-    <FinanceCharts
-      income={watchedIncome}
-      rent={watchedRent}
-      carPayment={watchedCarPayment}
-      otherExpenses={watchedOtherExpenses}
-    />
-  </motion.div>
-)}
+            {currentScore !== null && (
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.4 }}
+              >
+                <FinanceCharts
+                  income={watchedIncome}
+                  rent={watchedRent}
+                  carPayment={watchedCarPayment}
+                  otherExpenses={watchedOtherExpenses}
+                />
+              </motion.div>
+            )}
 
             <div className="premium-card rounded-[2rem] p-7 sm:p-9">
               <div className="flex items-center justify-between gap-4 mb-6">
@@ -400,6 +451,10 @@ export default function Home() {
             </div>
           </motion.section>
         </div>
+
+        <footer className="mt-10 text-center text-sm text-slate-400">
+          Wealth IQ Calculator • Created by Jardin Gwin • Financial analytics portfolio project
+        </footer>
       </div>
     </div>
   );
