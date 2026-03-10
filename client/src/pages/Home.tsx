@@ -9,6 +9,7 @@ import {
   Wallet,
   Home as HomeIcon,
   Car,
+  GroceryBag,
   CreditCard,
   Sparkles,
   AlertCircle,
