@@ -32,6 +32,9 @@ const formSchema = z.object({
   carPayment: z.coerce
     .number({ invalid_type_error: "Required" })
     .min(0, "Cannot be negative"),
+  Groceries: z.coerce
+    .number({ invalid_type_error: "Required" })
+    .min(0, "Cannot be negative"),
   otherExpenses: z.coerce
     .number({ invalid_type_error: "Required" })
     .min(0, "Cannot be negative"),
@@ -63,7 +66,7 @@ export default function Home() {
       income: 0,
       rent: 0,
       carPayment: 0,
-      Groceries; 0,
+      Groceries: 0,
       otherExpenses: 0,
     },
   });
@@ -71,6 +74,7 @@ export default function Home() {
   const watchedIncome = Number(watch("income") || 0);
   const watchedRent = Number(watch("rent") || 0);
   const watchedCarPayment = Number(watch("carPayment") || 0);
+  const watchedCarPayment = Number(watch("Groceries") || 0);
   const watchedOtherExpenses = Number(watch("otherExpenses") || 0);
 
   const resetDashboard = () => {
@@ -361,6 +365,31 @@ export default function Home() {
                       <p className="text-sm text-red-500 flex items-center gap-1 mt-1">
                         <AlertCircle className="w-3 h-3" />
                         {errors.carPayment.message}
+                      </p>
+                    )}
+                  </div>
+
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                  <div className="space-y-2">
+                    <label className="text-sm font-semibold text-slate-700 flex items-center gap-2">
+                      <Groceries className="w-4 h-4 text-amber-500" />
+                      Groceries
+                    </label>
+                    <div className="relative">
+                      <span className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 font-semibold">
+                        $
+                      </span>
+                      <input
+                        type="number"
+                        placeholder="0.00"
+                        className="financial-input w-full pl-9 pr-4 py-4 text-lg font-semibold text-slate-900 placeholder:text-slate-300"
+                        {...register("Groceries")}
+                      />
+                    </div>
+                    {errors.Groceries && (
+                      <p className="text-sm text-red-500 flex items-center gap-1 mt-1">
+                        <AlertCircle className="w-3 h-3" />
+                        {errors.Groceries.message}
                       </p>
                     )}
                   </div>
