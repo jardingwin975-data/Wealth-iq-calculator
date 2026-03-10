@@ -210,7 +210,7 @@ export default function Home() {
               </div>
 
               <h1 className="font-display text-4xl font-extrabold leading-tight text-slate-950 md:text-6xl">
-                Wealth IQ <span className="text-primary">Calculator</span>
+                Wealth IQ <span className="text-primary"> Financial Calculator</span>
               </h1>
 
               <p className="mt-6 max-w-3xl text-lg leading-8 text-slate-600 md:text-[1.45rem]">
