@@ -131,7 +131,6 @@ export default function Home() {
       );
       calculatedHousingRatio = Math.round((rent / income) * 100);
       calculatedTransportRatio = Math.round((carPayment / income) * 100);
-      calculatedTransportRatio = Math.round(( Groceries / income) * 100);
     }
 
     setCurrentScore(score);
@@ -177,19 +176,19 @@ export default function Home() {
   );
 
   const report = {
-  income: watchedIncome,
-  rent: watchedRent,
-  carPayment: watchedCarPayment,
-  Groceries: watchedGroceries,
-  otherExpenses: watchedOtherExpenses,
-  totalExpenses,
-  disposableIncome,
-  expenseRatio,
-  savingsRate,
-  housingRatio,
-  transportRatio,
-  score: currentScore,
-};
+    income: watchedIncome,
+    rent: watchedRent,
+    carPayment: watchedCarPayment,
+    Groceries: watchedGroceries,
+    otherExpenses: watchedOtherExpenses,
+    totalExpenses,
+    disposableIncome,
+    expenseRatio,
+    savingsRate,
+    housingRatio,
+    transportRatio,
+    score: currentScore,
+  };
 
   return (
     <div className="min-h-screen app-shell px-4 py-8 sm:px-6 lg:px-8">
@@ -197,22 +196,22 @@ export default function Home() {
         <motion.section
           initial={{ opacity: 0, y: 18 }}
           animate={{ opacity: 1, y: 0 }}
-          className="premium-card rounded-[2.25rem] p-7 sm:p-10 mb-10 overflow-hidden relative"
+          className="premium-card relative mb-10 overflow-hidden rounded-[2.25rem] p-7 sm:p-10"
         >
           <div className="absolute inset-0 pointer-events-none bg-[radial-gradient(circle_at_top_left,rgba(16,185,129,0.08),transparent_32%),radial-gradient(circle_at_top_right,rgba(59,130,246,0.08),transparent_28%)]" />
 
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start relative">
+          <div className="relative grid grid-cols-1 items-start gap-8 lg:grid-cols-12">
             <div className="lg:col-span-7">
-              <div className="inline-flex items-center gap-2 rounded-full border border-emerald-200 bg-emerald-50 px-4 py-2 text-sm font-semibold text-emerald-700 mb-6">
+              <div className="mb-6 inline-flex items-center gap-2 rounded-full border border-emerald-200 bg-emerald-50 px-4 py-2 text-sm font-semibold text-emerald-700">
                 <Sparkles className="h-4 w-4" />
                 Financial health scoring, simplified
               </div>
 
-              <h1 className="text-4xl md:text-6xl font-extrabold text-slate-950 leading-tight font-display">
+              <h1 className="font-display text-4xl font-extrabold leading-tight text-slate-950 md:text-6xl">
                 Wealth IQ <span className="text-primary">Calculator</span>
               </h1>
 
-              <p className="mt-6 max-w-3xl text-lg md:text-[1.45rem] leading-8 text-slate-600">
+              <p className="mt-6 max-w-3xl text-lg leading-8 text-slate-600 md:text-[1.45rem]">
                 A clean financial score tool that turns your monthly income and
                 expenses into a simple, visual health snapshot. See your score,
                 spending ratios, cash flow, and history in one place.
@@ -235,7 +234,7 @@ export default function Home() {
               </div>
             </div>
 
-            <div className="lg:col-span-5 grid gap-4">
+            <div className="grid gap-4 lg:col-span-5">
               {statCards.map((card) => {
                 const Icon = card.icon;
 
@@ -253,10 +252,10 @@ export default function Home() {
                         <p className="text-sm font-semibold uppercase tracking-[0.16em] text-slate-400">
                           {card.title}
                         </p>
-                        <h3 className="mt-1 text-2xl font-bold text-slate-900 font-display">
+                        <h3 className="font-display mt-1 text-2xl font-bold text-slate-900">
                           {card.value}
                         </h3>
-                        <p className="mt-2 text-base leading-7 text-slate-500">
+                        <p className="mt-1 text-sm leading-6 text-slate-500">
                           {card.desc}
                         </p>
                       </div>
@@ -268,51 +267,51 @@ export default function Home() {
           </div>
         </motion.section>
 
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 items-start">
+        <div className="grid grid-cols-1 items-start gap-10 lg:grid-cols-12">
           <motion.section
             initial={{ opacity: 0, x: -18 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ delay: 0.15 }}
             className="lg:col-span-5"
           >
-            <div className="premium-card rounded-[2rem] p-7 sm:p-9 relative overflow-hidden">
-              <div className="absolute top-0 left-0 h-1.5 w-full bg-gradient-to-r from-emerald-500 via-cyan-400 to-blue-500" />
+            <div className="premium-card relative overflow-hidden rounded-[2rem] p-7 sm:p-9">
+              <div className="absolute left-0 top-0 h-1.5 w-full bg-gradient-to-r from-emerald-500 via-cyan-400 to-blue-500" />
 
-              <div className="flex items-center justify-between gap-4 mb-8">
+              <div className="mb-8 flex items-center justify-between gap-4">
                 <div>
                   <p className="text-sm font-semibold uppercase tracking-[0.18em] text-slate-400">
                     Input panel
                   </p>
-                  <h2 className="text-2xl md:text-3xl font-bold text-slate-900 font-display mt-1">
+                  <h2 className="font-display mt-1 text-2xl font-bold text-slate-900 md:text-3xl">
                     Your Monthly Metrics
                   </h2>
                 </div>
 
-                <div className="hidden sm:flex h-12 w-12 items-center justify-center rounded-2xl bg-emerald-50 text-emerald-600">
+                <div className="hidden h-12 w-12 items-center justify-center rounded-2xl bg-emerald-50 text-emerald-600 sm:flex">
                   <Wallet className="h-6 w-6" />
                 </div>
               </div>
 
               <form onSubmit={handleSubmit(onSubmit)} className="space-y-7">
                 <div className="space-y-2">
-                  <label className="text-sm font-semibold text-slate-700 flex items-center gap-2">
-                    <Wallet className="w-4 h-4 text-emerald-500" />
+                  <label className="flex items-center gap-2 text-sm font-semibold text-slate-700">
+                    <Wallet className="h-4 w-4 text-emerald-500" />
                     Monthly Income
                   </label>
                   <div className="relative">
-                    <span className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 font-semibold">
+                    <span className="absolute left-4 top-1/2 -translate-y-1/2 font-semibold text-slate-400">
                       $
                     </span>
                     <input
                       type="number"
                       placeholder="0.00"
-                      className="financial-input w-full pl-9 pr-4 py-4 text-lg font-semibold text-slate-900 placeholder:text-slate-300"
+                      className="financial-input w-full py-4 pl-9 pr-4 text-lg font-semibold text-slate-900 placeholder:text-slate-300"
                       {...register("income")}
                     />
                   </div>
                   {errors.income && (
-                    <p className="text-sm text-red-500 flex items-center gap-1 mt-1">
-                      <AlertCircle className="w-3 h-3" />
+                    <p className="mt-1 flex items-center gap-1 text-sm text-red-500">
+                      <AlertCircle className="h-3 w-3" />
                       {errors.income.message}
                     </p>
                   )}
@@ -321,116 +320,115 @@ export default function Home() {
                 <div className="section-divider" />
 
                 <div className="space-y-2">
-                  <label className="text-sm font-semibold text-slate-700 flex items-center gap-2">
-                    <HomeIcon className="w-4 h-4 text-blue-500" />
+                  <label className="flex items-center gap-2 text-sm font-semibold text-slate-700">
+                    <HomeIcon className="h-4 w-4 text-blue-500" />
                     Rent / Mortgage
                   </label>
                   <div className="relative">
-                    <span className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 font-semibold">
+                    <span className="absolute left-4 top-1/2 -translate-y-1/2 font-semibold text-slate-400">
                       $
                     </span>
                     <input
                       type="number"
                       placeholder="0.00"
-                      className="financial-input w-full pl-9 pr-4 py-4 text-lg font-semibold text-slate-900 placeholder:text-slate-300"
+                      className="financial-input w-full py-4 pl-9 pr-4 text-lg font-semibold text-slate-900 placeholder:text-slate-300"
                       {...register("rent")}
                     />
                   </div>
                   {errors.rent && (
-                    <p className="text-sm text-red-500 flex items-center gap-1 mt-1">
-                      <AlertCircle className="w-3 h-3" />
+                    <p className="mt-1 flex items-center gap-1 text-sm text-red-500">
+                      <AlertCircle className="h-3 w-3" />
                       {errors.rent.message}
                     </p>
                   )}
                 </div>
 
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                <div className="grid grid-cols-1 gap-6 sm:grid-cols-2">
                   <div className="space-y-2">
-                    <label className="text-sm font-semibold text-slate-700 flex items-center gap-2">
-                      <Car className="w-4 h-4 text-amber-500" />
+                    <label className="flex items-center gap-2 text-sm font-semibold text-slate-700">
+                      <Car className="h-4 w-4 text-amber-500" />
                       Car Payment
                     </label>
                     <div className="relative">
-                      <span className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 font-semibold">
+                      <span className="absolute left-4 top-1/2 -translate-y-1/2 font-semibold text-slate-400">
                         $
                       </span>
                       <input
                         type="number"
                         placeholder="0.00"
-                        className="financial-input w-full pl-9 pr-4 py-4 text-lg font-semibold text-slate-900 placeholder:text-slate-300"
+                        className="financial-input w-full py-4 pl-9 pr-4 text-lg font-semibold text-slate-900 placeholder:text-slate-300"
                         {...register("carPayment")}
                       />
                     </div>
                     {errors.carPayment && (
-                      <p className="text-sm text-red-500 flex items-center gap-1 mt-1">
-                        <AlertCircle className="w-3 h-3" />
+                      <p className="mt-1 flex items-center gap-1 text-sm text-red-500">
+                        <AlertCircle className="h-3 w-3" />
                         {errors.carPayment.message}
                       </p>
                     )}
                   </div>
 
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
                   <div className="space-y-2">
-                    <label className="text-sm font-semibold text-slate-700 flex items-center gap-2">
-                      <Groceries className="w-4 h-4 text-amber-500" />
+                    <label className="flex items-center gap-2 text-sm font-semibold text-slate-700">
+                      <GroceryBag className="h-4 w-4 text-amber-500" />
                       Groceries
                     </label>
                     <div className="relative">
-                      <span className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 font-semibold">
+                      <span className="absolute left-4 top-1/2 -translate-y-1/2 font-semibold text-slate-400">
                         $
                       </span>
                       <input
                         type="number"
                         placeholder="0.00"
-                        className="financial-input w-full pl-9 pr-4 py-4 text-lg font-semibold text-slate-900 placeholder:text-slate-300"
+                        className="financial-input w-full py-4 pl-9 pr-4 text-lg font-semibold text-slate-900 placeholder:text-slate-300"
                         {...register("Groceries")}
                       />
                     </div>
                     {errors.Groceries && (
-                      <p className="text-sm text-red-500 flex items-center gap-1 mt-1">
-                        <AlertCircle className="w-3 h-3" />
+                      <p className="mt-1 flex items-center gap-1 text-sm text-red-500">
+                        <AlertCircle className="h-3 w-3" />
                         {errors.Groceries.message}
-                      </p>
-                    )}
-                  </div>
-
-                  <div className="space-y-2">
-                    <label className="text-sm font-semibold text-slate-700 flex items-center gap-2">
-                      <CreditCard className="w-4 h-4 text-purple-500" />
-                      Other Expenses
-                    </label>
-                    <div className="relative">
-                      <span className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 font-semibold">
-                        $
-                      </span>
-                      <input
-                        type="number"
-                        placeholder="0.00"
-                        className="financial-input w-full pl-9 pr-4 py-4 text-lg font-semibold text-slate-900 placeholder:text-slate-300"
-                        {...register("otherExpenses")}
-                      />
-                    </div>
-                    {errors.otherExpenses && (
-                      <p className="text-sm text-red-500 flex items-center gap-1 mt-1">
-                        <AlertCircle className="w-3 h-3" />
-                        {errors.otherExpenses.message}
                       </p>
                     )}
                   </div>
                 </div>
 
+                <div className="space-y-2">
+                  <label className="flex items-center gap-2 text-sm font-semibold text-slate-700">
+                    <CreditCard className="h-4 w-4 text-purple-500" />
+                    Other Expenses
+                  </label>
+                  <div className="relative">
+                    <span className="absolute left-4 top-1/2 -translate-y-1/2 font-semibold text-slate-400">
+                      $
+                    </span>
+                    <input
+                      type="number"
+                      placeholder="0.00"
+                      className="financial-input w-full py-4 pl-9 pr-4 text-lg font-semibold text-slate-900 placeholder:text-slate-300"
+                      {...register("otherExpenses")}
+                    />
+                  </div>
+                  {errors.otherExpenses && (
+                    <p className="mt-1 flex items-center gap-1 text-sm text-red-500">
+                      <AlertCircle className="h-3 w-3" />
+                      {errors.otherExpenses.message}
+                    </p>
+                  )}
+                </div>
+
                 {cashFlowWarning && (
-                  <div className="rounded-2xl border border-amber-200 bg-amber-50 px-4 py-3 text-sm text-amber-800 flex items-start gap-2">
-                    <AlertCircle className="w-4 h-4 mt-0.5 shrink-0" />
+                  <div className="flex items-start gap-2 rounded-2xl border border-amber-200 bg-amber-50 px-4 py-3 text-sm text-amber-800">
+                    <AlertCircle className="mt-0.5 h-4 w-4 shrink-0" />
                     <span>{cashFlowWarning}</span>
                   </div>
                 )}
 
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-3">
+                <div className="mt-3 grid grid-cols-1 gap-4 sm:grid-cols-2">
                   <button
                     type="submit"
                     disabled={isPending}
-                    className="financial-button w-full py-5 px-6 rounded-2xl font-bold text-white text-lg disabled:opacity-70 disabled:cursor-not-allowed"
+                    className="financial-button w-full rounded-2xl px-6 py-5 text-lg font-bold text-white disabled:cursor-not-allowed disabled:opacity-70"
                   >
                     {isPending ? "Calculating your score..." : "Calculate Wealth IQ"}
                   </button>
@@ -438,14 +436,14 @@ export default function Home() {
                   <button
                     type="button"
                     onClick={resetDashboard}
-                    className="w-full py-5 px-6 rounded-2xl font-bold text-slate-700 text-lg border border-slate-200 bg-white hover:bg-slate-50 transition-colors flex items-center justify-center gap-2"
+                    className="flex w-full items-center justify-center gap-2 rounded-2xl border border-slate-200 bg-white px-6 py-5 text-lg font-bold text-slate-700 transition-colors hover:bg-slate-50"
                   >
-                    <RotateCcw className="w-4 h-4" />
+                    <RotateCcw className="h-4 w-4" />
                     Reset Inputs
                   </button>
                 </div>
 
-                <p className="text-xs text-center text-slate-400 leading-relaxed">
+                <p className="text-center text-xs leading-relaxed text-slate-400">
                   Your score reflects how much of your income remains after your
                   recurring expenses. Lower burden and stronger savings usually
                   produce a healthier score.
@@ -458,7 +456,7 @@ export default function Home() {
             initial={{ opacity: 0, x: 18 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ delay: 0.2 }}
-            className="lg:col-span-7 flex flex-col gap-8"
+            className="flex flex-col gap-8 lg:col-span-7"
           >
             <ScoreDisplay
               score={currentScore}
@@ -475,6 +473,7 @@ export default function Home() {
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.4 }}
+                className="space-y-8"
               >
                 <FinanceCharts
                   income={watchedIncome}
@@ -483,21 +482,18 @@ export default function Home() {
                   Groceries={watchedGroceries}
                   otherExpenses={watchedOtherExpenses}
                 />
-                {currentScore !== null && (
-  <AIFinancialAdvisor report={report} />
-)}
 
-                
+                <AIFinancialAdvisor report={report} />
               </motion.div>
             )}
 
             <div className="premium-card rounded-[2rem] p-7 sm:p-9">
-              <div className="flex items-center justify-between gap-4 mb-6">
+              <div className="mb-6 flex items-center justify-between gap-4">
                 <div>
                   <p className="text-sm font-semibold uppercase tracking-[0.18em] text-slate-400">
                     History
                   </p>
-                  <h3 className="text-2xl font-bold text-slate-900 font-display mt-1">
+                  <h3 className="font-display mt-1 text-2xl font-bold text-slate-900">
                     Recent Calculations
                   </h3>
                 </div>
@@ -509,7 +505,8 @@ export default function Home() {
         </div>
 
         <footer className="mt-10 text-center text-sm text-slate-400">
-          Wealth IQ Calculator • Created by Jardin Gwin • Financial Analytics Application
+          Wealth IQ Calculator • Created by Jardin Gwin • Financial Analytics
+          Application
         </footer>
       </div>
     </div>
