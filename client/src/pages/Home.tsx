@@ -9,7 +9,7 @@ import {
   Wallet,
   Home as HomeIcon,
   Car,
-  GroceryBag,
+  ShoppingCart,
   CreditCard,
   Sparkles,
   AlertCircle,
@@ -371,9 +371,9 @@ export default function Home() {
 
                   <div className="space-y-2">
                     <label className="flex items-center gap-2 text-sm font-semibold text-slate-700">
-                      <GroceryBag className="h-4 w-4 text-amber-500" />
-                      Groceries
-                    </label>
+                      <ShoppingCart className="h-4 w-4 text-amber-500" />
+                       Groceries
+                        </label>
                     <div className="relative">
                       <span className="absolute left-4 top-1/2 -translate-y-1/2 font-semibold text-slate-400">
                         $
