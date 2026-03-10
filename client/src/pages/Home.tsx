@@ -74,7 +74,7 @@ export default function Home() {
   const watchedIncome = Number(watch("income") || 0);
   const watchedRent = Number(watch("rent") || 0);
   const watchedCarPayment = Number(watch("carPayment") || 0);
-  const watchedCarPayment = Number(watch("Groceries") || 0);
+  const watchedGroceries = Number(watch("Groceries") || 0);
   const watchedOtherExpenses = Number(watch("otherExpenses") || 0);
 
   const resetDashboard = () => {
