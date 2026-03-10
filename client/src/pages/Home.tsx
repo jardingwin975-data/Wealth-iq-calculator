@@ -219,7 +219,7 @@ export default function Home() {
                 spending ratios, cash flow, and history in one place.
               </p>
 
-              <div className="mt-8 flex flex-wrap gap-3">
+              <div className="mt-3 flex flex-wrap gap-3">
                 {[
                   "Live score analysis",
                   "Expense ratio tracking",
@@ -508,7 +508,7 @@ export default function Home() {
         </div>
 
         <footer className="mt-10 text-center text-sm text-slate-400">
-          Wealth IQ Calculator • Created by Jardin Gwin • Financial Analytics
+          Wealth IQ Financial Calculator • Created by Jardin Gwin • Financial Analytics
           Application
         </footer>
       </div>
