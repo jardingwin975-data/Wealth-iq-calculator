@@ -1,6 +1,6 @@
 import AIFinancialAdvisor from "@/components/AIFinancialAdvisor";
 import FinanceCharts from "@/components/FinanceCharts";
-import { useMemo, useState } from "react";
+import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
@@ -23,24 +23,29 @@ import { HistoryList } from "@/components/HistoryList";
 import { useCreateCalculation } from "@/hooks/use-calculations";
 
 const formSchema = z.object({
-  income: z.coerce
-    .number({ invalid_type_error: "Required" })
-    .min(0, "Cannot be negative"),
-  rent: z.coerce
-    .number({ invalid_type_error: "Required" })
-    .min(0, "Cannot be negative"),
-  carPayment: z.coerce
-    .number({ invalid_type_error: "Required" })
-    .min(0, "Cannot be negative"),
-  Groceries: z.coerce
-    .number({ invalid_type_error: "Required" })
-    .min(0, "Cannot be negative"),
-  otherExpenses: z.coerce
-    .number({ invalid_type_error: "Required" })
-    .min(0, "Cannot be negative"),
+  income: z.coerce.number().min(0, "Cannot be negative"),
+  rent: z.coerce.number().min(0, "Cannot be negative"),
+  carPayment: z.coerce.number().min(0, "Cannot be negative"),
+  Groceries: z.coerce.number().min(0, "Cannot be negative"),
+  otherExpenses: z.coerce.number().min(0, "Cannot be negative"),
 });
 
 type FormData = z.infer<typeof formSchema>;
+
+type ReportData = {
+  income: number;
+  rent: number;
+  carPayment: number;
+  Groceries: number;
+  otherExpenses: number;
+  totalExpenses: number | null;
+  disposableIncome: number | null;
+  expenseRatio: number | null;
+  savingsRate: number | null;
+  housingRatio: number | null;
+  transportRatio: number | null;
+  score: number | null;
+};
 
 export default function Home() {
   const [currentScore, setCurrentScore] = useState<number | null>(null);
@@ -52,7 +57,7 @@ export default function Home() {
   const [transportRatio, setTransportRatio] = useState<number | null>(null);
   const [cashFlowWarning, setCashFlowWarning] = useState<string | null>(null);
 
-  const { mutate: saveCalculation, isPending } = useCreateCalculation();
+  const createCalculation = useCreateCalculation();
 
   const {
     register,
@@ -141,7 +146,7 @@ export default function Home() {
     setHousingRatio(calculatedHousingRatio);
     setTransportRatio(calculatedTransportRatio);
 
-    saveCalculation({
+    createCalculation.mutate({
       income,
       rent,
       carPayment,
@@ -151,31 +156,7 @@ export default function Home() {
     });
   };
 
-  const statCards = useMemo(
-    () => [
-      {
-        icon: ShieldCheck,
-        title: "Financial Health",
-        value: "Score-based",
-        desc: "Quickly measure overall budget strength.",
-      },
-      {
-        icon: BarChart3,
-        title: "Expense Analytics",
-        value: "Real-time",
-        desc: "Track ratios, burden levels, and cash flow.",
-      },
-      {
-        icon: BadgeDollarSign,
-        title: "Budget Clarity",
-        value: "Actionable",
-        desc: "See how your income supports your lifestyle.",
-      },
-    ],
-    [],
-  );
-
-  const report = {
+  const report: ReportData = {
     income: watchedIncome,
     rent: watchedRent,
     carPayment: watchedCarPayment,
@@ -189,6 +170,27 @@ export default function Home() {
     transportRatio,
     score: currentScore,
   };
+
+  const statCards = [
+    {
+      icon: ShieldCheck,
+      title: "Financial Health",
+      value: "Score-based",
+      desc: "Quickly measure overall budget strength.",
+    },
+    {
+      icon: BarChart3,
+      title: "Expense Analytics",
+      value: "Real-time",
+      desc: "Track ratios, burden levels, and cash flow.",
+    },
+    {
+      icon: BadgeDollarSign,
+      title: "Budget Clarity",
+      value: "Actionable",
+      desc: "See how your income supports your lifestyle.",
+    },
+  ];
 
   return (
     <div className="min-h-screen app-shell px-4 py-8 sm:px-6 lg:px-8">
@@ -237,7 +239,6 @@ export default function Home() {
             <div className="grid gap-4 lg:col-span-5">
               {statCards.map((card) => {
                 const Icon = card.icon;
-
                 return (
                   <div
                     key={card.title}
@@ -427,10 +428,12 @@ export default function Home() {
                 <div className="mt-3 grid grid-cols-1 gap-4 sm:grid-cols-2">
                   <button
                     type="submit"
-                    disabled={isPending}
+                    disabled={createCalculation.isPending}
                     className="financial-button w-full rounded-2xl px-6 py-5 text-lg font-bold text-white disabled:cursor-not-allowed disabled:opacity-70"
                   >
-                    {isPending ? "Calculating your score..." : "Calculate Wealth IQ"}
+                    {createCalculation.isPending
+                      ? "Calculating your score..."
+                      : "Calculate Wealth IQ"}
                   </button>
 
                   <button
