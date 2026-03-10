@@ -97,15 +97,17 @@ export default function FinanceCharts({
     const colors = ["#22c55e", "#ef4444", "#3b82f6"];
     return <Cell key={`cell-${index}`} fill={colors[index]} />;
   })}
+<Bar
+  dataKey="value"
+  radius={[8, 8, 0, 0]}
+  animationDuration={900}
+  animationEasing="ease-out"
+>
+  {incomeVsExpenses.map((entry, index) => {
+    const colors = ["#22c55e", "#ef4444", "#3b82f6"];
+    return <Cell key={`cell-${index}`} fill={colors[index]} />;
+  })}
 </Bar>
-
-    
-      {incomeVsExpenses.map((entry, index) => {
-        const colors = ["#22c55e", "#ef4444", "#3b82f6"]; 
-        return <Cell key={index} fill={colors[index]} />;
-      })}
-    </Bar>
-
   </BarChart>
 </ResponsiveContainer>
         </div>
