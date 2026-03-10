@@ -62,6 +62,8 @@ export default function Home() {
       income: 0,
       rent: 0,
       carPayment: 0,
+      carPayment: 0,
+      Groceries; 0,
       otherExpenses: 0,
     },
   });
@@ -76,6 +78,7 @@ export default function Home() {
       income: 0,
       rent: 0,
       carPayment: 0,
+      Groceries: 0,
       otherExpenses: 0,
     });
 
@@ -90,9 +93,9 @@ export default function Home() {
   };
 
   const onSubmit = (data: FormData) => {
-    const { income, rent, carPayment, otherExpenses } = data;
+    const { income, rent, carPayment, Groceries, otherExpenses } = data;
 
-    const expenses = rent + carPayment + otherExpenses;
+    const expenses = rent + carPayment + Groceries + otherExpenses;
     const leftover = income - expenses;
 
     let score = 0;
@@ -124,6 +127,7 @@ export default function Home() {
       );
       calculatedHousingRatio = Math.round((rent / income) * 100);
       calculatedTransportRatio = Math.round((carPayment / income) * 100);
+      calculatedTransportRatio = Math.round(( Groceries / income) * 100);
     }
 
     setCurrentScore(score);
@@ -138,6 +142,7 @@ export default function Home() {
       income,
       rent,
       carPayment,
+      Groceries,
       otherExpenses,
       score,
     });
