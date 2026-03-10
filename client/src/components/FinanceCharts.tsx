@@ -91,7 +91,12 @@ export default function FinanceCharts({
               <YAxis />
               <Tooltip formatter={(value: number) => [`$${value}`, "Amount"]} />
               <Legend />
-              <Bar dataKey="value" radius={[8, 8, 0, 0]} />
+              <Bar dataKey="value" radius={[8, 8, 0, 0]}>
+  {incomeVsExpenses.map((entry, index) => {
+    const colors = ["#10b981", "#ef4444", "#3b82f6"]; // income, expenses, savings
+    return <Cell key={`cell-${index}`} fill={colors[index]} />;
+  })}
+</Bar>
             </BarChart>
           </ResponsiveContainer>
         </div>
