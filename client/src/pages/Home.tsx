@@ -63,7 +63,6 @@ export default function Home() {
       income: 0,
       rent: 0,
       carPayment: 0,
-      carPayment: 0,
       Groceries; 0,
       otherExpenses: 0,
     },
@@ -177,6 +176,7 @@ export default function Home() {
   income: watchedIncome,
   rent: watchedRent,
   carPayment: watchedCarPayment,
+  Groceries: watchedGroceries,
   otherExpenses: watchedOtherExpenses,
   totalExpenses,
   disposableIncome,
@@ -451,6 +451,7 @@ export default function Home() {
                   income={watchedIncome}
                   rent={watchedRent}
                   carPayment={watchedCarPayment}
+                  Groceries={watchedGroceries}
                   otherExpenses={watchedOtherExpenses}
                 />
                 {currentScore !== null && (
