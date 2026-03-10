@@ -275,7 +275,7 @@ export default function Home() {
             transition={{ delay: 0.15 }}
             className="lg:col-span-5"
           >
-            <div className="premium-card relative overflow-hidden rounded-[2rem] p-7 sm:p-9">
+            <div className="premium-card rounded-[2rem] p-8 mb-8">
               <div className="absolute left-0 top-0 h-1.5 w-full bg-gradient-to-r from-emerald-500 via-cyan-400 to-blue-500" />
 
               <div className="mb-8 flex items-center justify-between gap-4">
