@@ -1,6 +1,7 @@
 import {
   PieChart,
   Pie,
+  Sector,
   Cell,
   ResponsiveContainer,
   Tooltip,
@@ -18,6 +19,38 @@ type FinanceChartsProps = {
   carPayment: number;
   Groceries: number;
   otherExpenses: number;
+};
+
+type ActiveShapeProps = {
+  cx?: number;
+  cy?: number;
+  innerRadius?: number;
+  outerRadius?: number;
+  startAngle?: number;
+  endAngle?: number;
+};
+
+const renderActiveShape = (props: ActiveShapeProps) => {
+  const {
+    cx = 0,
+    cy = 0,
+    innerRadius = 0,
+    outerRadius = 0,
+    startAngle = 0,
+    endAngle = 0,
+  } = props;
+
+  return (
+    <Sector
+      cx={cx}
+      cy={cy}
+      innerRadius={innerRadius}
+      outerRadius={outerRadius + 8}
+      startAngle={startAngle}
+      endAngle={endAngle}
+      fill="#d1d5db"
+    />
+  );
 };
 
 export default function FinanceCharts({
@@ -64,6 +97,9 @@ export default function FinanceCharts({
                 cy="50%"
                 outerRadius={100}
                 label
+                activeShape={renderActiveShape}
+                isAnimationActive={true}
+                animationDuration={500}
               >
                 {expenseBreakdown.map((entry, index) => (
                   <Cell
@@ -73,7 +109,10 @@ export default function FinanceCharts({
                 ))}
               </Pie>
               <Tooltip
-                formatter={(value: number) => [`$${value.toLocaleString()}`, "Amount"]}
+                formatter={(value: number) => [
+                  `$${value.toLocaleString()}`,
+                  "Amount",
+                ]}
               />
               <Legend />
             </PieChart>
@@ -93,7 +132,10 @@ export default function FinanceCharts({
               <XAxis dataKey="name" />
               <YAxis />
               <Tooltip
-                formatter={(value: number) => [`$${value.toLocaleString()}`, "Amount"]}
+                formatter={(value: number) => [
+                  `$${value.toLocaleString()}`,
+                  "Amount",
+                ]}
               />
               <Legend />
               <Bar
