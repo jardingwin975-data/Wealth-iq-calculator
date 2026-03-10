@@ -71,7 +71,7 @@ export default function FinanceCharts({
                   />
                 ))}
               </Pie>
-              <Tooltip formatter={(value: number) => [`$${value}`, "Amount"]} />
+              <Tooltip formatter={(value: number) => [`$${value.toLocaleString()}`, "Amount"]} />
               <Legend />
             </PieChart>
           </ResponsiveContainer>
