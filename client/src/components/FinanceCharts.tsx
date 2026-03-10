@@ -43,7 +43,8 @@ export default function FinanceCharts({
     { name: "Savings", value: Math.max(savings, 0) },
   ];
 
-  const COLORS = ["#3b82f6", "#f59e0b", "#10b981", "#8b5cf6"];
+  const pieColors = ["#3b82f6", "#f59e0b", "#10b981", "#8b5cf6"];
+  const barColors = ["#22c55e", "#ef4444", "#3b82f6"];
 
   return (
     <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
@@ -66,12 +67,14 @@ export default function FinanceCharts({
               >
                 {expenseBreakdown.map((entry, index) => (
                   <Cell
-                    key={`cell-${entry.name}-${index}`}
-                    fill={COLORS[index % COLORS.length]}
+                    key={`pie-cell-${entry.name}-${index}`}
+                    fill={pieColors[index % pieColors.length]}
                   />
                 ))}
               </Pie>
-              <Tooltip formatter={(value: number) => [`$${value.toLocaleString()}`, "Amount"]} />
+              <Tooltip
+                formatter={(value: number) => [`$${value.toLocaleString()}`, "Amount"]}
+              />
               <Legend />
             </PieChart>
           </ResponsiveContainer>
@@ -85,31 +88,29 @@ export default function FinanceCharts({
 
         <div className="h-[320px] w-full">
           <ResponsiveContainer width="100%" height="100%">
-  <BarChart data={incomeVsExpenses}>
-    <CartesianGrid strokeDasharray="3 3" />
-    <XAxis dataKey="name" />
-    <YAxis />
-    <Tooltip formatter={(value: number) => [`$${value.toLocaleString()}`, "Amount"]} />
-    <Legend />
-
-    <Bar dataKey="value" radius={[8, 8, 0, 0]}>
-  {incomeVsExpenses.map((entry, index) => {
-    const colors = ["#22c55e", "#ef4444", "#3b82f6"];
-    return <Cell key={`cell-${index}`} fill={colors[index]} />;
-  })}
-<Bar
-  dataKey="value"
-  radius={[8, 8, 0, 0]}
-  animationDuration={900}
-  animationEasing="ease-out"
->
-  {incomeVsExpenses.map((entry, index) => {
-    const colors = ["#22c55e", "#ef4444", "#3b82f6"];
-    return <Cell key={`cell-${index}`} fill={colors[index]} />;
-  })}
-</Bar>
-  </BarChart>
-</ResponsiveContainer>
+            <BarChart data={incomeVsExpenses}>
+              <CartesianGrid strokeDasharray="3 3" />
+              <XAxis dataKey="name" />
+              <YAxis />
+              <Tooltip
+                formatter={(value: number) => [`$${value.toLocaleString()}`, "Amount"]}
+              />
+              <Legend />
+              <Bar
+                dataKey="value"
+                radius={[8, 8, 0, 0]}
+                animationDuration={900}
+                animationEasing="ease-out"
+              >
+                {incomeVsExpenses.map((entry, index) => (
+                  <Cell
+                    key={`bar-cell-${entry.name}-${index}`}
+                    fill={barColors[index % barColors.length]}
+                  />
+                ))}
+              </Bar>
+            </BarChart>
+          </ResponsiveContainer>
         </div>
       </div>
     </div>
