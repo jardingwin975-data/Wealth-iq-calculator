@@ -2,7 +2,6 @@ import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
-import { motion } from "framer-motion";
 import {
   Wallet,
   Home as HomeIcon,
@@ -198,11 +197,7 @@ export default function Home() {
 
       <div className="min-h-screen app-shell pt-36 px-4 pb-10">
         <div className="mx-auto max-w-7xl">
-          <motion.section
-            initial={{ opacity: 0, y: 18 }}
-            animate={{ opacity: 1, y: 0 }}
-            className="premium-card relative mb-10 overflow-hidden rounded-[2.25rem] p-7 sm:p-10"
-          >
+          <section className="premium-card relative mb-10 overflow-hidden rounded-[2.25rem] p-7 sm:p-10">
             <div className="absolute inset-0 pointer-events-none bg-[radial-gradient(circle_at_top_left,rgba(16,185,129,0.08),transparent_32%),radial-gradient(circle_at_top_right,rgba(59,130,246,0.08),transparent_28%)]" />
 
             <div className="relative grid grid-cols-1 items-start gap-8 lg:grid-cols-12">
@@ -269,15 +264,10 @@ export default function Home() {
                 })}
               </div>
             </div>
-          </motion.section>
+          </section>
 
           <div className="grid grid-cols-1 items-start gap-10 lg:grid-cols-12">
-            <motion.section
-              initial={{ opacity: 0, x: -18 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ delay: 0.15 }}
-              className="lg:col-span-5"
-            >
+            <section className="lg:col-span-5">
               <div className="premium-card relative rounded-[2rem] p-8 mb-8">
                 <div className="absolute left-0 top-0 h-1.5 w-full bg-gradient-to-r from-emerald-500 via-cyan-400 to-blue-500" />
 
@@ -454,14 +444,9 @@ export default function Home() {
                   </p>
                 </form>
               </div>
-            </motion.section>
+            </section>
 
-            <motion.section
-              initial={{ opacity: 0, x: 18 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ delay: 0.2 }}
-              className="flex flex-col gap-8 lg:col-span-7"
-            >
+            <section className="flex flex-col gap-8 lg:col-span-7">
               <div className="premium-card rounded-[2rem] p-7 sm:p-9">
                 <div className="mb-6">
                   <p className="text-sm font-semibold uppercase tracking-[0.18em] text-slate-400">
@@ -505,7 +490,7 @@ export default function Home() {
                   and AI guidance one at a time.
                 </p>
               </div>
-            </motion.section>
+            </section>
           </div>
 
           <footer className="mt-10 text-center text-sm text-slate-400">
@@ -516,3 +501,5 @@ export default function Home() {
     </>
   );
 }
+
+  
