@@ -1,6 +1,4 @@
-import AIFinancialAdvisor from "@/components/AIFinancialAdvisor";
-import FinanceCharts from "@/components/FinanceCharts";
-import { useState } from "react";
+ import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
@@ -18,9 +16,6 @@ import {
   BadgeDollarSign,
   RotateCcw,
 } from "lucide-react";
-import { ScoreDisplay } from "@/components/ScoreDisplay";
-import { HistoryList } from "@/components/HistoryList";
-import { useCreateCalculation } from "@/hooks/use-calculations";
 
 const formSchema = z.object({
   income: z.coerce.number().min(0, "Cannot be negative"),
@@ -32,21 +27,6 @@ const formSchema = z.object({
 
 type FormData = z.infer<typeof formSchema>;
 
-type ReportData = {
-  income: number;
-  rent: number;
-  carPayment: number;
-  Groceries: number;
-  otherExpenses: number;
-  totalExpenses: number | null;
-  disposableIncome: number | null;
-  expenseRatio: number | null;
-  savingsRate: number | null;
-  housingRatio: number | null;
-  transportRatio: number | null;
-  score: number | null;
-};
-
 export default function Home() {
   const [currentScore, setCurrentScore] = useState<number | null>(null);
   const [expenseRatio, setExpenseRatio] = useState<number | null>(null);
@@ -57,14 +37,11 @@ export default function Home() {
   const [transportRatio, setTransportRatio] = useState<number | null>(null);
   const [cashFlowWarning, setCashFlowWarning] = useState<string | null>(null);
 
-  const createCalculation = useCreateCalculation();
-
   const {
     register,
     handleSubmit,
-    watch,
     reset,
-    formState: { errors },
+    formState: { errors, isSubmitting },
   } = useForm<FormData>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -75,12 +52,6 @@ export default function Home() {
       otherExpenses: 0,
     },
   });
-
-  const watchedIncome = Number(watch("income") || 0);
-  const watchedRent = Number(watch("rent") || 0);
-  const watchedCarPayment = Number(watch("carPayment") || 0);
-  const watchedGroceries = Number(watch("Groceries") || 0);
-  const watchedOtherExpenses = Number(watch("otherExpenses") || 0);
 
   const resetDashboard = () => {
     reset({
@@ -115,11 +86,11 @@ export default function Home() {
 
     if (income <= 0 && expenses > 0) {
       setCashFlowWarning(
-        "Please enter monthly income before calculating financial health.",
+        "Please enter monthly income before calculating financial health."
       );
     } else if (expenses > income) {
       setCashFlowWarning(
-        "Warning: Your expenses exceed your income. This indicates negative cash flow.",
+        "Warning: Your expenses exceed your income. This indicates negative cash flow."
       );
     } else {
       setCashFlowWarning(null);
@@ -132,7 +103,7 @@ export default function Home() {
       calculatedExpenseRatio = Math.round((expenses / income) * 100);
       calculatedSavingsRate = Math.max(
         0,
-        Math.min(100, Math.round((leftover / income) * 100)),
+        Math.min(100, Math.round((leftover / income) * 100))
       );
       calculatedHousingRatio = Math.round((rent / income) * 100);
       calculatedTransportRatio = Math.round((carPayment / income) * 100);
@@ -145,30 +116,6 @@ export default function Home() {
     setDisposableIncome(leftover);
     setHousingRatio(calculatedHousingRatio);
     setTransportRatio(calculatedTransportRatio);
-
-    createCalculation.mutate({
-      income,
-      rent,
-      carPayment,
-      Groceries,
-      otherExpenses,
-      score,
-    });
-  };
-
-  const report: ReportData = {
-    income: watchedIncome,
-    rent: watchedRent,
-    carPayment: watchedCarPayment,
-    Groceries: watchedGroceries,
-    otherExpenses: watchedOtherExpenses,
-    totalExpenses,
-    disposableIncome,
-    expenseRatio,
-    savingsRate,
-    housingRatio,
-    transportRatio,
-    score: currentScore,
   };
 
   const statCards = [
@@ -192,185 +139,168 @@ export default function Home() {
     },
   ];
 
+  const results = [
+    {
+      label: "Wealth IQ Score",
+      value: currentScore !== null ? `${currentScore}/100` : "—",
+    },
+    {
+      label: "Expense Ratio",
+      value: expenseRatio !== null ? `${expenseRatio}%` : "—",
+    },
+    {
+      label: "Savings Rate",
+      value: savingsRate !== null ? `${savingsRate}%` : "—",
+    },
+    {
+      label: "Total Expenses",
+      value:
+        totalExpenses !== null ? `$${totalExpenses.toLocaleString()}` : "—",
+    },
+    {
+      label: "Disposable Income",
+      value:
+        disposableIncome !== null
+          ? `$${disposableIncome.toLocaleString()}`
+          : "—",
+    },
+    {
+      label: "Housing Burden",
+      value: housingRatio !== null ? `${housingRatio}%` : "—",
+    },
+    {
+      label: "Transport Burden",
+      value: transportRatio !== null ? `${transportRatio}%` : "—",
+    },
+  ];
+
   return (
     <>
       <a
-  href="https://gwinanalytics.com"
-  style={{
-    position: "fixed",
-    top: "calc(env(safe-area-inset-top, 0px) + 90px)",
-    left: "16px",
-    padding: "10px 14px",
-    background: "#11161d",
-    color: "white",
-    borderRadius: "10px",
-    textDecoration: "none",
-    fontWeight: 600,
-    border: "1px solid #232b36",
-    zIndex: 999999,
-    boxShadow: "0 6px 20px rgba(0,0,0,0.25)"
-  }}
->
-  ← Gwin Analytics
-</a>
+        href="https://gwinanalytics.com"
+        style={{
+          position: "fixed",
+          top: "calc(env(safe-area-inset-top, 0px) + 90px)",
+          left: "16px",
+          padding: "10px 14px",
+          background: "#11161d",
+          color: "white",
+          borderRadius: "10px",
+          textDecoration: "none",
+          fontWeight: 600,
+          border: "1px solid #232b36",
+          zIndex: 999999,
+          boxShadow: "0 6px 20px rgba(0,0,0,0.25)",
+        }}
+      >
+        ← Gwin Analytics
+      </a>
 
+      <div className="min-h-screen app-shell pt-36 px-4 pb-10">
+        <div className="mx-auto max-w-7xl">
+          <motion.section
+            initial={{ opacity: 0, y: 18 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="premium-card relative mb-10 overflow-hidden rounded-[2.25rem] p-7 sm:p-10"
+          >
+            <div className="absolute inset-0 pointer-events-none bg-[radial-gradient(circle_at_top_left,rgba(16,185,129,0.08),transparent_32%),radial-gradient(circle_at_top_right,rgba(59,130,246,0.08),transparent_28%)]" />
 
-    <div className="min-h-screen app-shell">
-      <div className="mx-auto max-w-7xl">
-        <motion.section
-          initial={{ opacity: 0, y: 18 }}
-          animate={{ opacity: 1, y: 0 }}
-          className="premium-card relative mb-10 overflow-hidden rounded-[2.25rem] p-7 sm:p-10"
-        >
-          <div className="absolute inset-0 pointer-events-none bg-[radial-gradient(circle_at_top_left,rgba(16,185,129,0.08),transparent_32%),radial-gradient(circle_at_top_right,rgba(59,130,246,0.08),transparent_28%)]" />
+            <div className="relative grid grid-cols-1 items-start gap-8 lg:grid-cols-12">
+              <div className="lg:col-span-7">
+                <div className="mb-6 inline-flex items-center gap-2 rounded-full border border-emerald-200 bg-emerald-50 px-4 py-2 text-sm font-semibold text-emerald-700">
+                  <Sparkles className="h-4 w-4" />
+                  Financial health scoring, simplified
+                </div>
 
-          <div className="relative grid grid-cols-1 items-start gap-8 lg:grid-cols-12">
-            <div className="lg:col-span-7">
-              <div className="mb-6 inline-flex items-center gap-2 rounded-full border border-emerald-200 bg-emerald-50 px-4 py-2 text-sm font-semibold text-emerald-700">
-                <Sparkles className="h-4 w-4" />
-                Financial health scoring, simplified
+                <h1 className="font-display text-4xl font-extrabold leading-tight text-slate-950 md:text-6xl">
+                  Wealth IQ <span className="text-primary">Financial Calculator</span>
+                </h1>
+
+                <p className="mt-6 max-w-3xl text-lg leading-8 text-slate-600 md:text-[1.45rem]">
+                  A clean financial score tool that turns your monthly income and
+                  expenses into a simple, visual health snapshot. See your score,
+                  spending ratios, and cash flow in one place.
+                </p>
+
+                <div className="mt-3 flex flex-wrap gap-3">
+                  {[
+                    "Live score analysis",
+                    "Expense ratio tracking",
+                    "Savings health insights",
+                    "Instant summary",
+                  ].map((item) => (
+                    <span
+                      key={item}
+                      className="rounded-full border border-slate-200 bg-white/80 px-4 py-2 text-sm font-medium text-slate-600 shadow-sm"
+                    >
+                      {item}
+                    </span>
+                  ))}
+                </div>
               </div>
 
-              <h1 className="font-display text-4xl font-extrabold leading-tight text-slate-950 md:text-6xl">
-                Wealth IQ <span className="text-primary"> Financial Calculator</span>
-              </h1>
+              <div className="grid gap-4 lg:col-span-5">
+                {statCards.map((card) => {
+                  const Icon = card.icon;
+                  return (
+                    <div
+                      key={card.title}
+                      className="rounded-[1.75rem] border border-slate-100 bg-white/80 p-6 shadow-sm"
+                    >
+                      <div className="flex items-start gap-4">
+                        <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-slate-950 text-white">
+                          <Icon className="h-5 w-5" />
+                        </div>
 
-              <p className="mt-6 max-w-3xl text-lg leading-8 text-slate-600 md:text-[1.45rem]">
-                A clean financial score tool that turns your monthly income and
-                expenses into a simple, visual health snapshot. See your score,
-                spending ratios, cash flow, and history in one place.
-              </p>
-
-              <div className="mt-3 flex flex-wrap gap-3">
-                {[
-                  "Live score analysis",
-                  "Expense ratio tracking",
-                  "Savings health insights",
-                  "Calculation history",
-                ].map((item) => (
-                  <span
-                    key={item}
-                    className="rounded-full border border-slate-200 bg-white/80 px-4 py-2 text-sm font-medium text-slate-600 shadow-sm"
-                  >
-                    {item}
-                  </span>
-                ))}
-              </div>
-            </div>
-
-            <div className="grid gap-4 lg:col-span-5">
-              {statCards.map((card) => {
-                const Icon = card.icon;
-                return (
-                  <div
-                    key={card.title}
-                    className="rounded-[1.75rem] border border-slate-100 bg-white/80 p-6 shadow-sm"
-                  >
-                    <div className="flex items-start gap-4">
-                      <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-slate-950 text-white">
-                        <Icon className="h-5 w-5" />
-                      </div>
-
-                      <div>
-                        <p className="text-sm font-semibold uppercase tracking-[0.16em] text-slate-400">
-                          {card.title}
-                        </p>
-                        <h3 className="font-display mt-1 text-2xl font-bold text-slate-900">
-                          {card.value}
-                        </h3>
-                        <p className="mt-1 text-sm leading-6 text-slate-500">
-                          {card.desc}
-                        </p>
+                        <div>
+                          <p className="text-sm font-semibold uppercase tracking-[0.16em] text-slate-400">
+                            {card.title}
+                          </p>
+                          <h3 className="font-display mt-1 text-2xl font-bold text-slate-900">
+                            {card.value}
+                          </h3>
+                          <p className="mt-1 text-sm leading-6 text-slate-500">
+                            {card.desc}
+                          </p>
+                        </div>
                       </div>
                     </div>
-                  </div>
-                );
-              })}
-            </div>
-          </div>
-        </motion.section>
-
-        <div className="grid grid-cols-1 items-start gap-10 lg:grid-cols-12">
-          <motion.section
-            initial={{ opacity: 0, x: -18 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ delay: 0.15 }}
-            className="lg:col-span-5"
-          >
-            <div className="premium-card rounded-[2rem] p-8 mb-8">
-              <div className="absolute left-0 top-0 h-1.5 w-full bg-gradient-to-r from-emerald-500 via-cyan-400 to-blue-500" />
-
-              <div className="mb-8 flex items-center justify-between gap-4">
-                <div>
-                  <p className="text-sm font-semibold uppercase tracking-[0.18em] text-slate-400">
-                    Input panel
-                  </p>
-                  <h2 className="font-display mt-1 text-2xl font-bold text-slate-900 md:text-3xl">
-                    Your Monthly Metrics
-                  </h2>
-                </div>
-
-                <div className="hidden h-12 w-12 items-center justify-center rounded-2xl bg-emerald-50 text-emerald-600 sm:flex">
-                  <Wallet className="h-6 w-6" />
-                </div>
+                  );
+                })}
               </div>
+            </div>
+          </motion.section>
 
-              <form onSubmit={handleSubmit(onSubmit)} className="space-y-7">
-                <div className="space-y-2">
-                  <label className="flex items-center gap-2 text-sm font-semibold text-slate-700">
-                    <Wallet className="h-4 w-4 text-emerald-500" />
-                    Monthly Income
-                  </label>
-                  <div className="relative">
-                    <span className="absolute left-4 top-1/2 -translate-y-1/2 font-semibold text-slate-400">
-                      $
-                    </span>
-                    <input
-                      type="number"
-                      placeholder="0.00"
-                      className="financial-input w-full py-4 pl-9 pr-4 text-lg font-semibold text-slate-900 placeholder:text-slate-300"
-                      {...register("income")}
-                    />
-                  </div>
-                  {errors.income && (
-                    <p className="mt-1 flex items-center gap-1 text-sm text-red-500">
-                      <AlertCircle className="h-3 w-3" />
-                      {errors.income.message}
+          <div className="grid grid-cols-1 items-start gap-10 lg:grid-cols-12">
+            <motion.section
+              initial={{ opacity: 0, x: -18 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ delay: 0.15 }}
+              className="lg:col-span-5"
+            >
+              <div className="premium-card relative rounded-[2rem] p-8 mb-8">
+                <div className="absolute left-0 top-0 h-1.5 w-full bg-gradient-to-r from-emerald-500 via-cyan-400 to-blue-500" />
+
+                <div className="mb-8 flex items-center justify-between gap-4">
+                  <div>
+                    <p className="text-sm font-semibold uppercase tracking-[0.18em] text-slate-400">
+                      Input panel
                     </p>
-                  )}
+                    <h2 className="font-display mt-1 text-2xl font-bold text-slate-900 md:text-3xl">
+                      Your Monthly Metrics
+                    </h2>
+                  </div>
+
+                  <div className="hidden h-12 w-12 items-center justify-center rounded-2xl bg-emerald-50 text-emerald-600 sm:flex">
+                    <Wallet className="h-6 w-6" />
+                  </div>
                 </div>
 
-                <div className="section-divider" />
-
-                <div className="space-y-2">
-                  <label className="flex items-center gap-2 text-sm font-semibold text-slate-700">
-                    <HomeIcon className="h-4 w-4 text-blue-500" />
-                    Rent / Mortgage
-                  </label>
-                  <div className="relative">
-                    <span className="absolute left-4 top-1/2 -translate-y-1/2 font-semibold text-slate-400">
-                      $
-                    </span>
-                    <input
-                      type="number"
-                      placeholder="0.00"
-                      className="financial-input w-full py-4 pl-9 pr-4 text-lg font-semibold text-slate-900 placeholder:text-slate-300"
-                      {...register("rent")}
-                    />
-                  </div>
-                  {errors.rent && (
-                    <p className="mt-1 flex items-center gap-1 text-sm text-red-500">
-                      <AlertCircle className="h-3 w-3" />
-                      {errors.rent.message}
-                    </p>
-                  )}
-                </div>
-
-                <div className="grid grid-cols-1 gap-6 sm:grid-cols-2">
+                <form onSubmit={handleSubmit(onSubmit)} className="space-y-7">
                   <div className="space-y-2">
                     <label className="flex items-center gap-2 text-sm font-semibold text-slate-700">
-                      <Car className="h-4 w-4 text-amber-500" />
-                      Car Payment
+                      <Wallet className="h-4 w-4 text-emerald-500" />
+                      Monthly Income
                     </label>
                     <div className="relative">
                       <span className="absolute left-4 top-1/2 -translate-y-1/2 font-semibold text-slate-400">
@@ -380,22 +310,24 @@ export default function Home() {
                         type="number"
                         placeholder="0.00"
                         className="financial-input w-full py-4 pl-9 pr-4 text-lg font-semibold text-slate-900 placeholder:text-slate-300"
-                        {...register("carPayment")}
+                        {...register("income")}
                       />
                     </div>
-                    {errors.carPayment && (
+                    {errors.income && (
                       <p className="mt-1 flex items-center gap-1 text-sm text-red-500">
                         <AlertCircle className="h-3 w-3" />
-                        {errors.carPayment.message}
+                        {errors.income.message}
                       </p>
                     )}
                   </div>
 
+                  <div className="section-divider" />
+
                   <div className="space-y-2">
                     <label className="flex items-center gap-2 text-sm font-semibold text-slate-700">
-                      <ShoppingCart className="h-4 w-4 text-amber-500" />
-                       Groceries
-                        </label>
+                      <HomeIcon className="h-4 w-4 text-blue-500" />
+                      Rent / Mortgage
+                    </label>
                     <div className="relative">
                       <span className="absolute left-4 top-1/2 -translate-y-1/2 font-semibold text-slate-400">
                         $
@@ -404,137 +336,183 @@ export default function Home() {
                         type="number"
                         placeholder="0.00"
                         className="financial-input w-full py-4 pl-9 pr-4 text-lg font-semibold text-slate-900 placeholder:text-slate-300"
-                        {...register("Groceries")}
+                        {...register("rent")}
                       />
                     </div>
-                    {errors.Groceries && (
+                    {errors.rent && (
                       <p className="mt-1 flex items-center gap-1 text-sm text-red-500">
                         <AlertCircle className="h-3 w-3" />
-                        {errors.Groceries.message}
+                        {errors.rent.message}
                       </p>
                     )}
                   </div>
-                </div>
 
-                <div className="space-y-2">
-                  <label className="flex items-center gap-2 text-sm font-semibold text-slate-700">
-                    <CreditCard className="h-4 w-4 text-purple-500" />
-                    Other Expenses
-                  </label>
-                  <div className="relative">
-                    <span className="absolute left-4 top-1/2 -translate-y-1/2 font-semibold text-slate-400">
-                      $
-                    </span>
-                    <input
-                      type="number"
-                      placeholder="0.00"
-                      className="financial-input w-full py-4 pl-9 pr-4 text-lg font-semibold text-slate-900 placeholder:text-slate-300"
-                      {...register("otherExpenses")}
-                    />
+                  <div className="grid grid-cols-1 gap-6 sm:grid-cols-2">
+                    <div className="space-y-2">
+                      <label className="flex items-center gap-2 text-sm font-semibold text-slate-700">
+                        <Car className="h-4 w-4 text-amber-500" />
+                        Car Payment
+                      </label>
+                      <div className="relative">
+                        <span className="absolute left-4 top-1/2 -translate-y-1/2 font-semibold text-slate-400">
+                          $
+                        </span>
+                        <input
+                          type="number"
+                          placeholder="0.00"
+                          className="financial-input w-full py-4 pl-9 pr-4 text-lg font-semibold text-slate-900 placeholder:text-slate-300"
+                          {...register("carPayment")}
+                        />
+                      </div>
+                      {errors.carPayment && (
+                        <p className="mt-1 flex items-center gap-1 text-sm text-red-500">
+                          <AlertCircle className="h-3 w-3" />
+                          {errors.carPayment.message}
+                        </p>
+                      )}
+                    </div>
+
+                    <div className="space-y-2">
+                      <label className="flex items-center gap-2 text-sm font-semibold text-slate-700">
+                        <ShoppingCart className="h-4 w-4 text-amber-500" />
+                        Groceries
+                      </label>
+                      <div className="relative">
+                        <span className="absolute left-4 top-1/2 -translate-y-1/2 font-semibold text-slate-400">
+                          $
+                        </span>
+                        <input
+                          type="number"
+                          placeholder="0.00"
+                          className="financial-input w-full py-4 pl-9 pr-4 text-lg font-semibold text-slate-900 placeholder:text-slate-300"
+                          {...register("Groceries")}
+                        />
+                      </div>
+                      {errors.Groceries && (
+                        <p className="mt-1 flex items-center gap-1 text-sm text-red-500">
+                          <AlertCircle className="h-3 w-3" />
+                          {errors.Groceries.message}
+                        </p>
+                      )}
+                    </div>
                   </div>
-                  {errors.otherExpenses && (
-                    <p className="mt-1 flex items-center gap-1 text-sm text-red-500">
-                      <AlertCircle className="h-3 w-3" />
-                      {errors.otherExpenses.message}
-                    </p>
+
+                  <div className="space-y-2">
+                    <label className="flex items-center gap-2 text-sm font-semibold text-slate-700">
+                      <CreditCard className="h-4 w-4 text-purple-500" />
+                      Other Expenses
+                    </label>
+                    <div className="relative">
+                      <span className="absolute left-4 top-1/2 -translate-y-1/2 font-semibold text-slate-400">
+                        $
+                      </span>
+                      <input
+                        type="number"
+                        placeholder="0.00"
+                        className="financial-input w-full py-4 pl-9 pr-4 text-lg font-semibold text-slate-900 placeholder:text-slate-300"
+                        {...register("otherExpenses")}
+                      />
+                    </div>
+                    {errors.otherExpenses && (
+                      <p className="mt-1 flex items-center gap-1 text-sm text-red-500">
+                        <AlertCircle className="h-3 w-3" />
+                        {errors.otherExpenses.message}
+                      </p>
+                    )}
+                  </div>
+
+                  {cashFlowWarning && (
+                    <div className="flex items-start gap-2 rounded-2xl border border-amber-200 bg-amber-50 px-4 py-3 text-sm text-amber-800">
+                      <AlertCircle className="mt-0.5 h-4 w-4 shrink-0" />
+                      <span>{cashFlowWarning}</span>
+                    </div>
                   )}
-                </div>
 
-                {cashFlowWarning && (
-                  <div className="flex items-start gap-2 rounded-2xl border border-amber-200 bg-amber-50 px-4 py-3 text-sm text-amber-800">
-                    <AlertCircle className="mt-0.5 h-4 w-4 shrink-0" />
-                    <span>{cashFlowWarning}</span>
+                  <div className="mt-3 grid grid-cols-1 gap-4 sm:grid-cols-2">
+                    <button
+                      type="submit"
+                      disabled={isSubmitting}
+                      className="financial-button w-full rounded-2xl px-6 py-5 text-lg font-bold text-white disabled:cursor-not-allowed disabled:opacity-70"
+                    >
+                      {isSubmitting ? "Calculating..." : "Calculate Wealth IQ"}
+                    </button>
+
+                    <button
+                      type="button"
+                      onClick={resetDashboard}
+                      className="flex w-full items-center justify-center gap-2 rounded-2xl border border-slate-200 bg-white px-6 py-5 text-lg font-bold text-slate-700 transition-colors hover:bg-slate-50"
+                    >
+                      <RotateCcw className="h-4 w-4" />
+                      Reset Inputs
+                    </button>
                   </div>
-                )}
 
-                <div className="mt-3 grid grid-cols-1 gap-4 sm:grid-cols-2">
-                  <button
-                    type="submit"
-                    disabled={createCalculation.isPending}
-                    className="financial-button w-full rounded-2xl px-6 py-5 text-lg font-bold text-white disabled:cursor-not-allowed disabled:opacity-70"
-                  >
-                    {createCalculation.isPending
-                      ? "Calculating your score..."
-                      : "Calculate Wealth IQ"}
-                  </button>
+                  <p className="text-center text-xs leading-relaxed text-slate-400">
+                    Your score reflects how much of your income remains after your
+                    recurring expenses. Lower burden and stronger savings usually
+                    produce a healthier score.
+                  </p>
+                </form>
+              </div>
+            </motion.section>
 
-                  <button
-                    type="button"
-                    onClick={resetDashboard}
-                    className="flex w-full items-center justify-center gap-2 rounded-2xl border border-slate-200 bg-white px-6 py-5 text-lg font-bold text-slate-700 transition-colors hover:bg-slate-50"
-                  >
-                    <RotateCcw className="h-4 w-4" />
-                    Reset Inputs
-                  </button>
-                </div>
-
-                <p className="text-center text-xs leading-relaxed text-slate-400">
-                  Your score reflects how much of your income remains after your
-                  recurring expenses. Lower burden and stronger savings usually
-                  produce a healthier score.
-                </p>
-              </form>
-            </div>
-          </motion.section>
-
-          <motion.section
-            initial={{ opacity: 0, x: 18 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ delay: 0.2 }}
-            className="flex flex-col gap-8 lg:col-span-7"
-          >
-            <ScoreDisplay
-              score={currentScore}
-              expenseRatio={expenseRatio}
-              savingsRate={savingsRate}
-              totalExpenses={totalExpenses}
-              disposableIncome={disposableIncome}
-              housingRatio={housingRatio}
-              transportRatio={transportRatio}
-            />
-
-            {currentScore !== null && (
-              <motion.div
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.4 }}
-                className="space-y-8"
-              >
-                <FinanceCharts
-                  income={watchedIncome}
-                  rent={watchedRent}
-                  carPayment={watchedCarPayment}
-                  Groceries={watchedGroceries}
-                  otherExpenses={watchedOtherExpenses}
-                />
-
-                <AIFinancialAdvisor report={report} />
-              </motion.div>
-            )}
-
-            <div className="premium-card rounded-[2rem] p-7 sm:p-9">
-              <div className="mb-6 flex items-center justify-between gap-4">
-                <div>
+            <motion.section
+              initial={{ opacity: 0, x: 18 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ delay: 0.2 }}
+              className="flex flex-col gap-8 lg:col-span-7"
+            >
+              <div className="premium-card rounded-[2rem] p-7 sm:p-9">
+                <div className="mb-6">
                   <p className="text-sm font-semibold uppercase tracking-[0.18em] text-slate-400">
-                    History
+                    Financial score
                   </p>
                   <h3 className="font-display mt-1 text-2xl font-bold text-slate-900">
-                    Recent Calculations
+                    Your Wealth IQ
                   </h3>
+                </div>
+
+                <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-4">
+                  {results.map((item) => (
+                    <div
+                      key={item.label}
+                      className="rounded-3xl bg-white/80 border border-slate-100 p-4 shadow-[0_10px_28px_rgba(15,23,42,0.05)]"
+                    >
+                      <p className="text-[11px] uppercase tracking-[0.16em] text-slate-400 font-bold">
+                        {item.label}
+                      </p>
+                      <p className="mt-3 text-2xl font-bold text-slate-900">
+                        {item.value}
+                      </p>
+                    </div>
+                  ))}
                 </div>
               </div>
 
-              <HistoryList />
-            </div>
-          </motion.section>
-        </div>
+              <div className="premium-card rounded-[2rem] p-7 sm:p-9">
+                <div className="mb-6">
+                  <p className="text-sm font-semibold uppercase tracking-[0.18em] text-slate-400">
+                    Status
+                  </p>
+                  <h3 className="font-display mt-1 text-2xl font-bold text-slate-900">
+                    Calculator Ready
+                  </h3>
+                </div>
 
-        <footer className="mt-10 text-center text-sm text-slate-400">
-          Wealth IQ Financial Calculator • Created by Jardin Gwin • Financial Analytics
-          Application
-        </footer>
+                <p className="text-slate-600 leading-7">
+                  This stable version keeps your WealthIQ calculator live while we
+                  isolate and reintroduce advanced components like history, charts,
+                  and AI guidance one at a time.
+                </p>
+              </div>
+            </motion.section>
+          </div>
+
+          <footer className="mt-10 text-center text-sm text-slate-400">
+            Wealth IQ Financial Calculator • Created by Jardin Gwin • Financial Analytics Application
+          </footer>
+        </div>
       </div>
-    </div>
-</>
-);
+    </>
+  );
 }
