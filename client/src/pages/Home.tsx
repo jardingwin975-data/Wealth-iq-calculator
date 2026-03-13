@@ -194,24 +194,26 @@ export default function Home() {
 
   return (
     <>
-         <a
-      href="https://gwinanalytics.com"
-      style={{
-        position: "fixed",
-        top: "16px",
-        left: "16px",
-        padding: "10px 14px",
-        background: "#11161d",
-        color: "white",
-        borderRadius: "10px",
-        textDecoration: "none",
-        fontWeight: 600,
-        border: "1px solid #232b36",
-        zIndex: 9999
-      }}
-    >
-      ← Gwin Analytics
-    </a>
+      <a
+  href="https://gwinanalytics.com"
+  style={{
+    position: "fixed",
+    top: "calc(env(safe-area-inset-top, 0px) + 90px)",
+    left: "16px",
+    padding: "10px 14px",
+    background: "#11161d",
+    color: "white",
+    borderRadius: "10px",
+    textDecoration: "none",
+    fontWeight: 600,
+    border: "1px solid #232b36",
+    zIndex: 999999,
+    boxShadow: "0 6px 20px rgba(0,0,0,0.25)"
+  }}
+>
+  ← Gwin Analytics
+</a>
+
 
     <div className="min-h-screen app-shell">
       <div className="mx-auto max-w-7xl">
