@@ -1,16 +1,8 @@
 export default function App() {
   return (
-    <div
-      style={{
-        padding: "40px",
-        fontFamily: "Arial, sans-serif",
-        background: "white",
-        color: "black",
-        minHeight: "100vh",
-      }}
-    >
-      <h1>WealthIQ App Test</h1>
-      <p>If you can see this, React is working.</p>
+    <div style={{ padding: 40 }}>
+      <h1>WealthIQ Test Render</h1>
+      <p>If you see this text, React is working.</p>
     </div>
   );
 }
