@@ -492,7 +492,6 @@ export default function Home() {
               </div>
             </section>
           </div>
-
           <footer className="mt-10 text-center text-sm text-slate-400">
             Wealth IQ Financial Calculator • Created by Jardin Gwin • Financial Analytics Application
           </footer>
