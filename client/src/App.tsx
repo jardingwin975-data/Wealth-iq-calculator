@@ -2,9 +2,9 @@ import Home from "./pages/Home";
 
 export default function App() {
   return (
-    <div>
+    <div className="min-h-screen">
 
-      {/* Back to Gwin Analytics */}
+      {/* Back Button */}
       <a
         href="https://gwinanalytics.com"
         style={{
@@ -16,7 +16,7 @@ export default function App() {
           color: "white",
           borderRadius: "12px",
           textDecoration: "none",
-          fontWeight: "600",
+          fontWeight: 600,
           boxShadow: "0 8px 25px rgba(0,0,0,0.25)",
           zIndex: 9999
         }}
@@ -24,7 +24,7 @@ export default function App() {
         ← Gwin Analytics
       </a>
 
-      {/* Original WealthIQ App */}
+      {/* ORIGINAL APP */}
       <Home />
 
     </div>
