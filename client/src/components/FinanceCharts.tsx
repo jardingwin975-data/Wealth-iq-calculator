@@ -27,14 +27,17 @@ export default function FinanceCharts({
     { name: "Other Expenses", value: otherExpenses, color: "#8b5cf6" },
   ].filter((item) => item.value > 0);
 
-  const maxBreakdown = breakdown.reduce((m, item) => Math.max(m, item.value), 0) || 1;
-  const maxCash = Math.max(income, totalExpenses, savings, 1);
+  const maxBreakdown =
+    breakdown.reduce((max, item) => Math.max(max, item.value), 0) || 1;
 
   const cashFlow = [
     { name: "Income", value: income, color: "#22c55e" },
     { name: "Expenses", value: totalExpenses, color: "#3b82f6" },
     { name: "Savings", value: savings, color: "#8b5cf6" },
   ];
+
+  const maxCash =
+    cashFlow.reduce((max, item) => Math.max(max, item.value), 0) || 1;
 
   return (
     <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
@@ -44,7 +47,9 @@ export default function FinanceCharts({
             <p className="text-sm font-semibold uppercase tracking-[0.18em] text-slate-400">
               Analytics
             </p>
-            <h3 className="text-2xl font-bold text-slate-900">Expense Breakdown</h3>
+            <h3 className="text-2xl font-bold text-slate-900">
+              Expense Breakdown
+            </h3>
             <p className="mt-2 text-slate-500">
               See where your monthly expenses are concentrated.
             </p>
@@ -61,8 +66,12 @@ export default function FinanceCharts({
               {breakdown.map((item) => (
                 <div key={item.name}>
                   <div className="mb-2 flex items-center justify-between text-sm">
-                    <span className="font-medium text-slate-700">{item.name}</span>
-                    <span className="text-slate-500">{currency(item.value)}</span>
+                    <span className="font-medium text-slate-700">
+                      {item.name}
+                    </span>
+                    <span className="text-slate-500">
+                      {currency(item.value)}
+                    </span>
                   </div>
                   <div className="h-4 rounded-full bg-slate-100 overflow-hidden">
                     <div
@@ -79,7 +88,10 @@ export default function FinanceCharts({
 
             <div className="mt-8 flex flex-wrap gap-4">
               {breakdown.map((item) => (
-                <div key={item.name} className="flex items-center gap-2 text-sm text-slate-600">
+                <div
+                  key={item.name}
+                  className="flex items-center gap-2 text-sm text-slate-600"
+                >
                   <span
                     className="inline-block h-3 w-3 rounded-full"
                     style={{ background: item.color }}
@@ -96,15 +108,22 @@ export default function FinanceCharts({
         <p className="text-sm font-semibold uppercase tracking-[0.18em] text-slate-400">
           Cash Flow
         </p>
-        <h3 className="text-2xl font-bold text-slate-900 mt-1">Income vs Expenses</h3>
+        <h3 className="text-2xl font-bold text-slate-900 mt-1">
+          Income vs Expenses
+        </h3>
         <p className="mt-2 text-slate-500">
           Compare your income, spending, and remaining savings.
         </p>
 
         <div className="mt-8 grid grid-cols-3 gap-6 items-end min-h-[280px]">
           {cashFlow.map((item) => (
-            <div key={item.name} className="flex flex-col items-center justify-end">
-              <div className="text-sm text-slate-500 mb-3">{currency(item.value)}</div>
+            <div
+              key={item.name}
+              className="flex flex-col items-center justify-end"
+            >
+              <div className="text-sm text-slate-500 mb-3">
+                {currency(item.value)}
+              </div>
               <div className="h-56 w-full flex items-end justify-center">
                 <div
                   className="w-10 rounded-t-2xl"
