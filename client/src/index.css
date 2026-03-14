@@ -2,10 +2,18 @@
 @tailwind components;
 @tailwind utilities;
 
-body {
+html,
+body,
+#root {
   margin: 0;
+  padding: 0;
+  min-height: 100%;
+}
+
+body {
   font-family: Inter, system-ui, sans-serif;
   background: #f6f7fb;
+  color: #111827;
 }
 
 .app-shell {
@@ -36,12 +44,7 @@ body {
 }
 
 .financial-button {
-  background: linear-gradient(
-    90deg,
-    #10b981,
-    #06b6d4,
-    #3b82f6
-  );
+  background: linear-gradient(90deg, #10b981, #06b6d4, #3b82f6);
 }
 
 .section-divider {
