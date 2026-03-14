@@ -176,24 +176,14 @@ export default function Home() {
   return (
     <>
       <a
-        href="https://gwinanalytics.com"
-        style={{
-          position: "fixed",
-          top: "calc(env(safe-area-inset-top, 0px) + 90px)",
-          left: "16px",
-          padding: "10px 14px",
-          background: "#11161d",
-          color: "white",
-          borderRadius: "10px",
-          textDecoration: "none",
-          fontWeight: 600,
-          border: "1px solid #232b36",
-          zIndex: 999999,
-          boxShadow: "0 6px 20px rgba(0,0,0,0.25)",
-        }}
-      >
-        ← Gwin Analytics
-      </a>
+  href="https://gwinanalytics.com"
+  className="fixed left-4 z-[999] flex items-center gap-2 rounded-xl border border-slate-200 bg-white/90 px-4 py-2 text-sm font-semibold text-slate-700 shadow-md backdrop-blur transition hover:bg-white"
+  style={{
+    top: "calc(env(safe-area-inset-top,0px) + 16px)",
+  }}
+>
+  ← Gwin Analytics
+</a>
 
       <div className="min-h-screen app-shell pt-36 px-4 pb-10">
         <div className="mx-auto max-w-7xl">
