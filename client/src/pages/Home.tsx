@@ -1,6 +1,8 @@
 import { useMemo, useState } from "react";
 import { ScoreDisplay } from "../components/ScoreDisplay";
 import FinanceCharts from "../components/FinanceCharts";
+import { HistoryList } from "../components/HistoryList";
+import { useCreateCalculation } from "../hooks/use-calculations";
 
 export default function Home() {
   const [income, setIncome] = useState(2100);
@@ -8,6 +10,8 @@ export default function Home() {
   const [carPayment, setCarPayment] = useState(400);
   const [groceries, setGroceries] = useState(250);
   const [otherExpenses, setOtherExpenses] = useState(0);
+
+  const createCalculation = useCreateCalculation();
 
   const totalExpenses = useMemo(
     () => rent + carPayment + groceries + otherExpenses,
@@ -77,6 +81,17 @@ export default function Home() {
     setCarPayment(400);
     setGroceries(250);
     setOtherExpenses(0);
+  };
+
+  const saveCalculation = () => {
+    createCalculation.mutate({
+      income,
+      rent,
+      carPayment,
+      groceries,
+      otherExpenses,
+      score,
+    } as any);
   };
 
   const inputStyle: React.CSSProperties = {
@@ -212,7 +227,14 @@ export default function Home() {
           </div>
         </div>
 
-        <div style={{ marginTop: 18 }}>
+        <div
+          style={{
+            marginTop: 18,
+            display: "flex",
+            gap: 12,
+            flexWrap: "wrap",
+          }}
+        >
           <button
             onClick={resetValues}
             style={{
@@ -226,6 +248,21 @@ export default function Home() {
             }}
           >
             Reset Demo Values
+          </button>
+
+          <button
+            onClick={saveCalculation}
+            style={{
+              padding: "12px 18px",
+              borderRadius: 12,
+              border: "none",
+              background: "#2563eb",
+              color: "white",
+              fontWeight: 600,
+              cursor: "pointer",
+            }}
+          >
+            {createCalculation.isPending ? "Saving..." : "Save Calculation"}
           </button>
         </div>
       </div>
@@ -250,6 +287,19 @@ export default function Home() {
           Groceries={groceries}
           otherExpenses={otherExpenses}
         />
+      </div>
+
+      <div style={{ marginTop: 32 }}>
+        <h2
+          style={{
+            fontSize: 28,
+            fontWeight: 700,
+            marginBottom: 16,
+          }}
+        >
+          Recent Calculations
+        </h2>
+        <HistoryList />
       </div>
     </div>
   );
