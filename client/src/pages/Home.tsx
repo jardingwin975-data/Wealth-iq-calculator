@@ -12,6 +12,9 @@ import {
 } from "lucide-react";
 import { ScoreDisplay } from "../components/ScoreDisplay";
 import FinanceCharts from "../components/FinanceCharts";
+import AIFinancialAdvisor from "../components/AIFinancialAdvisor";
+import { HistoryList } from "../components/HistoryList";
+import { useCreateCalculation } from "../hooks/use-calculations";
 
 export default function Home() {
   const [income, setIncome] = useState<number>(2100);
@@ -19,6 +22,8 @@ export default function Home() {
   const [carPayment, setCarPayment] = useState<number>(400);
   const [groceries, setGroceries] = useState<number>(250);
   const [otherExpenses, setOtherExpenses] = useState<number>(0);
+
+  const createCalculation = useCreateCalculation();
 
   const totalExpenses = useMemo(
     () => rent + carPayment + groceries + otherExpenses,
@@ -86,13 +91,31 @@ export default function Home() {
     const targetSavingsRate = 20;
     const targetDisposable = Math.round((income * targetSavingsRate) / 100);
     const recommendedMaxExpenses = Math.max(income - targetDisposable, 0);
-    const improvementNeeded = Math.max(totalExpenses - recommendedMaxExpenses, 0);
+    const improvementNeeded = Math.max(
+      totalExpenses - recommendedMaxExpenses,
+      0
+    );
 
     return {
       recommendedMaxExpenses,
       improvementNeeded,
     };
   }, [income, totalExpenses]);
+
+  const report = {
+    income,
+    rent,
+    carPayment,
+    groceries,
+    otherExpenses,
+    score,
+    expenseRatio,
+    savingsRate,
+    totalExpenses,
+    disposableIncome,
+    housingRatio,
+    transportRatio,
+  };
 
   const featureCards = [
     {
@@ -135,6 +158,34 @@ export default function Home() {
     fontWeight: 600,
     color: "#475569",
     marginBottom: 8,
+  };
+
+  const actionButtonStyle: React.CSSProperties = {
+    padding: "16px 22px",
+    borderRadius: 16,
+    fontWeight: 700,
+    fontSize: 16,
+    cursor: "pointer",
+    border: "none",
+  };
+
+  const resetValues = () => {
+    setIncome(2100);
+    setRent(350);
+    setCarPayment(400);
+    setGroceries(250);
+    setOtherExpenses(0);
+  };
+
+  const saveCalculation = () => {
+    createCalculation.mutate({
+      income,
+      rent,
+      carPayment,
+      groceries,
+      otherExpenses,
+      score,
+    });
   };
 
   return (
@@ -328,7 +379,7 @@ export default function Home() {
               />
             </div>
 
-            <div>
+            <div style={{ marginBottom: 22 }}>
               <label style={labelRowStyle}>
                 <CreditCard size={18} />
                 Other Expenses
@@ -340,6 +391,59 @@ export default function Home() {
                 style={inputStyle}
               />
             </div>
+
+            <div
+              style={{
+                display: "flex",
+                gap: 14,
+                flexWrap: "wrap",
+                marginTop: 8,
+              }}
+            >
+              <button
+                type="button"
+                onClick={saveCalculation}
+                disabled={createCalculation.isPending}
+                style={{
+                  ...actionButtonStyle,
+                  background:
+                    "linear-gradient(90deg, #10b981 0%, #06b6d4 55%, #3b82f6 100%)",
+                  color: "white",
+                  boxShadow: "0 12px 28px rgba(16,185,129,0.18)",
+                }}
+              >
+                {createCalculation.isPending
+                  ? "Saving..."
+                  : "Save Calculation"}
+              </button>
+
+              <button
+                type="button"
+                onClick={resetValues}
+                style={{
+                  ...actionButtonStyle,
+                  background: "white",
+                  color: "#334155",
+                  border: "1px solid #dbe3ee",
+                }}
+              >
+                Reset Inputs
+              </button>
+            </div>
+
+            <p
+              style={{
+                marginTop: 20,
+                marginBottom: 0,
+                color: "#94a3b8",
+                fontSize: 14,
+                lineHeight: 1.7,
+              }}
+            >
+              Your score reflects how much of your income remains after your
+              recurring expenses. Lower burden and stronger savings usually
+              produce a healthier score.
+            </p>
           </div>
 
           <ScoreDisplay
@@ -404,6 +508,40 @@ export default function Home() {
               ? `You would need to cut about $${comparison.improvementNeeded.toLocaleString()} in monthly expenses to reach that target.`
               : "You are already at or better than that target."}
           </p>
+        </div>
+
+        <div style={{ marginTop: 32 }}>
+          <AIFinancialAdvisor report={report} />
+        </div>
+
+        <div className="premium-card p-8" style={{ marginTop: 32 }}>
+          <p
+            style={{
+              marginTop: 0,
+              marginBottom: 10,
+              fontSize: 14,
+              fontWeight: 800,
+              letterSpacing: "0.18em",
+              textTransform: "uppercase",
+              color: "#94a3b8",
+            }}
+          >
+            History
+          </p>
+
+          <h2
+            style={{
+              fontSize: 28,
+              fontWeight: 900,
+              marginTop: 0,
+              marginBottom: 20,
+              color: "#0f172a",
+            }}
+          >
+            Recent Calculations
+          </h2>
+
+          <HistoryList />
         </div>
       </div>
     </div>
