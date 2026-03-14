@@ -1,9 +1,8 @@
-import Home from "./pages/Home";
-import { Toaster } from "./components/ui/toaster";
-import { TooltipProvider } from "./components/ui/tooltip";
-import NotFound from "./pages/not-found";
-import { ErrorBoundary } from "./components/ErrorBoundary";
-
 export default function App() {
-  return <Home />;
+  return (
+    <div style={{ padding: 40, background: "white", minHeight: "100vh", color: "#111" }}>
+      <h1>App mounted</h1>
+      <p>If you see this, App.tsx is working.</p>
+    </div>
+  );
 }
