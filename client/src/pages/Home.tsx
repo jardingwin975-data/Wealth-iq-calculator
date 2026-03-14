@@ -2,6 +2,7 @@ import { useMemo, useState } from "react";
 import { ScoreDisplay } from "../components/ScoreDisplay";
 import FinanceCharts from "../components/FinanceCharts";
 import { HistoryList } from "../components/HistoryList";
+import AIFinancialAdvisor from "../components/AIFinancialAdvisor";
 import { useCreateCalculation } from "../hooks/use-calculations";
 
 export default function Home() {
@@ -91,7 +92,34 @@ export default function Home() {
       groceries,
       otherExpenses,
       score,
-    } as any);
+    });
+  };
+
+  const comparison = useMemo(() => {
+    const targetSavingsRate = 20;
+    const targetDisposable = Math.round((income * targetSavingsRate) / 100);
+    const recommendedMaxExpenses = Math.max(income - targetDisposable, 0);
+    const improvementNeeded = Math.max(totalExpenses - recommendedMaxExpenses, 0);
+
+    return {
+      recommendedMaxExpenses,
+      improvementNeeded,
+    };
+  }, [income, totalExpenses]);
+
+  const report = {
+    income,
+    rent,
+    carPayment,
+    groceries,
+    otherExpenses,
+    score,
+    expenseRatio,
+    savingsRate,
+    totalExpenses,
+    disposableIncome,
+    housingRatio,
+    transportRatio,
   };
 
   const inputStyle: React.CSSProperties = {
@@ -287,6 +315,35 @@ export default function Home() {
           Groceries={groceries}
           otherExpenses={otherExpenses}
         />
+      </div>
+
+      <div
+        style={{
+          marginTop: 32,
+          padding: 24,
+          border: "1px solid #e5e7eb",
+          borderRadius: 24,
+          background: "#f8fafc",
+        }}
+      >
+        <h2 style={{ fontSize: 24, fontWeight: 700, marginTop: 0 }}>
+          Scenario Comparison
+        </h2>
+        <p style={{ color: "#64748b", marginBottom: 12 }}>
+          To hit a 20% savings rate, your target maximum monthly expenses would be:
+        </p>
+        <p style={{ fontSize: 28, fontWeight: 700, marginBottom: 8 }}>
+          ${comparison.recommendedMaxExpenses.toLocaleString()}
+        </p>
+        <p style={{ color: "#64748b" }}>
+          {comparison.improvementNeeded > 0
+            ? `You would need to cut about $${comparison.improvementNeeded.toLocaleString()} in monthly expenses to reach that target.`
+            : "You are already at or better than that target."}
+        </p>
+      </div>
+
+      <div style={{ marginTop: 32 }}>
+        <AIFinancialAdvisor report={report} />
       </div>
 
       <div style={{ marginTop: 32 }}>
