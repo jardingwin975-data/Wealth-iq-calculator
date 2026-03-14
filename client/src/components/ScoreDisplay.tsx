@@ -163,7 +163,7 @@ export function ScoreDisplay({
           </div>
         </div>
 
-        <div className="mt-8 grid grid-cols-1 xl:grid-cols-12 gap-8 items-center">
+        <div className="mt-8 grid grid-cols-1 xl:grid-cols-12 gap-10 items-center">
           <div className="xl:col-span-5 flex flex-col items-center">
             <div className="relative flex items-center justify-center">
               <svg className="w-64 h-64 -rotate-90" viewBox="0 0 256 256">
