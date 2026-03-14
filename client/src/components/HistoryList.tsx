@@ -1,43 +1,34 @@
-import { useCalculations } from "../hooks/use-calculations";
 import {
   Calendar,
   Wallet,
   PiggyBank,
   TrendingUp,
   Download,
+  Trash2,
 } from "lucide-react";
+import { useCalculations, useClearCalculations } from "../hooks/use-calculations";
 
 function getScoreMeta(score: number) {
-  if (score >= 80) {
-    return {
-      badge: "bg-emerald-100 text-emerald-700",
-      label: "Excellent",
-    };
-  }
-  if (score >= 50) {
-    return {
-      badge: "bg-blue-100 text-blue-700",
-      label: "Stable",
-    };
-  }
-  if (score >= 20) {
-    return {
-      badge: "bg-amber-100 text-amber-700",
-      label: "Caution",
-    };
-  }
-  return {
-    badge: "bg-red-100 text-red-700",
-    label: "Critical",
-  };
+  if (score >= 80) return { badge: "bg-emerald-100 text-emerald-700", label: "Excellent" };
+  if (score >= 50) return { badge: "bg-blue-100 text-blue-700", label: "Stable" };
+  if (score >= 20) return { badge: "bg-amber-100 text-amber-700", label: "Caution" };
+  return { badge: "bg-red-100 text-red-700", label: "Critical" };
 }
 
 function formatCurrency(value: number) {
   return `$${value.toLocaleString()}`;
 }
 
+function formatDate(value?: string) {
+  if (!value) return "Unknown date";
+  const d = new Date(value);
+  if (Number.isNaN(d.getTime())) return "Unknown date";
+  return d.toLocaleString();
+}
+
 export function HistoryList() {
   const { data: calculations, isLoading } = useCalculations();
+  const clearCalculations = useClearCalculations();
 
   const handleExportCsv = () => {
     if (!calculations || calculations.length === 0) return;
@@ -45,7 +36,9 @@ export function HistoryList() {
     const sorted = [...calculations].sort((a, b) => b.id - a.id);
 
     const rows = sorted.map((calc) => {
-      const totalExpenses = calc.rent + calc.carPayment + calc.otherExpenses;
+      const groceries = calc.groceries ?? 0;
+      const totalExpenses =
+        calc.rent + calc.carPayment + groceries + calc.otherExpenses;
       const disposableIncome = calc.income - totalExpenses;
       const expenseRatio =
         calc.income > 0 ? Math.round((totalExpenses / calc.income) * 100) : 0;
@@ -56,9 +49,11 @@ export function HistoryList() {
 
       return {
         calculationId: calc.id,
+        createdAt: calc.createdAt,
         income: calc.income,
         rent: calc.rent,
         carPayment: calc.carPayment,
+        groceries,
         otherExpenses: calc.otherExpenses,
         totalExpenses,
         disposableIncome,
@@ -72,9 +67,7 @@ export function HistoryList() {
     const csv = [
       headers.join(","),
       ...rows.map((row) =>
-        headers
-          .map((header) => `"${String(row[header as keyof typeof row])}"`)
-          .join(","),
+        headers.map((header) => `"${String(row[header as keyof typeof row])}"`).join(",")
       ),
     ].join("\n");
 
@@ -88,6 +81,11 @@ export function HistoryList() {
     link.click();
     document.body.removeChild(link);
     URL.revokeObjectURL(url);
+  };
+
+  const handleClear = () => {
+    const ok = window.confirm("Clear all saved Wealth IQ calculations?");
+    if (ok) clearCalculations.mutate();
   };
 
   if (isLoading) {
@@ -106,7 +104,7 @@ export function HistoryList() {
         <Wallet className="w-10 h-10 text-slate-300 mx-auto mb-4" />
         <p className="text-slate-700 font-semibold text-lg">No calculations yet</p>
         <p className="text-sm text-slate-400 mt-2">
-          Your financial history will appear here after you run your first score.
+          Your financial history will appear here after you save your first score.
         </p>
       </div>
     );
@@ -116,7 +114,7 @@ export function HistoryList() {
 
   return (
     <div className="w-full">
-      <div className="flex justify-end mb-4">
+      <div className="flex justify-end mb-4 gap-3 flex-wrap">
         <button
           type="button"
           onClick={handleExportCsv}
@@ -125,11 +123,22 @@ export function HistoryList() {
           <Download className="w-4 h-4" />
           Export History to CSV
         </button>
+
+        <button
+          type="button"
+          onClick={handleClear}
+          className="inline-flex items-center gap-2 rounded-2xl border border-red-200 bg-white px-4 py-2 text-sm font-semibold text-red-600 hover:bg-red-50 transition-colors"
+        >
+          <Trash2 className="w-4 h-4" />
+          {clearCalculations.isPending ? "Clearing..." : "Clear History"}
+        </button>
       </div>
 
-      <div className="space-y-4 max-h-[520px] overflow-y-auto pr-2">
+      <div className="space-y-4 max-h-[520px] overflow-y-auto pr-2 scrollbar-thin">
         {sorted.map((calc) => {
-          const totalExpenses = calc.rent + calc.carPayment + calc.otherExpenses;
+          const groceries = calc.groceries ?? 0;
+          const totalExpenses =
+            calc.rent + calc.carPayment + groceries + calc.otherExpenses;
           const disposableIncome = calc.income - totalExpenses;
           const expenseRatio =
             calc.income > 0 ? Math.round((totalExpenses / calc.income) * 100) : 0;
@@ -148,7 +157,7 @@ export function HistoryList() {
               <div className="flex items-start justify-between gap-5">
                 <div className="min-w-0">
                   <div className="flex items-center gap-3 flex-wrap">
-                    <h4 className="text-2xl font-bold text-slate-900">
+                    <h4 className="text-2xl font-bold text-slate-900 font-display">
                       {formatCurrency(calc.income)}
                     </h4>
                     <span
@@ -158,9 +167,13 @@ export function HistoryList() {
                     </span>
                   </div>
 
-                  <div className="flex items-center gap-2 mt-2 text-sm text-slate-500">
-                    <Calendar className="w-4 h-4" />
-                    Calc #{calc.id}
+                  <div className="flex items-center gap-2 mt-2 text-sm text-slate-500 flex-wrap">
+                    <span className="inline-flex items-center gap-2">
+                      <Calendar className="w-4 h-4" />
+                      {formatDate(calc.createdAt)}
+                    </span>
+                    <span>•</span>
+                    <span>Calc #{calc.id}</span>
                   </div>
                 </div>
 
