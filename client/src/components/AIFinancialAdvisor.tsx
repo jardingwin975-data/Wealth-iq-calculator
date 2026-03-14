@@ -41,15 +41,15 @@ export default function AIFinancialAdvisor({ report }: Props) {
     } = report;
 
     if (disposableIncome < 0) {
-      return "Your disposable income is negative. Focus first on reducing recurring expenses until cash flow turns positive.";
+      return "Your disposable income is negative. Focus on reducing recurring expenses until cash flow turns positive.";
     }
 
     if (housingRatio > 35) {
-      return "Your housing burden is elevated. Lowering housing costs closer to 30–35% of income would usually improve financial stability.";
+      return "Your housing burden is elevated. Lowering housing costs closer to 30–35% of income would usually improve stability.";
     }
 
     if (expenseRatio > 70) {
-      return "Your expense ratio is high. Start with recurring bills first, because they usually create the fastest score improvement.";
+      return "Your expense ratio is high. Start with recurring bills first because those usually create the fastest improvement.";
     }
 
     if (transportRatio > 15) {
@@ -93,6 +93,7 @@ export default function AIFinancialAdvisor({ report }: Props) {
       if (!res.ok) throw new Error("AI service unavailable");
 
       const data = await res.json();
+
       setMessages((prev) => [
         ...prev,
         {
