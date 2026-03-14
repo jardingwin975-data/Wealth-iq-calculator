@@ -1,52 +1,74 @@
-import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import { api } from "@shared/routes";
-import type { InsertCalculation } from "@shared/schema";
-import { z } from "zod";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 
-// Helper for parsing with logging
-function parseWithLogging<T>(schema: z.ZodSchema<T>, data: unknown, label: string): T {
-  const result = schema.safeParse(data);
-  if (!result.success) {
-    console.error(`[Zod] ${label} validation failed:`, result.error.format());
-    throw result.error;
+export type Calculation = {
+  id: number;
+  income: number;
+  rent: number;
+  carPayment: number;
+  otherExpenses: number;
+  score: number;
+};
+
+export type InsertCalculation = Omit<Calculation, "id">;
+
+const STORAGE_KEY = "wealth-iq-calculations";
+const QUERY_KEY = ["wealth-iq-calculations"];
+
+function getStoredCalculations(): Calculation[] {
+  try {
+    const raw = localStorage.getItem(STORAGE_KEY);
+    if (!raw) return [];
+    const parsed = JSON.parse(raw);
+    return Array.isArray(parsed) ? parsed : [];
+  } catch {
+    return [];
   }
-  return result.data;
+}
+
+function setStoredCalculations(calculations: Calculation[]) {
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(calculations));
 }
 
 export function useCalculations() {
-  return useQuery({
-    queryKey: [api.calculations.list.path],
+  return useQuery<Calculation[]>({
+    queryKey: QUERY_KEY,
     queryFn: async () => {
-      const res = await fetch(api.calculations.list.path, { credentials: "include" });
-      if (!res.ok) throw new Error("Failed to fetch calculations");
-      const data = await res.json();
-      return parseWithLogging(api.calculations.list.responses[200], data, "calculations.list");
+      return getStoredCalculations();
     },
+    staleTime: Infinity,
   });
 }
 
 export function useCreateCalculation() {
   const queryClient = useQueryClient();
-  
-  return useMutation({
+
+  return useMutation<Calculation, Error, InsertCalculation>({
     mutationFn: async (data: InsertCalculation) => {
-      const validated = api.calculations.create.input.parse(data);
-      const res = await fetch(api.calculations.create.path, {
-        method: api.calculations.create.method,
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(validated),
-        credentials: "include",
-      });
-      
-      if (!res.ok) {
-        throw new Error("Failed to save calculation");
-      }
-      
-      const responseData = await res.json();
-      return parseWithLogging(api.calculations.create.responses[201], responseData, "calculations.create");
+      const existing = getStoredCalculations();
+      const next: Calculation = {
+        ...data,
+        id: Date.now(),
+      };
+      const updated = [next, ...existing];
+      setStoredCalculations(updated);
+      return next;
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: [api.calculations.list.path] });
+      queryClient.invalidateQueries({ queryKey: QUERY_KEY });
+    },
+  });
+}
+
+export function useClearCalculations() {
+  const queryClient = useQueryClient();
+
+  return useMutation<void, Error, void>({
+    mutationFn: async () => {
+      localStorage.removeItem(STORAGE_KEY);
+    },
+    onSuccess: () => {
+      queryClient.setQueryData(QUERY_KEY, []);
+      queryClient.invalidateQueries({ queryKey: QUERY_KEY });
     },
   });
 }
