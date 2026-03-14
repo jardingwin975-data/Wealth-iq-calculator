@@ -131,7 +131,7 @@ export default function Home() {
       </a>
 
       <h1 style={{ fontSize: "32px", fontWeight: 700 }}>
-        Wealth IQ Calculator
+        Wealth IQ Financial Calculator
       </h1>
 
       <p style={{ color: "#64748b", marginBottom: 32 }}>
