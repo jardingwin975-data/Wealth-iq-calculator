@@ -54,6 +54,10 @@ export default function FinanceCharts({
               See where your monthly expenses are concentrated.
             </p>
           </div>
+
+          <div className="inline-flex items-center rounded-full border border-amber-300 bg-amber-50 px-3 py-1 text-sm font-semibold text-amber-700">
+            {maxBreakdown > income * 0.35 ? "Moderate Risk" : "Balanced"}
+          </div>
         </div>
 
         {breakdown.length === 0 ? (
@@ -126,7 +130,7 @@ export default function FinanceCharts({
               </div>
               <div className="h-56 w-full flex items-end justify-center">
                 <div
-                  className="w-10 rounded-t-2xl"
+                  className="w-10 rounded-t-2xl shadow-sm"
                   style={{
                     height: `${Math.max((item.value / maxCash) * 100, 4)}%`,
                     background: item.color,
