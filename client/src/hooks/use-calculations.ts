@@ -5,6 +5,7 @@ export type Calculation = {
   income: number;
   rent: number;
   carPayment: number;
+  groceries: number;
   otherExpenses: number;
   score: number;
 };
@@ -32,9 +33,7 @@ function setStoredCalculations(calculations: Calculation[]) {
 export function useCalculations() {
   return useQuery<Calculation[]>({
     queryKey: QUERY_KEY,
-    queryFn: async () => {
-      return getStoredCalculations();
-    },
+    queryFn: async () => getStoredCalculations(),
     staleTime: Infinity,
   });
 }
@@ -43,12 +42,14 @@ export function useCreateCalculation() {
   const queryClient = useQueryClient();
 
   return useMutation<Calculation, Error, InsertCalculation>({
-    mutationFn: async (data: InsertCalculation) => {
+    mutationFn: async (data) => {
       const existing = getStoredCalculations();
+
       const next: Calculation = {
         ...data,
         id: Date.now(),
       };
+
       const updated = [next, ...existing];
       setStoredCalculations(updated);
       return next;
