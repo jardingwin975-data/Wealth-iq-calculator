@@ -1,5 +1,4 @@
-import { useEffect, useMemo, useState } from "react";
-import { motion, animate } from "framer-motion";
+import { useMemo } from "react";
 import {
   ArrowUpRight,
   PiggyBank,
@@ -28,104 +27,72 @@ export function ScoreDisplay({
   housingRatio,
   transportRatio,
 }: ScoreDisplayProps) {
-  const [displayValue, setDisplayValue] = useState(0);
-
-  useEffect(() => {
-    if (score !== null) {
-      const controls = animate(0, score, {
-        duration: 1.4,
-        ease: "easeOut",
-        onUpdate(value) {
-          setDisplayValue(Math.round(value));
-        },
-      });
-
-      return () => controls.stop();
-    }
-
-    setDisplayValue(0);
-  }, [score]);
-
-  const getScoreDetails = (s: number | null) => {
-    if (s === null) {
+  const details = useMemo(() => {
+    if (score === null) {
       return {
         color: "text-slate-500",
-        circle: "stroke-slate-300",
-        glow: "bg-slate-300",
+        stroke: "#cbd5e1",
         badge: "bg-slate-100 text-slate-700 border-slate-200",
         message: "Ready to calculate",
         band: "No score yet",
       };
     }
-    if (s >= 80) {
+
+    if (score >= 80) {
       return {
         color: "text-emerald-500",
-        circle: "stroke-emerald-500",
-        glow: "bg-emerald-400",
+        stroke: "#10b981",
         badge: "bg-emerald-50 text-emerald-700 border-emerald-200",
         message: "Excellent Wealth Health!",
         band: "Elite financial position",
       };
     }
-    if (s >= 50) {
+
+    if (score >= 50) {
       return {
         color: "text-blue-500",
-        circle: "stroke-blue-500",
-        glow: "bg-blue-400",
+        stroke: "#3b82f6",
         badge: "bg-blue-50 text-blue-700 border-blue-200",
         message: "Good Financial Baseline",
         band: "Stable, with room to optimize",
       };
     }
-    if (s >= 20) {
+
+    if (score >= 20) {
       return {
         color: "text-amber-500",
-        circle: "stroke-amber-500",
-        glow: "bg-amber-400",
+        stroke: "#f59e0b",
         badge: "bg-amber-50 text-amber-700 border-amber-200",
         message: "Caution: High Expenses",
         band: "Spending pressure is building",
       };
     }
+
     return {
       color: "text-red-500",
-      circle: "stroke-red-500",
-      glow: "bg-red-400",
+      stroke: "#ef4444",
       badge: "bg-red-50 text-red-700 border-red-200",
       message: "Critical: Expenses exceed safe limits",
       band: "Immediate financial pressure",
     };
-  };
-
-  const details = getScoreDetails(score);
-  const radius = 90;
-  const circumference = 2 * Math.PI * radius;
-  const strokeDashoffset =
-    score !== null
-      ? circumference - (score / 100) * circumference
-      : circumference;
+  }, [score]);
 
   const recommendation = useMemo(() => {
     if (score === null) {
       return "Enter your monthly numbers to generate a financial health snapshot.";
     }
-
     if ((housingRatio ?? 0) > 35) {
       return "Your housing burden is elevated. Keeping housing closer to 30–35% of income usually improves long-term stability.";
     }
-
     if ((expenseRatio ?? 0) > 70) {
-      return "Your expense ratio is high. Look at recurring bills first — that’s often the fastest way to improve your score.";
+      return "Your expense ratio is high. Look at recurring bills first because those usually create the fastest improvement.";
     }
-
     if ((transportRatio ?? 0) > 15) {
-      return "Transportation costs may be taking too much of your income. Reducing that burden can lift your financial flexibility.";
+      return "Transportation costs may be taking too much of your income. Reducing that burden can improve flexibility.";
     }
-
     if ((savingsRate ?? 0) < 20) {
       return "Your savings rate is positive, but strengthening it further would improve resilience and long-term wealth building.";
     }
-
     return "You’re in a strong position. Focus on maintaining low expense pressure and increasing investable cash flow over time.";
   }, [score, housingRatio, expenseRatio, transportRatio, savingsRate]);
 
@@ -154,12 +121,12 @@ export function ScoreDisplay({
     },
     {
       label: "Total Expenses",
-      value: `$${totalExpenses?.toLocaleString() ?? "0"}`,
+      value: `$${(totalExpenses ?? 0).toLocaleString()}`,
       icon: ShieldAlert,
     },
     {
       label: "Disposable Income",
-      value: `$${disposableIncome?.toLocaleString() ?? "0"}`,
+      value: `$${(disposableIncome ?? 0).toLocaleString()}`,
       icon: ArrowUpRight,
     },
     {
@@ -174,83 +141,66 @@ export function ScoreDisplay({
     },
   ];
 
+  const safeScore = Math.max(0, Math.min(100, score ?? 0));
+  const radius = 90;
+  const circumference = 2 * Math.PI * radius;
+  const dashOffset = circumference - (safeScore / 100) * circumference;
+
   return (
     <div className="premium-card rounded-[2rem] p-7 sm:p-9 overflow-hidden relative">
-      <div className="absolute inset-0 pointer-events-none">
-        {score !== null && (
-          <>
-            <div
-              className={`absolute top-16 left-1/2 -translate-x-1/2 h-40 w-40 rounded-full blur-3xl opacity-20 ${details.glow}`}
-            />
-            <div
-              className={`absolute bottom-8 right-8 h-32 w-32 rounded-full blur-3xl opacity-10 ${details.glow}`}
-            />
-          </>
-        )}
-      </div>
-
       <div className="relative z-10">
-        <div className="flex flex-col md:flex-row md:items-start md:justify-between gap-6">
-          <div>
-            <p className="text-sm font-semibold uppercase tracking-[0.18em] text-slate-400">
-              Financial score
-            </p>
-            <h3 className="text-2xl md:text-3xl font-bold text-slate-900 font-display mt-1">
-              Your Wealth IQ
-            </h3>
-            <div
-              className={`inline-flex items-center rounded-full border px-3 py-1.5 text-sm font-semibold mt-4 ${details.badge}`}
-            >
-              {details.band}
-            </div>
+        <div>
+          <p className="text-sm font-semibold uppercase tracking-[0.18em] text-slate-400">
+            Financial score
+          </p>
+          <h3 className="text-2xl md:text-3xl font-bold text-slate-900 font-display mt-1">
+            Your Wealth IQ
+          </h3>
+          <div
+            className={`inline-flex items-center rounded-full border px-3 py-1.5 text-sm font-semibold mt-4 ${details.badge}`}
+          >
+            {details.band}
           </div>
         </div>
 
         <div className="mt-8 grid grid-cols-1 xl:grid-cols-12 gap-8 items-center">
           <div className="xl:col-span-5 flex flex-col items-center">
             <div className="relative flex items-center justify-center">
-              <svg className="w-64 h-64 transform -rotate-90">
+              <svg className="w-64 h-64 -rotate-90" viewBox="0 0 256 256">
                 <circle
                   cx="128"
                   cy="128"
                   r={radius}
-                  className="stroke-slate-200"
+                  stroke="#e2e8f0"
                   strokeWidth="12"
                   fill="transparent"
                 />
-                <motion.circle
+                <circle
                   cx="128"
                   cy="128"
                   r={radius}
-                  className={`${details.circle} drop-shadow-md`}
+                  stroke={details.stroke}
                   strokeWidth="12"
                   fill="transparent"
                   strokeLinecap="round"
-                  initial={{ strokeDashoffset: circumference }}
-                  animate={{ strokeDashoffset }}
-                  transition={{ duration: 1.4, ease: "easeOut" }}
-                  style={{ strokeDasharray: circumference }}
+                  strokeDasharray={circumference}
+                  strokeDashoffset={dashOffset}
                 />
               </svg>
 
               <div className="absolute flex flex-col items-center justify-center">
-                <motion.div
+                <div
                   className={`text-6xl font-extrabold tracking-tighter font-display ${details.color}`}
                 >
-                  {score !== null ? displayValue : "—"}
-                </motion.div>
+                  {score !== null ? safeScore : "—"}
+                </div>
                 <div className="text-sm font-medium text-slate-400 mt-1">/ 100</div>
               </div>
             </div>
 
-            <motion.p
-              key={details.message}
-              initial={{ opacity: 0, y: 10 }}
-              animate={{ opacity: 1, y: 0 }}
-              className={`mt-6 text-center font-semibold text-xl ${details.color}`}
-            >
+            <p className={`mt-6 text-center font-semibold text-xl ${details.color}`}>
               {details.message}
-            </motion.p>
+            </p>
           </div>
 
           <div className="xl:col-span-7">
