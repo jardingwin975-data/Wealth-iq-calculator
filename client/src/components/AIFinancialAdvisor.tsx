@@ -1,7 +1,22 @@
-import { useState } from "react";
+import { useMemo, useState } from "react";
+
+type Report = {
+  income?: number;
+  rent?: number;
+  carPayment?: number;
+  groceries?: number;
+  otherExpenses?: number;
+  score?: number | null;
+  expenseRatio?: number | null;
+  savingsRate?: number | null;
+  totalExpenses?: number | null;
+  disposableIncome?: number | null;
+  housingRatio?: number | null;
+  transportRatio?: number | null;
+};
 
 type Props = {
-  report?: any;
+  report?: Report;
 };
 
 export default function AIFinancialAdvisor({ report }: Props) {
@@ -11,52 +26,50 @@ export default function AIFinancialAdvisor({ report }: Props) {
   >([]);
   const [loading, setLoading] = useState(false);
 
-  const buildFallbackReply = () => {
-    if (!report) {
-      return "AI advisor is not connected yet. Your calculator is working, but this feature needs a backend service to provide live responses.";
+  const baseAdvice = useMemo(() => {
+    if (!report || report.score === null || report.score === undefined) {
+      return "Run the calculator to get personalized guidance based on your financial numbers.";
     }
 
-    const score = report?.score ?? null;
-    const expenseRatio = report?.expenseRatio ?? 0;
-    const savingsRate = report?.savingsRate ?? 0;
-    const disposableIncome = report?.disposableIncome ?? 0;
-    const housingRatio = report?.housingRatio ?? 0;
-    const transportRatio = report?.transportRatio ?? 0;
+    const {
+      score = 0,
+      expenseRatio = 0,
+      savingsRate = 0,
+      housingRatio = 0,
+      transportRatio = 0,
+      disposableIncome = 0,
+    } = report;
 
-    if (score === null) {
-      return "Run the calculator first so I can give guidance based on your numbers.";
-    }
-
-    if (expenseRatio > 70) {
-      return "Your expense ratio is high. Start by reviewing recurring costs first, because those usually have the biggest impact on improving your score.";
+    if (disposableIncome < 0) {
+      return "Your disposable income is negative. Focus first on reducing recurring expenses until cash flow turns positive.";
     }
 
     if (housingRatio > 35) {
-      return "Your housing burden looks elevated. Keeping housing closer to 30–35% of income usually improves long-term flexibility.";
+      return "Your housing burden is elevated. Lowering housing costs closer to 30–35% of income would usually improve financial stability.";
+    }
+
+    if (expenseRatio > 70) {
+      return "Your expense ratio is high. Start with recurring bills first, because they usually create the fastest score improvement.";
     }
 
     if (transportRatio > 15) {
-      return "Transportation costs may be taking too much of your monthly income. Reducing that burden could improve your score.";
+      return "Transportation is taking a meaningful share of income. Lowering that burden could improve flexibility.";
     }
 
     if (savingsRate < 20) {
-      return "Your savings rate is positive, but increasing it further would improve financial resilience and long-term wealth building.";
-    }
-
-    if (disposableIncome < 0) {
-      return "Your disposable income is negative right now. Focus on reducing essential recurring expenses until you return to positive cash flow.";
+      return "Your savings rate is positive, but increasing it would improve long-term resilience and wealth building.";
     }
 
     if (score >= 80) {
-      return "You are in a strong position. Keep maintaining low expense pressure and continue growing savings or investments over time.";
+      return "You’re in a strong position. Keep expenses controlled and continue building savings or investments.";
     }
 
     if (score >= 50) {
-      return "You have a solid financial baseline. Focus on optimizing spending and gradually improving your savings rate.";
+      return "You have a solid baseline. The biggest opportunity now is tightening expenses and improving savings consistency.";
     }
 
-    return "Your finances show some pressure points, but there is room to improve. Start with the largest recurring expense category first.";
-  };
+    return "Your finances show pressure points, but there is room to improve. Start with the largest recurring expense category first.";
+  }, [report]);
 
   const askAI = async () => {
     if (!question.trim()) return;
@@ -65,40 +78,36 @@ export default function AIFinancialAdvisor({ report }: Props) {
     setMessages((prev) => [...prev, userMessage]);
     setLoading(true);
 
+    const fallbackReply =
+      question.toLowerCase().includes("improve")
+        ? `${baseAdvice} A practical next step is to reduce one recurring expense and rerun the calculator.`
+        : baseAdvice;
+
     try {
       const res = await fetch("/api/financial-assistant", {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          message: question,
-          report,
-        }),
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ message: question, report }),
       });
 
-      if (!res.ok) {
-        throw new Error("AI service unavailable");
-      }
+      if (!res.ok) throw new Error("AI service unavailable");
 
       const data = await res.json();
-
-      const aiMessage = {
-        role: "assistant" as const,
-        content:
-          data?.reply ||
-          "AI advisor is unavailable right now. Please try again later.",
-      };
-
-      setMessages((prev) => [...prev, aiMessage]);
-    } catch (err) {
-      const fallbackMessage = {
-        role: "assistant" as const,
-        content: buildFallbackReply(),
-      };
-
-      setMessages((prev) => [...prev, fallbackMessage]);
-      console.error(err);
+      setMessages((prev) => [
+        ...prev,
+        {
+          role: "assistant",
+          content: data?.reply || fallbackReply,
+        },
+      ]);
+    } catch {
+      setMessages((prev) => [
+        ...prev,
+        {
+          role: "assistant",
+          content: fallbackReply,
+        },
+      ]);
     }
 
     setQuestion("");
@@ -112,14 +121,12 @@ export default function AIFinancialAdvisor({ report }: Props) {
       </h3>
 
       <p className="text-slate-500 mb-6">
-        Ask questions about your financial score and get personalized guidance.
+        Ask questions about your score and get guidance based on your numbers.
       </p>
 
       <div className="space-y-4 mb-6 max-h-64 overflow-y-auto">
         {messages.length === 0 ? (
-          <div className="text-slate-600 leading-8 text-base">
-            {buildFallbackReply()}
-          </div>
+          <div className="text-slate-700 leading-7">{baseAdvice}</div>
         ) : (
           messages.map((msg, i) => (
             <div
