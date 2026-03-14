@@ -2,6 +2,7 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 
 export type Calculation = {
   id: number;
+  createdAt: string;
   income: number;
   rent: number;
   carPayment: number;
@@ -10,7 +11,7 @@ export type Calculation = {
   score: number;
 };
 
-export type InsertCalculation = Omit<Calculation, "id">;
+export type InsertCalculation = Omit<Calculation, "id" | "createdAt">;
 
 const STORAGE_KEY = "wealth-iq-calculations";
 const QUERY_KEY = ["wealth-iq-calculations"];
@@ -48,6 +49,7 @@ export function useCreateCalculation() {
       const next: Calculation = {
         ...data,
         id: Date.now(),
+        createdAt: new Date().toISOString(),
       };
 
       const updated = [next, ...existing];
