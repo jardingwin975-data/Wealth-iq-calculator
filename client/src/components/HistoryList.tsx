@@ -1,4 +1,4 @@
-import { useCalculations } from "@/hooks/use-calculations";
+import { useCalculations } from "../hooks/use-calculations";
 import {
   Calendar,
   Wallet,
