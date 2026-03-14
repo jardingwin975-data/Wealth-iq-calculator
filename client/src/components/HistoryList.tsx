@@ -6,7 +6,6 @@ import {
   TrendingUp,
   Download,
 } from "lucide-react";
-import { motion } from "framer-motion";
 
 function getScoreMeta(score: number) {
   if (score >= 80) {
@@ -74,10 +73,7 @@ export function HistoryList() {
       headers.join(","),
       ...rows.map((row) =>
         headers
-          .map((header) => {
-            const value = row[header as keyof typeof row];
-            return `"${String(value)}"`;
-          })
+          .map((header) => `"${String(row[header as keyof typeof row])}"`)
           .join(","),
       ),
     ].join("\n");
@@ -98,10 +94,7 @@ export function HistoryList() {
     return (
       <div className="w-full space-y-4">
         {[1, 2, 3].map((i) => (
-          <div
-            key={i}
-            className="h-28 rounded-3xl bg-slate-100 animate-pulse"
-          />
+          <div key={i} className="h-28 rounded-3xl bg-slate-100 animate-pulse" />
         ))}
       </div>
     );
@@ -134,8 +127,8 @@ export function HistoryList() {
         </button>
       </div>
 
-      <div className="space-y-4 max-h-[520px] overflow-y-auto pr-2 scrollbar-thin">
-        {sorted.map((calc, idx) => {
+      <div className="space-y-4 max-h-[520px] overflow-y-auto pr-2">
+        {sorted.map((calc) => {
           const totalExpenses = calc.rent + calc.carPayment + calc.otherExpenses;
           const disposableIncome = calc.income - totalExpenses;
           const expenseRatio =
@@ -148,17 +141,14 @@ export function HistoryList() {
           const meta = getScoreMeta(calc.score);
 
           return (
-            <motion.div
+            <div
               key={calc.id}
-              initial={{ opacity: 0, y: 16 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: idx * 0.06 }}
-              className="rounded-3xl border border-slate-100 bg-white/85 shadow-[0_12px_32px_rgba(15,23,42,0.05)] p-5 hover:shadow-[0_16px_40px_rgba(15,23,42,0.08)] transition-all"
+              className="rounded-3xl border border-slate-100 bg-white/85 shadow-[0_12px_32px_rgba(15,23,42,0.05)] p-5"
             >
               <div className="flex items-start justify-between gap-5">
                 <div className="min-w-0">
                   <div className="flex items-center gap-3 flex-wrap">
-                    <h4 className="text-2xl font-bold text-slate-900 font-display">
+                    <h4 className="text-2xl font-bold text-slate-900">
                       {formatCurrency(calc.income)}
                     </h4>
                     <span
@@ -220,7 +210,7 @@ export function HistoryList() {
                   </p>
                 </div>
               </div>
-            </motion.div>
+            </div>
           );
         })}
       </div>
