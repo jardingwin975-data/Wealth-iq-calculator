@@ -6,11 +6,11 @@ import AIFinancialAdvisor from "../components/AIFinancialAdvisor";
 import { useCreateCalculation } from "../hooks/use-calculations";
 
 export default function Home() {
-  const [income, setIncome] = useState(2100);
-  const [rent, setRent] = useState(350);
-  const [carPayment, setCarPayment] = useState(400);
-  const [groceries, setGroceries] = useState(250);
-  const [otherExpenses, setOtherExpenses] = useState(0);
+  const [income, setIncome] = useState<number>(2100);
+  const [rent, setRent] = useState<number>(350);
+  const [carPayment, setCarPayment] = useState<number>(400);
+  const [groceries, setGroceries] = useState<number>(250);
+  const [otherExpenses, setOtherExpenses] = useState<number>(0);
 
   const createCalculation = useCreateCalculation();
 
@@ -76,30 +76,14 @@ export default function Home() {
     disposableIncome,
   ]);
 
-  const resetValues = () => {
-    setIncome(2100);
-    setRent(350);
-    setCarPayment(400);
-    setGroceries(250);
-    setOtherExpenses(0);
-  };
-
-  const saveCalculation = () => {
-    createCalculation.mutate({
-      income,
-      rent,
-      carPayment,
-      groceries,
-      otherExpenses,
-      score,
-    });
-  };
-
   const comparison = useMemo(() => {
     const targetSavingsRate = 20;
     const targetDisposable = Math.round((income * targetSavingsRate) / 100);
     const recommendedMaxExpenses = Math.max(income - targetDisposable, 0);
-    const improvementNeeded = Math.max(totalExpenses - recommendedMaxExpenses, 0);
+    const improvementNeeded = Math.max(
+      totalExpenses - recommendedMaxExpenses,
+      0
+    );
 
     return {
       recommendedMaxExpenses,
@@ -122,6 +106,32 @@ export default function Home() {
     transportRatio,
   };
 
+  const handleNumberInput =
+    (setter: React.Dispatch<React.SetStateAction<number>>) =>
+    (e: React.ChangeEvent<HTMLInputElement>) => {
+      const value = Number(e.target.value);
+      setter(Number.isFinite(value) ? value : 0);
+    };
+
+  const resetValues = () => {
+    setIncome(2100);
+    setRent(350);
+    setCarPayment(400);
+    setGroceries(250);
+    setOtherExpenses(0);
+  };
+
+  const saveCalculation = () => {
+    createCalculation.mutate({
+      income,
+      rent,
+      carPayment,
+      groceries,
+      otherExpenses,
+      score,
+    });
+  };
+
   const inputStyle: React.CSSProperties = {
     width: "100%",
     padding: "14px 16px",
@@ -140,6 +150,18 @@ export default function Home() {
     fontWeight: 600,
     color: "#475569",
     marginBottom: 8,
+  };
+
+  const sectionStyle: React.CSSProperties = {
+    marginTop: 32,
+  };
+
+  const cardStyle: React.CSSProperties = {
+    marginTop: 32,
+    padding: 24,
+    border: "1px solid #e5e7eb",
+    borderRadius: 24,
+    background: "#f8fafc",
   };
 
   return (
@@ -169,23 +191,13 @@ export default function Home() {
         ← Gwin Analytics
       </a>
 
-      <h1 style={{ fontSize: "32px", fontWeight: 700 }}>
-        Wealth IQ Calculator
-      </h1>
+      <h1 style={{ fontSize: 32, fontWeight: 700 }}>Wealth IQ Calculator</h1>
 
       <p style={{ color: "#64748b", marginBottom: 32 }}>
         Measure the health of your monthly finances.
       </p>
 
-      <div
-        style={{
-          marginBottom: 32,
-          padding: 24,
-          border: "1px solid #e5e7eb",
-          borderRadius: 24,
-          background: "#f8fafc",
-        }}
-      >
+      <div style={cardStyle}>
         <h2
           style={{
             fontSize: 24,
@@ -209,7 +221,7 @@ export default function Home() {
             <input
               type="number"
               value={income}
-              onChange={(e) => setIncome(Number(e.target.value) || 0)}
+              onChange={handleNumberInput(setIncome)}
               style={inputStyle}
             />
           </div>
@@ -219,7 +231,7 @@ export default function Home() {
             <input
               type="number"
               value={rent}
-              onChange={(e) => setRent(Number(e.target.value) || 0)}
+              onChange={handleNumberInput(setRent)}
               style={inputStyle}
             />
           </div>
@@ -229,7 +241,7 @@ export default function Home() {
             <input
               type="number"
               value={carPayment}
-              onChange={(e) => setCarPayment(Number(e.target.value) || 0)}
+              onChange={handleNumberInput(setCarPayment)}
               style={inputStyle}
             />
           </div>
@@ -239,7 +251,7 @@ export default function Home() {
             <input
               type="number"
               value={groceries}
-              onChange={(e) => setGroceries(Number(e.target.value) || 0)}
+              onChange={handleNumberInput(setGroceries)}
               style={inputStyle}
             />
           </div>
@@ -249,7 +261,7 @@ export default function Home() {
             <input
               type="number"
               value={otherExpenses}
-              onChange={(e) => setOtherExpenses(Number(e.target.value) || 0)}
+              onChange={handleNumberInput(setOtherExpenses)}
               style={inputStyle}
             />
           </div>
@@ -295,7 +307,7 @@ export default function Home() {
         </div>
       </div>
 
-      <div style={{ marginTop: 32 }}>
+      <div style={sectionStyle}>
         <ScoreDisplay
           score={score}
           expenseRatio={expenseRatio}
@@ -307,7 +319,7 @@ export default function Home() {
         />
       </div>
 
-      <div style={{ marginTop: 32 }}>
+      <div style={sectionStyle}>
         <FinanceCharts
           income={income}
           rent={rent}
@@ -317,24 +329,20 @@ export default function Home() {
         />
       </div>
 
-      <div
-        style={{
-          marginTop: 32,
-          padding: 24,
-          border: "1px solid #e5e7eb",
-          borderRadius: 24,
-          background: "#f8fafc",
-        }}
-      >
+      <div style={cardStyle}>
         <h2 style={{ fontSize: 24, fontWeight: 700, marginTop: 0 }}>
           Scenario Comparison
         </h2>
+
         <p style={{ color: "#64748b", marginBottom: 12 }}>
-          To hit a 20% savings rate, your target maximum monthly expenses would be:
+          To hit a 20% savings rate, your target maximum monthly expenses would
+          be:
         </p>
+
         <p style={{ fontSize: 28, fontWeight: 700, marginBottom: 8 }}>
           ${comparison.recommendedMaxExpenses.toLocaleString()}
         </p>
+
         <p style={{ color: "#64748b" }}>
           {comparison.improvementNeeded > 0
             ? `You would need to cut about $${comparison.improvementNeeded.toLocaleString()} in monthly expenses to reach that target.`
@@ -342,11 +350,11 @@ export default function Home() {
         </p>
       </div>
 
-      <div style={{ marginTop: 32 }}>
+      <div style={sectionStyle}>
         <AIFinancialAdvisor report={report} />
       </div>
 
-      <div style={{ marginTop: 32 }}>
+      <div style={sectionStyle}>
         <h2
           style={{
             fontSize: 28,
