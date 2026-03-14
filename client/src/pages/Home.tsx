@@ -11,11 +11,12 @@ import {
   BadgeDollarSign,
   RotateCcw,
 } from "lucide-react";
-import { ScoreDisplay } from "@/components/ScoreDisplay";
-import FinanceCharts from "@/components/FinanceCharts";
-import AIFinancialAdvisor from "@/components/AIFinancialAdvisor";
-import { HistoryList } from "@/components/HistoryList";
-import { useCreateCalculation } from "@/hooks/use-calculations";
+
+import { ScoreDisplay } from "../components/ScoreDisplay";
+import FinanceCharts from "../components/FinanceCharts";
+import AIFinancialAdvisor from "../components/AIFinancialAdvisor";
+import { HistoryList } from "../components/HistoryList";
+import { useCreateCalculation } from "../hooks/use-calculations";
 
 export default function Home() {
   const [income, setIncome] = useState(0);
