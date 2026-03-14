@@ -1,6 +1,6 @@
 export default function App() {
   return (
-    <div style={{ padding: 40 }}>
+    <div style={{ padding: 40, fontFamily: "Arial" }}>
       <a
         href="https://gwinanalytics.com"
         style={{
@@ -21,7 +21,7 @@ export default function App() {
       </a>
 
       <h1>WealthIQ Financial Calculator</h1>
-      <p>Your calculator UI will appear here.</p>
+      <p>The site is now restored.</p>
     </div>
   );
 }
