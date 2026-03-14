@@ -1,4 +1,15 @@
 import { useMemo, useState } from "react";
+import {
+  Sparkles,
+  ShieldCheck,
+  BarChart3,
+  BadgeDollarSign,
+  Wallet,
+  Home as HomeIcon,
+  Car,
+  ShoppingCart,
+  CreditCard,
+} from "lucide-react";
 import { ScoreDisplay } from "../components/ScoreDisplay";
 import FinanceCharts from "../components/FinanceCharts";
 
@@ -83,10 +94,31 @@ export default function Home() {
     };
   }, [income, totalExpenses]);
 
+  const featureCards = [
+    {
+      icon: ShieldCheck,
+      title: "Financial Health",
+      value: "Score-based",
+      desc: "Quickly measure overall budget strength.",
+    },
+    {
+      icon: BarChart3,
+      title: "Expense Analytics",
+      value: "Real-time",
+      desc: "Track ratios and cash flow.",
+    },
+    {
+      icon: BadgeDollarSign,
+      title: "Budget Clarity",
+      value: "Actionable",
+      desc: "See how income supports your lifestyle.",
+    },
+  ];
+
   const inputStyle: React.CSSProperties = {
     width: "100%",
     padding: "14px 16px",
-    borderRadius: 12,
+    borderRadius: 14,
     border: "1px solid #dbe3ee",
     fontSize: 18,
     color: "#0f172a",
@@ -95,8 +127,10 @@ export default function Home() {
     background: "#fff",
   };
 
-  const labelStyle: React.CSSProperties = {
-    display: "block",
+  const labelRowStyle: React.CSSProperties = {
+    display: "flex",
+    alignItems: "center",
+    gap: 8,
     fontSize: 14,
     fontWeight: 600,
     color: "#475569",
@@ -105,163 +139,272 @@ export default function Home() {
 
   return (
     <div
+      className="app-shell"
       style={{
-        padding: 40,
+        padding: 24,
         minHeight: "100vh",
-        background: "white",
         color: "#111",
-        maxWidth: 900,
-        margin: "0 auto",
       }}
     >
-      <a
-        href="https://gwinanalytics.com"
-        style={{
-          display: "inline-block",
-          marginBottom: 20,
-          padding: "10px 16px",
-          background: "#0f172a",
-          color: "white",
-          borderRadius: 12,
-          textDecoration: "none",
-          fontWeight: 600,
-        }}
-      >
-        ← Gwin Analytics
-      </a>
-
-      <h1 style={{ fontSize: "32px", fontWeight: 700 }}>
-        Wealth IQ Financial Calculator
-      </h1>
-
-      <p style={{ color: "#64748b", marginBottom: 32 }}>
-        Measure the health of your monthly finances.
-      </p>
-
       <div
         style={{
-          marginBottom: 32,
-          padding: 24,
-          border: "1px solid #e5e7eb",
-          borderRadius: 24,
-          background: "#f8fafc",
+          maxWidth: 1180,
+          margin: "0 auto",
         }}
       >
-        <h2
+        <a
+          href="https://gwinanalytics.com"
           style={{
-            fontSize: 24,
-            fontWeight: 700,
-            marginTop: 0,
+            display: "inline-block",
             marginBottom: 20,
+            padding: "10px 16px",
+            background: "#0f172a",
+            color: "white",
+            borderRadius: 12,
+            textDecoration: "none",
+            fontWeight: 600,
           }}
         >
-          Monthly Inputs
-        </h2>
+          ← Gwin Analytics
+        </a>
+
+        <section className="premium-card p-8 mb-10">
+          <div
+            style={{
+              marginBottom: 16,
+              display: "inline-flex",
+              alignItems: "center",
+              gap: 8,
+              borderRadius: 999,
+              background: "#ecfdf5",
+              padding: "10px 16px",
+              fontSize: 14,
+              fontWeight: 700,
+              color: "#047857",
+            }}
+          >
+            <Sparkles size={16} />
+            Financial health scoring, simplified
+          </div>
+
+          <h1
+            style={{
+              fontSize: "clamp(2.2rem, 5vw, 4rem)",
+              lineHeight: 1.05,
+              fontWeight: 900,
+              letterSpacing: "-0.03em",
+              margin: 0,
+              color: "#0f172a",
+            }}
+          >
+            Wealth IQ{" "}
+            <span
+              style={{
+                background:
+                  "linear-gradient(90deg, #10b981 0%, #06b6d4 55%, #3b82f6 100%)",
+                WebkitBackgroundClip: "text",
+                WebkitTextFillColor: "transparent",
+              }}
+            >
+              Financial Calculator
+            </span>
+          </h1>
+
+          <p
+            style={{
+              marginTop: 18,
+              marginBottom: 0,
+              maxWidth: 720,
+              fontSize: 18,
+              lineHeight: 1.7,
+              color: "#64748b",
+            }}
+          >
+            A clean financial score tool that turns your monthly income and
+            expenses into a simple health snapshot with visual insights,
+            scoring, and cash-flow clarity.
+          </p>
+        </section>
+
+        <div className="grid md:grid-cols-3 gap-6 mb-10">
+          {featureCards.map((card) => {
+            const Icon = card.icon;
+
+            return (
+              <div key={card.title} className="premium-card p-6">
+                <div className="flex items-center gap-3 mb-3">
+                  <Icon className="h-5 w-5 text-slate-700" />
+                  <strong className="text-slate-900">{card.title}</strong>
+                </div>
+
+                <div
+                  style={{
+                    fontSize: 24,
+                    fontWeight: 800,
+                    color: "#0f172a",
+                    marginBottom: 8,
+                  }}
+                >
+                  {card.value}
+                </div>
+
+                <p
+                  style={{
+                    color: "#64748b",
+                    margin: 0,
+                    lineHeight: 1.6,
+                  }}
+                >
+                  {card.desc}
+                </p>
+              </div>
+            );
+          })}
+        </div>
+
+        <div className="grid lg:grid-cols-2 gap-10 items-start">
+          <div className="premium-card p-8">
+            <h2
+              style={{
+                fontSize: 24,
+                fontWeight: 800,
+                marginTop: 0,
+                marginBottom: 22,
+                color: "#0f172a",
+              }}
+            >
+              Monthly Inputs
+            </h2>
+
+            <div style={{ marginBottom: 18 }}>
+              <label style={labelRowStyle}>
+                <Wallet size={18} />
+                Monthly Income
+              </label>
+              <input
+                type="number"
+                value={income}
+                onChange={(e) => setIncome(Number(e.target.value) || 0)}
+                style={inputStyle}
+              />
+            </div>
+
+            <div style={{ marginBottom: 18 }}>
+              <label style={labelRowStyle}>
+                <HomeIcon size={18} />
+                Rent / Mortgage
+              </label>
+              <input
+                type="number"
+                value={rent}
+                onChange={(e) => setRent(Number(e.target.value) || 0)}
+                style={inputStyle}
+              />
+            </div>
+
+            <div style={{ marginBottom: 18 }}>
+              <label style={labelRowStyle}>
+                <Car size={18} />
+                Car Payment
+              </label>
+              <input
+                type="number"
+                value={carPayment}
+                onChange={(e) => setCarPayment(Number(e.target.value) || 0)}
+                style={inputStyle}
+              />
+            </div>
+
+            <div style={{ marginBottom: 18 }}>
+              <label style={labelRowStyle}>
+                <ShoppingCart size={18} />
+                Groceries
+              </label>
+              <input
+                type="number"
+                value={groceries}
+                onChange={(e) => setGroceries(Number(e.target.value) || 0)}
+                style={inputStyle}
+              />
+            </div>
+
+            <div>
+              <label style={labelRowStyle}>
+                <CreditCard size={18} />
+                Other Expenses
+              </label>
+              <input
+                type="number"
+                value={otherExpenses}
+                onChange={(e) => setOtherExpenses(Number(e.target.value) || 0)}
+                style={inputStyle}
+              />
+            </div>
+          </div>
+
+          <ScoreDisplay
+            score={score}
+            expenseRatio={expenseRatio}
+            savingsRate={savingsRate}
+            totalExpenses={totalExpenses}
+            disposableIncome={disposableIncome}
+            housingRatio={housingRatio}
+            transportRatio={transportRatio}
+          />
+        </div>
+
+        <div style={{ marginTop: 32 }}>
+          <FinanceCharts
+            income={income}
+            rent={rent}
+            carPayment={carPayment}
+            Groceries={groceries}
+            otherExpenses={otherExpenses}
+          />
+        </div>
 
         <div
+          className="premium-card"
           style={{
-            display: "grid",
-            gridTemplateColumns: "repeat(auto-fit, minmax(220px, 1fr))",
-            gap: 16,
+            marginTop: 32,
+            padding: 24,
           }}
         >
-          <div>
-            <label style={labelStyle}>Monthly Income</label>
-            <input
-              type="number"
-              value={income}
-              onChange={(e) => setIncome(Number(e.target.value) || 0)}
-              style={inputStyle}
-            />
-          </div>
+          <h2
+            style={{
+              fontSize: 24,
+              fontWeight: 800,
+              marginTop: 0,
+              marginBottom: 12,
+              color: "#0f172a",
+            }}
+          >
+            Scenario Comparison
+          </h2>
 
-          <div>
-            <label style={labelStyle}>Rent / Mortgage</label>
-            <input
-              type="number"
-              value={rent}
-              onChange={(e) => setRent(Number(e.target.value) || 0)}
-              style={inputStyle}
-            />
-          </div>
+          <p style={{ color: "#64748b", marginBottom: 12 }}>
+            To hit a 20% savings rate, your target maximum monthly expenses
+            would be:
+          </p>
 
-          <div>
-            <label style={labelStyle}>Car Payment</label>
-            <input
-              type="number"
-              value={carPayment}
-              onChange={(e) => setCarPayment(Number(e.target.value) || 0)}
-              style={inputStyle}
-            />
-          </div>
+          <p
+            style={{
+              fontSize: 32,
+              fontWeight: 900,
+              marginBottom: 8,
+              marginTop: 0,
+              color: "#0f172a",
+            }}
+          >
+            ${comparison.recommendedMaxExpenses.toLocaleString()}
+          </p>
 
-          <div>
-            <label style={labelStyle}>Groceries</label>
-            <input
-              type="number"
-              value={groceries}
-              onChange={(e) => setGroceries(Number(e.target.value) || 0)}
-              style={inputStyle}
-            />
-          </div>
-
-          <div>
-            <label style={labelStyle}>Other Expenses</label>
-            <input
-              type="number"
-              value={otherExpenses}
-              onChange={(e) => setOtherExpenses(Number(e.target.value) || 0)}
-              style={inputStyle}
-            />
-          </div>
+          <p style={{ color: "#64748b", marginBottom: 0 }}>
+            {comparison.improvementNeeded > 0
+              ? `You would need to cut about $${comparison.improvementNeeded.toLocaleString()} in monthly expenses to reach that target.`
+              : "You are already at or better than that target."}
+          </p>
         </div>
-      </div>
-
-      <div style={{ marginTop: 32 }}>
-        <ScoreDisplay
-          score={score}
-          expenseRatio={expenseRatio}
-          savingsRate={savingsRate}
-          totalExpenses={totalExpenses}
-          disposableIncome={disposableIncome}
-          housingRatio={housingRatio}
-          transportRatio={transportRatio}
-        />
-      </div>
-
-      <div style={{ marginTop: 32 }}>
-        <FinanceCharts
-          income={income}
-          rent={rent}
-          carPayment={carPayment}
-          Groceries={groceries}
-          otherExpenses={otherExpenses}
-        />
-      </div>
-
-      <div
-        style={{
-          marginTop: 32,
-          padding: 24,
-          border: "1px solid #e5e7eb",
-          borderRadius: 24,
-          background: "#f8fafc",
-        }}
-      >
-        <h2 style={{ fontSize: 24, fontWeight: 700, marginTop: 0 }}>
-          Scenario Comparison
-        </h2>
-        <p style={{ color: "#64748b", marginBottom: 12 }}>
-          To hit a 20% savings rate, your target maximum monthly expenses would be:
-        </p>
-        <p style={{ fontSize: 28, fontWeight: 700, marginBottom: 8 }}>
-          ${comparison.recommendedMaxExpenses.toLocaleString()}
-        </p>
-        <p style={{ color: "#64748b" }}>
-          {comparison.improvementNeeded > 0
-            ? `You would need to cut about $${comparison.improvementNeeded.toLocaleString()} in monthly expenses to reach that target.`
-            : "You are already at or better than that target."}
-        </p>
       </div>
     </div>
   );
