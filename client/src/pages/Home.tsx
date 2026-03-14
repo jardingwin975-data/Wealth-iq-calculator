@@ -11,7 +11,16 @@ export default function Home() {
   const [transportRatio] = useState<number | null>(14);
 
   return (
-    <div style={{ padding: 40, minHeight: "100vh", background: "white", color: "#111" }}>
+    <div
+  style={{
+    padding: 40,
+    minHeight: "100vh",
+    background: "white",
+    color: "#111",
+    maxWidth: 900,
+    margin: "0 auto"
+  }}
+>
 
   <a
     href="https://gwinanalytics.com"
@@ -36,16 +45,17 @@ export default function Home() {
   <p style={{ color: "#64748b", marginBottom: 32 }}>
     Measure the health of your monthly finances.
   </p>
-
-      <ScoreDisplay
-        score={score}
-        expenseRatio={expenseRatio}
-        savingsRate={savingsRate}
-        totalExpenses={totalExpenses}
-        disposableIncome={disposableIncome}
-        housingRatio={housingRatio}
-        transportRatio={transportRatio}
-      />
+  <div style={{ marginTop: 32 }}>
+  <ScoreDisplay
+    score={score}
+    expenseRatio={expenseRatio}
+    savingsRate={savingsRate}
+    totalExpenses={totalExpenses}
+    disposableIncome={disposableIncome}
+    housingRatio={housingRatio}
+    transportRatio={transportRatio}
+  />
+</div>
     </div>
   );
 }
