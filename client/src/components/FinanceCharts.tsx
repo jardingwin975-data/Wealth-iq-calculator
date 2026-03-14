@@ -1,18 +1,3 @@
-import {
-  PieChart,
-  Pie,
-  Sector,
-  Cell,
-  ResponsiveContainer,
-  Tooltip,
-  BarChart,
-  Bar,
-  XAxis,
-  YAxis,
-  CartesianGrid,
-  Legend,
-} from "recharts";
-
 type FinanceChartsProps = {
   income: number;
   rent: number;
@@ -21,37 +6,9 @@ type FinanceChartsProps = {
   otherExpenses: number;
 };
 
-type ActiveShapeProps = {
-  cx?: number;
-  cy?: number;
-  innerRadius?: number;
-  outerRadius?: number;
-  startAngle?: number;
-  endAngle?: number;
-};
-
-const renderActiveShape = (props: ActiveShapeProps) => {
-  const {
-    cx = 0,
-    cy = 0,
-    innerRadius = 0,
-    outerRadius = 0,
-    startAngle = 0,
-    endAngle = 0,
-  } = props;
-
-  return (
-    <Sector
-      cx={cx}
-      cy={cy}
-      innerRadius={innerRadius}
-      outerRadius={outerRadius + 8}
-      startAngle={startAngle}
-      endAngle={endAngle}
-      fill="#d1d5db"
-    />
-  );
-};
+function currency(value: number) {
+  return `$${value.toLocaleString()}`;
+}
 
 export default function FinanceCharts({
   income,
@@ -61,98 +18,107 @@ export default function FinanceCharts({
   otherExpenses,
 }: FinanceChartsProps) {
   const totalExpenses = rent + carPayment + Groceries + otherExpenses;
-  const savings = income - totalExpenses;
+  const savings = Math.max(income - totalExpenses, 0);
 
-  const expenseBreakdown = [
-    { name: "Rent/Mortgage", value: rent },
-    { name: "Car Payment", value: carPayment },
-    { name: "Groceries", value: Groceries },
-    { name: "Other Expenses", value: otherExpenses },
+  const breakdown = [
+    { name: "Rent / Mortgage", value: rent, color: "#3b82f6" },
+    { name: "Car Payment", value: carPayment, color: "#f59e0b" },
+    { name: "Groceries", value: Groceries, color: "#10b981" },
+    { name: "Other Expenses", value: otherExpenses, color: "#8b5cf6" },
   ].filter((item) => item.value > 0);
 
-  const incomeVsExpenses = [
-    { name: "Income", value: income },
-    { name: "Expenses", value: totalExpenses },
-    { name: "Savings", value: Math.max(savings, 0) },
-  ];
+  const maxBreakdown = breakdown.reduce((m, item) => Math.max(m, item.value), 0) || 1;
+  const maxCash = Math.max(income, totalExpenses, savings, 1);
 
-  const pieColors = ["#3b82f6", "#f59e0b", "#10b981", "#8b5cf6"];
-  const barColors = ["#22c55e", "#ef4444", "#3b82f6"];
+  const cashFlow = [
+    { name: "Income", value: income, color: "#22c55e" },
+    { name: "Expenses", value: totalExpenses, color: "#3b82f6" },
+    { name: "Savings", value: savings, color: "#8b5cf6" },
+  ];
 
   return (
     <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
       <div className="premium-card rounded-[2rem] p-6">
-        <h3 className="mb-4 text-xl font-bold text-slate-900">
-          Expense Breakdown
-        </h3>
-
-        <div className="h-[320px] w-full">
-          <ResponsiveContainer width="100%" height="100%">
-            <PieChart>
-              <Pie
-                data={expenseBreakdown}
-                dataKey="value"
-                nameKey="name"
-                cx="50%"
-                cy="50%"
-                outerRadius={100}
-                label
-                activeShape={renderActiveShape}
-                isAnimationActive={true}
-                animationDuration={500}
-              >
-                {expenseBreakdown.map((entry, index) => (
-                  <Cell
-                    key={`pie-cell-${entry.name}-${index}`}
-                    fill={pieColors[index % pieColors.length]}
-                  />
-                ))}
-              </Pie>
-              <Tooltip
-                formatter={(value: number) => [
-                  `$${value.toLocaleString()}`,
-                  "Amount",
-                ]}
-              />
-              <Legend />
-            </PieChart>
-          </ResponsiveContainer>
+        <div className="flex items-start justify-between gap-4 mb-4">
+          <div>
+            <p className="text-sm font-semibold uppercase tracking-[0.18em] text-slate-400">
+              Analytics
+            </p>
+            <h3 className="text-2xl font-bold text-slate-900">Expense Breakdown</h3>
+            <p className="mt-2 text-slate-500">
+              See where your monthly expenses are concentrated.
+            </p>
+          </div>
         </div>
+
+        {breakdown.length === 0 ? (
+          <div className="rounded-3xl border border-dashed border-slate-200 p-8 text-center text-slate-500">
+            Enter expenses to see a breakdown.
+          </div>
+        ) : (
+          <>
+            <div className="space-y-4 mt-6">
+              {breakdown.map((item) => (
+                <div key={item.name}>
+                  <div className="mb-2 flex items-center justify-between text-sm">
+                    <span className="font-medium text-slate-700">{item.name}</span>
+                    <span className="text-slate-500">{currency(item.value)}</span>
+                  </div>
+                  <div className="h-4 rounded-full bg-slate-100 overflow-hidden">
+                    <div
+                      className="h-full rounded-full"
+                      style={{
+                        width: `${(item.value / maxBreakdown) * 100}%`,
+                        background: item.color,
+                      }}
+                    />
+                  </div>
+                </div>
+              ))}
+            </div>
+
+            <div className="mt-8 flex flex-wrap gap-4">
+              {breakdown.map((item) => (
+                <div key={item.name} className="flex items-center gap-2 text-sm text-slate-600">
+                  <span
+                    className="inline-block h-3 w-3 rounded-full"
+                    style={{ background: item.color }}
+                  />
+                  {item.name}
+                </div>
+              ))}
+            </div>
+          </>
+        )}
       </div>
 
       <div className="premium-card rounded-[2rem] p-6">
-        <h3 className="mb-4 text-xl font-bold text-slate-900">
-          Income vs Expenses
-        </h3>
+        <p className="text-sm font-semibold uppercase tracking-[0.18em] text-slate-400">
+          Cash Flow
+        </p>
+        <h3 className="text-2xl font-bold text-slate-900 mt-1">Income vs Expenses</h3>
+        <p className="mt-2 text-slate-500">
+          Compare your income, spending, and remaining savings.
+        </p>
 
-        <div className="h-[320px] w-full">
-          <ResponsiveContainer width="100%" height="100%">
-            <BarChart data={incomeVsExpenses}>
-              <CartesianGrid strokeDasharray="3 3" />
-              <XAxis dataKey="name" />
-              <YAxis />
-              <Tooltip
-                formatter={(value: number) => [
-                  `$${value.toLocaleString()}`,
-                  "Amount",
-                ]}
-              />
-              <Legend />
-              <Bar
-                dataKey="value"
-                radius={[8, 8, 0, 0]}
-                animationDuration={900}
-                animationEasing="ease-out"
-              >
-                {incomeVsExpenses.map((entry, index) => (
-                  <Cell
-                    key={`bar-cell-${entry.name}-${index}`}
-                    fill={barColors[index % barColors.length]}
-                  />
-                ))}
-              </Bar>
-            </BarChart>
-          </ResponsiveContainer>
+        <div className="mt-8 grid grid-cols-3 gap-6 items-end min-h-[280px]">
+          {cashFlow.map((item) => (
+            <div key={item.name} className="flex flex-col items-center justify-end">
+              <div className="text-sm text-slate-500 mb-3">{currency(item.value)}</div>
+              <div className="h-56 w-full flex items-end justify-center">
+                <div
+                  className="w-10 rounded-t-2xl"
+                  style={{
+                    height: `${Math.max((item.value / maxCash) * 100, 4)}%`,
+                    background: item.color,
+                  }}
+                />
+              </div>
+              <div className="mt-4 text-center text-sm font-medium text-slate-700">
+                {item.name}
+              </div>
+            </div>
+          ))}
         </div>
       </div>
     </div>
