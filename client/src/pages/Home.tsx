@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { ScoreDisplay } from "../components/ScoreDisplay";
-
+import FinanceCharts from "../components/FinanceCharts";
 export default function Home() {
   const [score] = useState<number | null>(52);
   const [expenseRatio] = useState<number | null>(48);
@@ -55,7 +55,15 @@ export default function Home() {
     housingRatio={housingRatio}
     transportRatio={transportRatio}
   />
+
+  <FinanceCharts
+  income={2100}
+  rent={350}
+  carPayment={400}
+  Groceries={250}
+  otherExpenses={0}
+/>
 </div>
-    </div>
+</div>
   );
 }
