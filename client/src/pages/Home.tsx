@@ -12,23 +12,30 @@ export default function Home() {
 
   return (
     <div style={{ padding: 40, minHeight: "100vh", background: "white", color: "#111" }}>
-      <a
-        href="https://gwinanalytics.com"
-        style={{
-          display: "inline-block",
-          marginBottom: 24,
-          padding: "10px 14px",
-          background: "#11161d",
-          color: "white",
-          borderRadius: 10,
-          textDecoration: "none",
-          fontWeight: 600,
-        }}
-      >
-        ← Gwin Analytics
-      </a>
 
-      <h1 style={{ marginBottom: 24 }}>Wealth IQ Calculator</h1>
+  <a
+    href="https://gwinanalytics.com"
+    style={{
+      display: "inline-block",
+      marginBottom: 20,
+      padding: "10px 16px",
+      background: "#0f172a",
+      color: "white",
+      borderRadius: 12,
+      textDecoration: "none",
+      fontWeight: 600
+    }}
+  >
+    ← Gwin Analytics
+  </a>
+
+  <h1 style={{ fontSize: "32px", fontWeight: 700 }}>
+    Wealth IQ Calculator
+  </h1>
+
+  <p style={{ color: "#64748b", marginBottom: 32 }}>
+    Measure the health of your monthly finances.
+  </p>
 
       <ScoreDisplay
         score={score}
