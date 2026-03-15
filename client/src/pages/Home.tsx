@@ -6,6 +6,7 @@ import {
   ShoppingCart,
   CreditCard,
   RotateCcw,
+  Wand2,
 } from "lucide-react";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { ScoreDisplay } from "../components/ScoreDisplay";
@@ -162,6 +163,15 @@ function WealthIQPage() {
     setHasCalculated(false);
   };
 
+  const handleLoadDemo = () => {
+    setIncome("4200");
+    setRent("1400");
+    setCarPayment("420");
+    setGroceries("450");
+    setOtherExpenses("600");
+    setHasCalculated(true);
+  };
+
   const inputWrap =
     "rounded-[1.75rem] border border-slate-200 bg-white/90 shadow-[0_12px_40px_rgba(15,23,42,0.05)] p-5 sm:p-6";
   const inputClass =
@@ -287,6 +297,15 @@ function WealthIQPage() {
                 className="financial-button rounded-2xl px-8 py-5 text-lg sm:text-xl font-bold text-white shadow-[0_16px_40px_rgba(16,185,129,0.18)]"
               >
                 Calculate Wealth IQ
+              </button>
+
+              <button
+                type="button"
+                onClick={handleLoadDemo}
+                className="inline-flex items-center justify-center gap-2 rounded-2xl border border-emerald-200 bg-emerald-50 px-8 py-5 text-lg sm:text-xl font-bold text-emerald-700"
+              >
+                <Wand2 className="h-5 w-5" />
+                Load Demo
               </button>
 
               <button
