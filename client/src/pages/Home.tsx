@@ -1,5 +1,12 @@
 import { useMemo, useState } from "react";
-import { Wallet, House, Car, ShoppingCart, CreditCard, RotateCcw } from "lucide-react";
+import {
+  Wallet,
+  House,
+  Car,
+  ShoppingCart,
+  CreditCard,
+  RotateCcw,
+} from "lucide-react";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { ScoreDisplay } from "../components/ScoreDisplay";
 import FinanceCharts from "../components/FinanceCharts";
@@ -10,51 +17,71 @@ import { useCreateCalculation } from "../hooks/use-calculations";
 const queryClient = new QueryClient();
 
 function WealthIQPage() {
-  const [income, setIncome] = useState<number>(2100);
-  const [rent, setRent] = useState<number>(350);
-  const [carPayment, setCarPayment] = useState<number>(400);
-  const [groceries, setGroceries] = useState<number>(250);
-  const [otherExpenses, setOtherExpenses] = useState<number>(0);
+  const [income, setIncome] = useState("2100");
+  const [rent, setRent] = useState("350");
+  const [carPayment, setCarPayment] = useState("400");
+  const [groceries, setGroceries] = useState("250");
+  const [otherExpenses, setOtherExpenses] = useState("0");
 
   const [hasCalculated, setHasCalculated] = useState(false);
 
   const createCalculation = useCreateCalculation();
 
+  const toNumber = (value: string) => {
+    if (value.trim() === "") return 0;
+    const parsed = Number(value);
+    return Number.isFinite(parsed) ? parsed : 0;
+  };
+
+  const incomeValue = useMemo(() => toNumber(income), [income]);
+  const rentValue = useMemo(() => toNumber(rent), [rent]);
+  const carPaymentValue = useMemo(() => toNumber(carPayment), [carPayment]);
+  const groceriesValue = useMemo(() => toNumber(groceries), [groceries]);
+  const otherExpensesValue = useMemo(
+    () => toNumber(otherExpenses),
+    [otherExpenses]
+  );
+
   const totalExpenses = useMemo(
-    () => rent + carPayment + groceries + otherExpenses,
-    [rent, carPayment, groceries, otherExpenses]
+    () =>
+      rentValue + carPaymentValue + groceriesValue + otherExpensesValue,
+    [rentValue, carPaymentValue, groceriesValue, otherExpensesValue]
   );
 
   const disposableIncome = useMemo(
-    () => income - totalExpenses,
-    [income, totalExpenses]
+    () => incomeValue - totalExpenses,
+    [incomeValue, totalExpenses]
   );
 
   const expenseRatio = useMemo(
-    () => (income > 0 ? Math.round((totalExpenses / income) * 100) : 0),
-    [income, totalExpenses]
+    () =>
+      incomeValue > 0 ? Math.round((totalExpenses / incomeValue) * 100) : 0,
+    [incomeValue, totalExpenses]
   );
 
   const savingsRate = useMemo(
     () =>
-      income > 0
-        ? Math.max(0, Math.round((disposableIncome / income) * 100))
+      incomeValue > 0
+        ? Math.max(0, Math.round((disposableIncome / incomeValue) * 100))
         : 0,
-    [income, disposableIncome]
+    [incomeValue, disposableIncome]
   );
 
   const housingRatio = useMemo(
-    () => (income > 0 ? Math.round((rent / income) * 100) : 0),
-    [income, rent]
+    () => (incomeValue > 0 ? Math.round((rentValue / incomeValue) * 100) : 0),
+    [incomeValue, rentValue]
   );
 
   const transportRatio = useMemo(
-    () => (income > 0 ? Math.round((carPayment / income) * 100) : 0),
-    [income, carPayment]
+    () =>
+      incomeValue > 0
+        ? Math.round((carPaymentValue / incomeValue) * 100)
+        : 0,
+    [incomeValue, carPaymentValue]
   );
 
   const score = useMemo(() => {
-    if (income <= 0) return 0;
+    if (incomeValue <= 0) return 0;
 
     let nextScore = 100;
 
@@ -74,7 +101,7 @@ function WealthIQPage() {
 
     return Math.max(0, Math.min(100, Math.round(nextScore)));
   }, [
-    income,
+    incomeValue,
     expenseRatio,
     savingsRate,
     housingRatio,
@@ -84,22 +111,25 @@ function WealthIQPage() {
 
   const comparison = useMemo(() => {
     const targetSavingsRate = 20;
-    const targetDisposable = Math.round((income * targetSavingsRate) / 100);
-    const recommendedMaxExpenses = Math.max(income - targetDisposable, 0);
-    const improvementNeeded = Math.max(totalExpenses - recommendedMaxExpenses, 0);
+    const targetDisposable = Math.round((incomeValue * targetSavingsRate) / 100);
+    const recommendedMaxExpenses = Math.max(incomeValue - targetDisposable, 0);
+    const improvementNeeded = Math.max(
+      totalExpenses - recommendedMaxExpenses,
+      0
+    );
 
     return {
       recommendedMaxExpenses,
       improvementNeeded,
     };
-  }, [income, totalExpenses]);
+  }, [incomeValue, totalExpenses]);
 
   const report = {
-    income,
-    rent,
-    carPayment,
-    groceries,
-    otherExpenses,
+    income: incomeValue,
+    rent: rentValue,
+    carPayment: carPaymentValue,
+    groceries: groceriesValue,
+    otherExpenses: otherExpensesValue,
     score: hasCalculated ? score : null,
     expenseRatio: hasCalculated ? expenseRatio : null,
     savingsRate: hasCalculated ? savingsRate : null,
@@ -117,47 +147,47 @@ function WealthIQPage() {
     setHasCalculated(true);
 
     createCalculation.mutate({
-      income,
-      rent,
-      carPayment,
-      groceries,
-      otherExpenses,
+      income: incomeValue,
+      rent: rentValue,
+      carPayment: carPaymentValue,
+      groceries: groceriesValue,
+      otherExpenses: otherExpensesValue,
       score,
     });
   };
 
   const handleReset = () => {
-    setIncome(2100);
-    setRent(350);
-    setCarPayment(400);
-    setGroceries(250);
-    setOtherExpenses(0);
+    setIncome("");
+    setRent("");
+    setCarPayment("");
+    setGroceries("");
+    setOtherExpenses("");
     setHasCalculated(false);
   };
 
   const inputWrap =
-    "rounded-[2rem] border border-slate-200 bg-white/90 shadow-[0_12px_40px_rgba(15,23,42,0.05)] p-6 sm:p-8";
+    "rounded-[1.75rem] border border-slate-200 bg-white/90 shadow-[0_12px_40px_rgba(15,23,42,0.05)] p-5 sm:p-6";
   const inputClass =
-    "financial-input w-full px-5 py-5 text-2xl text-slate-900";
+    "financial-input w-full px-5 py-4 text-xl sm:text-2xl text-slate-900";
   const labelClass =
-    "mb-3 flex items-center gap-3 text-xl font-semibold text-slate-600";
+    "mb-3 flex items-center gap-3 text-lg sm:text-xl font-semibold text-slate-600";
 
   return (
-    <div className="min-h-screen bg-[radial-gradient(circle_at_top,_rgba(16,185,129,0.10),_transparent_28%),linear-gradient(180deg,#edf8f4_0%,#eef4fb_40%,#f7f9fc_100%)]">
+    <div className="min-h-screen bg-[radial-gradient(circle_at_top_left,rgba(16,185,129,0.10),transparent_30%),radial-gradient(circle_at_top_right,rgba(59,130,246,0.08),transparent_32%),linear-gradient(180deg,#eef8f4_0%,#edf4fb_45%,#f7f9fc_100%)]">
       <div className="mx-auto max-w-5xl px-5 py-8 sm:px-6 sm:py-10">
         <a
           href="https://gwinanalytics.com"
-          className="inline-flex items-center rounded-2xl bg-slate-950 px-6 py-4 text-xl font-semibold text-white shadow-lg"
+          className="inline-flex items-center rounded-2xl bg-slate-950 px-6 py-4 text-lg sm:text-xl font-semibold text-white shadow-lg"
         >
           ← Gwin Analytics
         </a>
 
-        <section className="premium-card mt-8 rounded-[2.5rem] p-8 sm:p-10">
-          <div className="inline-flex items-center rounded-full border border-emerald-200 bg-emerald-50 px-5 py-2 text-lg font-semibold text-emerald-700">
+        <section className="premium-card mt-8 rounded-[2.5rem] p-7 sm:p-10">
+          <div className="inline-flex items-center rounded-full border border-emerald-200 bg-emerald-50 px-5 py-2 text-base sm:text-lg font-semibold text-emerald-700">
             Financial health scoring, simplified
           </div>
 
-          <h1 className="mt-8 text-5xl font-black tracking-tight text-slate-950 sm:text-6xl leading-tight">
+          <h1 className="mt-8 text-[3.15rem] leading-[0.95] font-black tracking-tight text-slate-950 sm:text-[4.5rem]">
             <span className="text-slate-950">Wealth IQ Financial</span>
             <br />
             <span className="bg-gradient-to-r from-emerald-500 via-cyan-500 to-blue-500 bg-clip-text text-transparent">
@@ -165,7 +195,7 @@ function WealthIQPage() {
             </span>
           </h1>
 
-          <p className="mt-6 max-w-3xl text-xl leading-10 text-slate-500 sm:text-2xl">
+          <p className="mt-6 max-w-3xl text-lg sm:text-[2rem] leading-9 sm:leading-[3.25rem] text-slate-500">
             A clean financial score tool that turns your monthly income and expenses
             into a simple health snapshot with visual insights, scoring, cash-flow
             clarity, AI guidance, and downloadable history.
@@ -173,72 +203,84 @@ function WealthIQPage() {
         </section>
 
         <section className="mt-10 grid gap-6">
-          <div className="premium-card rounded-[2.5rem] p-8 sm:p-10">
-            <h2 className="text-4xl font-black text-slate-950">Monthly Inputs</h2>
+          <div className="premium-card rounded-[2.5rem] p-7 sm:p-10">
+            <h2 className="text-3xl sm:text-4xl font-black tracking-tight text-slate-950">
+              Monthly Inputs
+            </h2>
 
             <div className="mt-8 grid gap-6">
               <div className={inputWrap}>
                 <label className={labelClass}>
-                  <Wallet className="h-7 w-7 text-slate-500" />
+                  <Wallet className="h-6 w-6 sm:h-7 sm:w-7 text-slate-500" />
                   Monthly Income
                 </label>
                 <input
                   type="number"
+                  inputMode="decimal"
                   value={income}
-                  onChange={(e) => setIncome(Number(e.target.value) || 0)}
+                  onChange={(e) => setIncome(e.target.value)}
                   className={inputClass}
+                  placeholder="0"
                 />
               </div>
 
               <div className={inputWrap}>
                 <label className={labelClass}>
-                  <House className="h-7 w-7 text-slate-500" />
+                  <House className="h-6 w-6 sm:h-7 sm:w-7 text-slate-500" />
                   Rent / Mortgage
                 </label>
                 <input
                   type="number"
+                  inputMode="decimal"
                   value={rent}
-                  onChange={(e) => setRent(Number(e.target.value) || 0)}
+                  onChange={(e) => setRent(e.target.value)}
                   className={inputClass}
+                  placeholder="0"
                 />
               </div>
 
               <div className={inputWrap}>
                 <label className={labelClass}>
-                  <Car className="h-7 w-7 text-slate-500" />
+                  <Car className="h-6 w-6 sm:h-7 sm:w-7 text-slate-500" />
                   Car Payment
                 </label>
                 <input
                   type="number"
+                  inputMode="decimal"
                   value={carPayment}
-                  onChange={(e) => setCarPayment(Number(e.target.value) || 0)}
+                  onChange={(e) => setCarPayment(e.target.value)}
                   className={inputClass}
+                  placeholder="0"
                 />
               </div>
 
               <div className={inputWrap}>
                 <label className={labelClass}>
-                  <ShoppingCart className="h-7 w-7 text-slate-500" />
+                  <ShoppingCart className="h-6 w-6 sm:h-7 sm:w-7 text-slate-500" />
                   Groceries
                 </label>
                 <input
                   type="number"
+                  inputMode="decimal"
                   value={groceries}
-                  onChange={(e) => setGroceries(Number(e.target.value) || 0)}
+                  onChange={(e) => setGroceries(e.target.value)}
                   className={inputClass}
+                  placeholder="0"
                 />
               </div>
 
               <div className={inputWrap}>
                 <label className={labelClass}>
-                  <CreditCard className="h-7 w-7 text-slate-500" />
+                  <CreditCard className="h-6 w-6 sm:h-7 sm:w-7 text-slate-500" />
                   Other Expenses
                 </label>
                 <input
                   type="number"
+                  inputMode="decimal"
                   value={otherExpenses}
-                  onChange={(e) => setOtherExpenses(Number(e.target.value) || 0)}
+                  onChange={(e) => setOtherExpenses(e.target.value)}
                   className={inputClass}
+                  placeholder="0"
                 />
               </div>
             </div>
@@ -247,7 +289,7 @@ function WealthIQPage() {
               <button
                 type="button"
                 onClick={handleCalculate}
-                className="financial-button rounded-2xl px-8 py-5 text-xl font-bold text-white shadow-[0_16px_40px_rgba(16,185,129,0.18)]"
+                className="financial-button rounded-2xl px-8 py-5 text-lg sm:text-xl font-bold text-white shadow-[0_16px_40px_rgba(16,185,129,0.18)]"
               >
                 Calculate Wealth IQ
               </button>
@@ -255,7 +297,7 @@ function WealthIQPage() {
               <button
                 type="button"
                 onClick={handleSave}
-                className="rounded-2xl bg-slate-950 px-8 py-5 text-xl font-bold text-white"
+                className="rounded-2xl bg-slate-950 px-8 py-5 text-lg sm:text-xl font-bold text-white"
               >
                 Save Calculation
               </button>
@@ -263,7 +305,7 @@ function WealthIQPage() {
               <button
                 type="button"
                 onClick={handleReset}
-                className="inline-flex items-center justify-center gap-2 rounded-2xl border border-slate-200 bg-white px-8 py-5 text-xl font-bold text-slate-700"
+                className="inline-flex items-center justify-center gap-2 rounded-2xl border border-slate-200 bg-white px-8 py-5 text-lg sm:text-xl font-bold text-slate-700"
               >
                 <RotateCcw className="h-5 w-5" />
                 Reset Inputs
@@ -283,23 +325,25 @@ function WealthIQPage() {
 
         <div className="mt-8">
           <FinanceCharts
-            income={income}
-            rent={rent}
-            carPayment={carPayment}
-            Groceries={groceries}
-            otherExpenses={otherExpenses}
+            income={incomeValue}
+            rent={rentValue}
+            carPayment={carPaymentValue}
+            Groceries={groceriesValue}
+            otherExpenses={otherExpensesValue}
           />
         </div>
 
-        <div className="mt-8 premium-card rounded-[2.5rem] p-8 sm:p-10">
-          <h2 className="text-4xl font-black text-slate-950">Scenario Comparison</h2>
-          <p className="mt-5 text-xl leading-10 text-slate-500">
+        <div className="mt-8 premium-card rounded-[2.5rem] p-7 sm:p-10">
+          <h2 className="text-3xl sm:text-4xl font-black text-slate-950">
+            Scenario Comparison
+          </h2>
+          <p className="mt-5 text-lg sm:text-xl leading-9 sm:leading-10 text-slate-500">
             To hit a 20% savings rate, your target maximum monthly expenses would be:
           </p>
-          <p className="mt-6 text-6xl font-black tracking-tight text-slate-950">
+          <p className="mt-6 text-5xl sm:text-6xl font-black tracking-tight text-slate-950">
             ${comparison.recommendedMaxExpenses.toLocaleString()}
           </p>
-          <p className="mt-6 text-xl leading-9 text-slate-500">
+          <p className="mt-6 text-lg sm:text-xl leading-9 text-slate-500">
             {comparison.improvementNeeded > 0
               ? `You would need to cut about $${comparison.improvementNeeded.toLocaleString()} in monthly expenses to reach that target.`
               : "You are already at or better than that target."}
@@ -314,7 +358,7 @@ function WealthIQPage() {
           <HistoryList />
         </div>
 
-        <footer className="py-10 text-center text-lg text-slate-400">
+        <footer className="py-10 text-center text-base sm:text-lg text-slate-400">
           Wealth IQ Financial Calculator • Created by Jardin Gwin • Financial analytics portfolio project
         </footer>
       </div>
