@@ -1,49 +1,24 @@
 import { useMemo, useState } from "react";
-import {
-  Sparkles,
-  ShieldCheck,
-  BarChart3,
-  BadgeDollarSign,
-  Wallet,
-  Home as HomeIcon,
-  Car,
-  ShoppingCart,
-  CreditCard,
-} from "lucide-react";
+import { Wallet, House, Car, ShoppingCart, CreditCard, RotateCcw } from "lucide-react";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { ScoreDisplay } from "../components/ScoreDisplay";
 import FinanceCharts from "../components/FinanceCharts";
 import AIFinancialAdvisor from "../components/AIFinancialAdvisor";
 import { HistoryList } from "../components/HistoryList";
 import { useCreateCalculation } from "../hooks/use-calculations";
 
-type CalculationState = {
-  income: number;
-  rent: number;
-  carPayment: number;
-  groceries: number;
-  otherExpenses: number;
-};
+const queryClient = new QueryClient();
 
-const DEFAULT_VALUES: CalculationState = {
-  income: 2100,
-  rent: 350,
-  carPayment: 400,
-  groceries: 250,
-  otherExpenses: 0,
-};
+function WealthIQPage() {
+  const [income, setIncome] = useState<number>(2100);
+  const [rent, setRent] = useState<number>(350);
+  const [carPayment, setCarPayment] = useState<number>(400);
+  const [groceries, setGroceries] = useState<number>(250);
+  const [otherExpenses, setOtherExpenses] = useState<number>(0);
 
-export default function Home() {
-  const [formValues, setFormValues] = useState<CalculationState>(DEFAULT_VALUES);
-  const [calculatedValues, setCalculatedValues] =
-    useState<CalculationState>(DEFAULT_VALUES);
+  const [hasCalculated, setHasCalculated] = useState(false);
 
   const createCalculation = useCreateCalculation();
-
-  const income = calculatedValues.income;
-  const rent = calculatedValues.rent;
-  const carPayment = calculatedValues.carPayment;
-  const groceries = calculatedValues.groceries;
-  const otherExpenses = calculatedValues.otherExpenses;
 
   const totalExpenses = useMemo(
     () => rent + carPayment + groceries + otherExpenses,
@@ -111,10 +86,7 @@ export default function Home() {
     const targetSavingsRate = 20;
     const targetDisposable = Math.round((income * targetSavingsRate) / 100);
     const recommendedMaxExpenses = Math.max(income - targetDisposable, 0);
-    const improvementNeeded = Math.max(
-      totalExpenses - recommendedMaxExpenses,
-      0
-    );
+    const improvementNeeded = Math.max(totalExpenses - recommendedMaxExpenses, 0);
 
     return {
       recommendedMaxExpenses,
@@ -128,84 +100,22 @@ export default function Home() {
     carPayment,
     groceries,
     otherExpenses,
-    score,
-    expenseRatio,
-    savingsRate,
-    totalExpenses,
-    disposableIncome,
-    housingRatio,
-    transportRatio,
+    score: hasCalculated ? score : null,
+    expenseRatio: hasCalculated ? expenseRatio : null,
+    savingsRate: hasCalculated ? savingsRate : null,
+    totalExpenses: hasCalculated ? totalExpenses : null,
+    disposableIncome: hasCalculated ? disposableIncome : null,
+    housingRatio: hasCalculated ? housingRatio : null,
+    transportRatio: hasCalculated ? transportRatio : null,
   };
 
-  const featureCards = [
-    {
-      icon: ShieldCheck,
-      title: "Financial Health",
-      value: "Score-based",
-      desc: "Quickly measure overall budget strength.",
-    },
-    {
-      icon: BarChart3,
-      title: "Expense Analytics",
-      value: "Real-time",
-      desc: "Track ratios and cash flow.",
-    },
-    {
-      icon: BadgeDollarSign,
-      title: "Budget Clarity",
-      value: "Actionable",
-      desc: "See how income supports your lifestyle.",
-    },
-  ];
-
-  const inputStyle: React.CSSProperties = {
-    width: "100%",
-    padding: "14px 16px",
-    borderRadius: 14,
-    border: "1px solid #dbe3ee",
-    fontSize: 18,
-    color: "#0f172a",
-    outline: "none",
-    boxSizing: "border-box",
-    background: "#fff",
+  const handleCalculate = () => {
+    setHasCalculated(true);
   };
 
-  const labelRowStyle: React.CSSProperties = {
-    display: "flex",
-    alignItems: "center",
-    gap: 8,
-    fontSize: 14,
-    fontWeight: 600,
-    color: "#475569",
-    marginBottom: 8,
-  };
+  const handleSave = () => {
+    setHasCalculated(true);
 
-  const actionButtonStyle: React.CSSProperties = {
-    padding: "16px 22px",
-    borderRadius: 16,
-    fontWeight: 700,
-    fontSize: 16,
-    cursor: "pointer",
-    border: "none",
-  };
-
-  const updateField = (field: keyof CalculationState, value: number) => {
-    setFormValues((prev) => ({
-      ...prev,
-      [field]: value,
-    }));
-  };
-
-  const calculateWealthIQ = () => {
-    setCalculatedValues(formValues);
-  };
-
-  const resetValues = () => {
-    setFormValues(DEFAULT_VALUES);
-    setCalculatedValues(DEFAULT_VALUES);
-  };
-
-  const saveCalculation = () => {
     createCalculation.mutate({
       income,
       rent,
@@ -216,297 +126,162 @@ export default function Home() {
     });
   };
 
+  const handleReset = () => {
+    setIncome(2100);
+    setRent(350);
+    setCarPayment(400);
+    setGroceries(250);
+    setOtherExpenses(0);
+    setHasCalculated(false);
+  };
+
+  const inputWrap =
+    "rounded-[2rem] border border-slate-200 bg-white/90 shadow-[0_12px_40px_rgba(15,23,42,0.05)] p-6 sm:p-8";
+  const inputClass =
+    "financial-input w-full px-5 py-5 text-2xl text-slate-900";
+  const labelClass =
+    "mb-3 flex items-center gap-3 text-xl font-semibold text-slate-600";
+
   return (
-    <div
-      className="app-shell"
-      style={{
-        padding: 24,
-        minHeight: "100vh",
-        color: "#111",
-      }}
-    >
-      <div
-        style={{
-          maxWidth: 1180,
-          margin: "0 auto",
-        }}
-      >
+    <div className="min-h-screen bg-[radial-gradient(circle_at_top,_rgba(16,185,129,0.10),_transparent_28%),linear-gradient(180deg,#edf8f4_0%,#eef4fb_40%,#f7f9fc_100%)]">
+      <div className="mx-auto max-w-5xl px-5 py-8 sm:px-6 sm:py-10">
         <a
           href="https://gwinanalytics.com"
-          style={{
-            display: "inline-block",
-            marginBottom: 20,
-            padding: "10px 16px",
-            background: "#0f172a",
-            color: "white",
-            borderRadius: 12,
-            textDecoration: "none",
-            fontWeight: 600,
-          }}
+          className="inline-flex items-center rounded-2xl bg-slate-950 px-6 py-4 text-xl font-semibold text-white shadow-lg"
         >
           ← Gwin Analytics
         </a>
 
-        <section className="premium-card p-8 mb-10">
-          <div
-            style={{
-              marginBottom: 16,
-              display: "inline-flex",
-              alignItems: "center",
-              gap: 8,
-              borderRadius: 999,
-              background: "#ecfdf5",
-              padding: "10px 16px",
-              fontSize: 14,
-              fontWeight: 700,
-              color: "#047857",
-            }}
-          >
-            <Sparkles size={16} />
+        <section className="premium-card mt-8 rounded-[2.5rem] p-8 sm:p-10">
+          <div className="inline-flex items-center rounded-full border border-emerald-200 bg-emerald-50 px-5 py-2 text-lg font-semibold text-emerald-700">
             Financial health scoring, simplified
           </div>
 
-          <h1
-            style={{
-              fontSize: "clamp(2.2rem, 5vw, 4rem)",
-              lineHeight: 1.05,
-              fontWeight: 900,
-              letterSpacing: "-0.03em",
-              margin: 0,
-              color: "#0f172a",
-            }}
-          >
-            Wealth IQ{" "}
-            <span
-              style={{
-                background:
-                  "linear-gradient(90deg, #10b981 0%, #06b6d4 55%, #3b82f6 100%)",
-                WebkitBackgroundClip: "text",
-                WebkitTextFillColor: "transparent",
-              }}
-            >
-              Financial Calculator
+          <h1 className="mt-8 text-5xl font-black tracking-tight text-slate-950 sm:text-6xl leading-tight">
+            <span className="text-slate-950">Wealth IQ Financial</span>
+            <br />
+            <span className="bg-gradient-to-r from-emerald-500 via-cyan-500 to-blue-500 bg-clip-text text-transparent">
+              Calculator
             </span>
           </h1>
 
-          <p
-            style={{
-              marginTop: 18,
-              marginBottom: 0,
-              maxWidth: 720,
-              fontSize: 18,
-              lineHeight: 1.7,
-              color: "#64748b",
-            }}
-          >
-            A clean financial score tool that turns your monthly income and
-            expenses into a simple health snapshot with visual insights,
-            scoring, cash-flow clarity, AI guidance, and downloadable history.
+          <p className="mt-6 max-w-3xl text-xl leading-10 text-slate-500 sm:text-2xl">
+            A clean financial score tool that turns your monthly income and expenses
+            into a simple health snapshot with visual insights, scoring, cash-flow
+            clarity, AI guidance, and downloadable history.
           </p>
         </section>
 
-        <div className="grid md:grid-cols-3 gap-6 mb-10">
-          {featureCards.map((card) => {
-            const Icon = card.icon;
+        <section className="mt-10 grid gap-6">
+          <div className="premium-card rounded-[2.5rem] p-8 sm:p-10">
+            <h2 className="text-4xl font-black text-slate-950">Monthly Inputs</h2>
 
-            return (
-              <div key={card.title} className="premium-card p-6">
-                <div className="flex items-center gap-3 mb-3">
-                  <Icon className="h-5 w-5 text-slate-700" />
-                  <strong className="text-slate-900">{card.title}</strong>
-                </div>
-
-                <div
-                  style={{
-                    fontSize: 24,
-                    fontWeight: 800,
-                    color: "#0f172a",
-                    marginBottom: 8,
-                  }}
-                >
-                  {card.value}
-                </div>
-
-                <p
-                  style={{
-                    color: "#64748b",
-                    margin: 0,
-                    lineHeight: 1.6,
-                  }}
-                >
-                  {card.desc}
-                </p>
+            <div className="mt-8 grid gap-6">
+              <div className={inputWrap}>
+                <label className={labelClass}>
+                  <Wallet className="h-7 w-7 text-slate-500" />
+                  Monthly Income
+                </label>
+                <input
+                  type="number"
+                  value={income}
+                  onChange={(e) => setIncome(Number(e.target.value) || 0)}
+                  className={inputClass}
+                />
               </div>
-            );
-          })}
-        </div>
 
-        <div className="grid lg:grid-cols-2 gap-10 items-start">
-          <div className="premium-card p-8">
-            <h2
-              style={{
-                fontSize: 24,
-                fontWeight: 800,
-                marginTop: 0,
-                marginBottom: 22,
-                color: "#0f172a",
-              }}
-            >
-              Monthly Inputs
-            </h2>
+              <div className={inputWrap}>
+                <label className={labelClass}>
+                  <House className="h-7 w-7 text-slate-500" />
+                  Rent / Mortgage
+                </label>
+                <input
+                  type="number"
+                  value={rent}
+                  onChange={(e) => setRent(Number(e.target.value) || 0)}
+                  className={inputClass}
+                />
+              </div>
 
-            <div style={{ marginBottom: 18 }}>
-              <label style={labelRowStyle}>
-                <Wallet size={18} />
-                Monthly Income
-              </label>
-              <input
-                type="number"
-                value={formValues.income}
-                onChange={(e) =>
-                  updateField("income", Number(e.target.value) || 0)
-                }
-                style={inputStyle}
-              />
+              <div className={inputWrap}>
+                <label className={labelClass}>
+                  <Car className="h-7 w-7 text-slate-500" />
+                  Car Payment
+                </label>
+                <input
+                  type="number"
+                  value={carPayment}
+                  onChange={(e) => setCarPayment(Number(e.target.value) || 0)}
+                  className={inputClass}
+                />
+              </div>
+
+              <div className={inputWrap}>
+                <label className={labelClass}>
+                  <ShoppingCart className="h-7 w-7 text-slate-500" />
+                  Groceries
+                </label>
+                <input
+                  type="number"
+                  value={groceries}
+                  onChange={(e) => setGroceries(Number(e.target.value) || 0)}
+                  className={inputClass}
+                />
+              </div>
+
+              <div className={inputWrap}>
+                <label className={labelClass}>
+                  <CreditCard className="h-7 w-7 text-slate-500" />
+                  Other Expenses
+                </label>
+                <input
+                  type="number"
+                  value={otherExpenses}
+                  onChange={(e) => setOtherExpenses(Number(e.target.value) || 0)}
+                  className={inputClass}
+                />
+              </div>
             </div>
 
-            <div style={{ marginBottom: 18 }}>
-              <label style={labelRowStyle}>
-                <HomeIcon size={18} />
-                Rent / Mortgage
-              </label>
-              <input
-                type="number"
-                value={formValues.rent}
-                onChange={(e) =>
-                  updateField("rent", Number(e.target.value) || 0)
-                }
-                style={inputStyle}
-              />
-            </div>
-
-            <div style={{ marginBottom: 18 }}>
-              <label style={labelRowStyle}>
-                <Car size={18} />
-                Car Payment
-              </label>
-              <input
-                type="number"
-                value={formValues.carPayment}
-                onChange={(e) =>
-                  updateField("carPayment", Number(e.target.value) || 0)
-                }
-                style={inputStyle}
-              />
-            </div>
-
-            <div style={{ marginBottom: 18 }}>
-              <label style={labelRowStyle}>
-                <ShoppingCart size={18} />
-                Groceries
-              </label>
-              <input
-                type="number"
-                value={formValues.groceries}
-                onChange={(e) =>
-                  updateField("groceries", Number(e.target.value) || 0)
-                }
-                style={inputStyle}
-              />
-            </div>
-
-            <div style={{ marginBottom: 22 }}>
-              <label style={labelRowStyle}>
-                <CreditCard size={18} />
-                Other Expenses
-              </label>
-              <input
-                type="number"
-                value={formValues.otherExpenses}
-                onChange={(e) =>
-                  updateField("otherExpenses", Number(e.target.value) || 0)
-                }
-                style={inputStyle}
-              />
-            </div>
-
-            <div
-              style={{
-                display: "flex",
-                gap: 14,
-                flexWrap: "wrap",
-                marginTop: 8,
-              }}
-            >
+            <div className="mt-8 flex flex-col gap-4 sm:flex-row sm:flex-wrap">
               <button
                 type="button"
-                onClick={calculateWealthIQ}
-                style={{
-                  ...actionButtonStyle,
-                  background:
-                    "linear-gradient(90deg, #10b981 0%, #06b6d4 55%, #3b82f6 100%)",
-                  color: "white",
-                  boxShadow: "0 12px 28px rgba(16,185,129,0.18)",
-                }}
+                onClick={handleCalculate}
+                className="financial-button rounded-2xl px-8 py-5 text-xl font-bold text-white shadow-[0_16px_40px_rgba(16,185,129,0.18)]"
               >
                 Calculate Wealth IQ
               </button>
 
               <button
                 type="button"
-                onClick={saveCalculation}
-                disabled={createCalculation.isPending}
-                style={{
-                  ...actionButtonStyle,
-                  background: "#0f172a",
-                  color: "white",
-                  opacity: createCalculation.isPending ? 0.7 : 1,
-                }}
+                onClick={handleSave}
+                className="rounded-2xl bg-slate-950 px-8 py-5 text-xl font-bold text-white"
               >
-                {createCalculation.isPending ? "Saving..." : "Save Calculation"}
+                Save Calculation
               </button>
 
               <button
                 type="button"
-                onClick={resetValues}
-                style={{
-                  ...actionButtonStyle,
-                  background: "white",
-                  color: "#334155",
-                  border: "1px solid #dbe3ee",
-                }}
+                onClick={handleReset}
+                className="inline-flex items-center justify-center gap-2 rounded-2xl border border-slate-200 bg-white px-8 py-5 text-xl font-bold text-slate-700"
               >
+                <RotateCcw className="h-5 w-5" />
                 Reset Inputs
               </button>
             </div>
 
-            <p
-              style={{
-                marginTop: 20,
-                marginBottom: 0,
-                color: "#94a3b8",
-                fontSize: 14,
-                lineHeight: 1.7,
-              }}
-            >
-              Your score reflects how much of your income remains after your
-              recurring expenses. Lower burden and stronger savings usually
-              produce a healthier score.
+            <p className="mt-8 text-lg leading-9 text-slate-400">
+              Your score reflects how much of your income remains after your recurring
+              expenses. Lower burden and stronger savings usually produce a healthier score.
             </p>
           </div>
+        </section>
 
-          <ScoreDisplay
-            score={score}
-            expenseRatio={expenseRatio}
-            savingsRate={savingsRate}
-            totalExpenses={totalExpenses}
-            disposableIncome={disposableIncome}
-            housingRatio={housingRatio}
-            transportRatio={transportRatio}
-          />
+        <div className="mt-8">
+          <ScoreDisplay {...report} />
         </div>
 
-        <div style={{ marginTop: 32 }}>
+        <div className="mt-8">
           <FinanceCharts
             income={income}
             rent={rent}
@@ -516,77 +291,41 @@ export default function Home() {
           />
         </div>
 
-        <div className="premium-card" style={{ marginTop: 32, padding: 24 }}>
-          <h2
-            style={{
-              fontSize: 24,
-              fontWeight: 800,
-              marginTop: 0,
-              marginBottom: 12,
-              color: "#0f172a",
-            }}
-          >
-            Scenario Comparison
-          </h2>
-
-          <p style={{ color: "#64748b", marginBottom: 12 }}>
-            To hit a 20% savings rate, your target maximum monthly expenses
-            would be:
+        <div className="mt-8 premium-card rounded-[2.5rem] p-8 sm:p-10">
+          <h2 className="text-4xl font-black text-slate-950">Scenario Comparison</h2>
+          <p className="mt-5 text-xl leading-10 text-slate-500">
+            To hit a 20% savings rate, your target maximum monthly expenses would be:
           </p>
-
-          <p
-            style={{
-              fontSize: 32,
-              fontWeight: 900,
-              marginBottom: 8,
-              marginTop: 0,
-              color: "#0f172a",
-            }}
-          >
+          <p className="mt-6 text-6xl font-black tracking-tight text-slate-950">
             ${comparison.recommendedMaxExpenses.toLocaleString()}
           </p>
-
-          <p style={{ color: "#64748b", marginBottom: 0 }}>
+          <p className="mt-6 text-xl leading-9 text-slate-500">
             {comparison.improvementNeeded > 0
               ? `You would need to cut about $${comparison.improvementNeeded.toLocaleString()} in monthly expenses to reach that target.`
               : "You are already at or better than that target."}
           </p>
         </div>
 
-        <div style={{ marginTop: 32 }}>
+        <div className="mt-8">
           <AIFinancialAdvisor report={report} />
         </div>
 
-        <div className="premium-card p-8" style={{ marginTop: 32 }}>
-          <p
-            style={{
-              marginTop: 0,
-              marginBottom: 10,
-              fontSize: 14,
-              fontWeight: 800,
-              letterSpacing: "0.18em",
-              textTransform: "uppercase",
-              color: "#94a3b8",
-            }}
-          >
-            History
-          </p>
-
-          <h2
-            style={{
-              fontSize: 28,
-              fontWeight: 900,
-              marginTop: 0,
-              marginBottom: 20,
-              color: "#0f172a",
-            }}
-          >
-            Recent Calculations
-          </h2>
-
+        <div className="mt-8">
           <HistoryList />
         </div>
+
+        <footer className="py-10 text-center text-lg text-slate-400">
+          Wealth IQ Financial Calculator • Created by Jardin Gwin • Financial analytics portfolio project
+        </footer>
       </div>
     </div>
+  );
+}
+
+export default function Home() {
+  return (
+    <QueryClientProvider client={queryClient}>
+      <WealthIQPage />
+    </QueryClientProvider>
   );
 }
