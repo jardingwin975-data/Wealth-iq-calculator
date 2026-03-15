@@ -187,9 +187,7 @@ function WealthIQPage() {
           <h1 className="mt-8 text-[3.15rem] leading-[0.95] font-black tracking-tight text-slate-950 sm:text-[4.5rem]">
             <span className="text-slate-950">Wealth IQ Financial</span>
             <br />
-            <span className="bg-gradient-to-r from-emerald-500 via-cyan-500 to-blue-500 bg-clip-text text-transparent">
-              Calculator
-            </span>
+            <span className="text-emerald-500">Calculator</span>
           </h1>
 
           <p className="mt-6 max-w-3xl text-lg sm:text-[2rem] leading-9 sm:leading-[3.25rem] text-slate-500">
@@ -198,10 +196,6 @@ function WealthIQPage() {
             clarity, AI guidance, and downloadable history.
           </p>
         </section>
-
-        <div className="mt-8">
-          <ScoreDisplay {...report} />
-        </div>
 
         <section className="mt-8 grid gap-6">
           <div className="premium-card rounded-[2.5rem] p-7 sm:p-10">
@@ -319,6 +313,10 @@ function WealthIQPage() {
             </p>
           </div>
         </section>
+
+        <div className="mt-8">
+          <ScoreDisplay {...report} />
+        </div>
 
         <div className="mt-8">
           <FinanceCharts
