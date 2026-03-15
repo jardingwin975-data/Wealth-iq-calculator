@@ -16,14 +16,34 @@ import AIFinancialAdvisor from "../components/AIFinancialAdvisor";
 import { HistoryList } from "../components/HistoryList";
 import { useCreateCalculation } from "../hooks/use-calculations";
 
+type CalculationState = {
+  income: number;
+  rent: number;
+  carPayment: number;
+  groceries: number;
+  otherExpenses: number;
+};
+
+const DEFAULT_VALUES: CalculationState = {
+  income: 2100,
+  rent: 350,
+  carPayment: 400,
+  groceries: 250,
+  otherExpenses: 0,
+};
+
 export default function Home() {
-  const [income, setIncome] = useState<number>(2100);
-  const [rent, setRent] = useState<number>(350);
-  const [carPayment, setCarPayment] = useState<number>(400);
-  const [groceries, setGroceries] = useState<number>(250);
-  const [otherExpenses, setOtherExpenses] = useState<number>(0);
+  const [formValues, setFormValues] = useState<CalculationState>(DEFAULT_VALUES);
+  const [calculatedValues, setCalculatedValues] =
+    useState<CalculationState>(DEFAULT_VALUES);
 
   const createCalculation = useCreateCalculation();
+
+  const income = calculatedValues.income;
+  const rent = calculatedValues.rent;
+  const carPayment = calculatedValues.carPayment;
+  const groceries = calculatedValues.groceries;
+  const otherExpenses = calculatedValues.otherExpenses;
 
   const totalExpenses = useMemo(
     () => rent + carPayment + groceries + otherExpenses,
@@ -169,12 +189,20 @@ export default function Home() {
     border: "none",
   };
 
+  const updateField = (field: keyof CalculationState, value: number) => {
+    setFormValues((prev) => ({
+      ...prev,
+      [field]: value,
+    }));
+  };
+
+  const calculateWealthIQ = () => {
+    setCalculatedValues(formValues);
+  };
+
   const resetValues = () => {
-    setIncome(2100);
-    setRent(350);
-    setCarPayment(400);
-    setGroceries(250);
-    setOtherExpenses(0);
+    setFormValues(DEFAULT_VALUES);
+    setCalculatedValues(DEFAULT_VALUES);
   };
 
   const saveCalculation = () => {
@@ -273,7 +301,7 @@ export default function Home() {
           >
             A clean financial score tool that turns your monthly income and
             expenses into a simple health snapshot with visual insights,
-            scoring, and cash-flow clarity.
+            scoring, cash-flow clarity, AI guidance, and downloadable history.
           </p>
         </section>
 
@@ -334,8 +362,10 @@ export default function Home() {
               </label>
               <input
                 type="number"
-                value={income}
-                onChange={(e) => setIncome(Number(e.target.value) || 0)}
+                value={formValues.income}
+                onChange={(e) =>
+                  updateField("income", Number(e.target.value) || 0)
+                }
                 style={inputStyle}
               />
             </div>
@@ -347,8 +377,10 @@ export default function Home() {
               </label>
               <input
                 type="number"
-                value={rent}
-                onChange={(e) => setRent(Number(e.target.value) || 0)}
+                value={formValues.rent}
+                onChange={(e) =>
+                  updateField("rent", Number(e.target.value) || 0)
+                }
                 style={inputStyle}
               />
             </div>
@@ -360,8 +392,10 @@ export default function Home() {
               </label>
               <input
                 type="number"
-                value={carPayment}
-                onChange={(e) => setCarPayment(Number(e.target.value) || 0)}
+                value={formValues.carPayment}
+                onChange={(e) =>
+                  updateField("carPayment", Number(e.target.value) || 0)
+                }
                 style={inputStyle}
               />
             </div>
@@ -373,8 +407,10 @@ export default function Home() {
               </label>
               <input
                 type="number"
-                value={groceries}
-                onChange={(e) => setGroceries(Number(e.target.value) || 0)}
+                value={formValues.groceries}
+                onChange={(e) =>
+                  updateField("groceries", Number(e.target.value) || 0)
+                }
                 style={inputStyle}
               />
             </div>
@@ -386,8 +422,10 @@ export default function Home() {
               </label>
               <input
                 type="number"
-                value={otherExpenses}
-                onChange={(e) => setOtherExpenses(Number(e.target.value) || 0)}
+                value={formValues.otherExpenses}
+                onChange={(e) =>
+                  updateField("otherExpenses", Number(e.target.value) || 0)
+                }
                 style={inputStyle}
               />
             </div>
@@ -402,8 +440,7 @@ export default function Home() {
             >
               <button
                 type="button"
-                onClick={saveCalculation}
-                disabled={createCalculation.isPending}
+                onClick={calculateWealthIQ}
                 style={{
                   ...actionButtonStyle,
                   background:
@@ -412,9 +449,21 @@ export default function Home() {
                   boxShadow: "0 12px 28px rgba(16,185,129,0.18)",
                 }}
               >
-                {createCalculation.isPending
-                  ? "Saving..."
-                  : "Save Calculation"}
+                Calculate Wealth IQ
+              </button>
+
+              <button
+                type="button"
+                onClick={saveCalculation}
+                disabled={createCalculation.isPending}
+                style={{
+                  ...actionButtonStyle,
+                  background: "#0f172a",
+                  color: "white",
+                  opacity: createCalculation.isPending ? 0.7 : 1,
+                }}
+              >
+                {createCalculation.isPending ? "Saving..." : "Save Calculation"}
               </button>
 
               <button
@@ -467,13 +516,7 @@ export default function Home() {
           />
         </div>
 
-        <div
-          className="premium-card"
-          style={{
-            marginTop: 32,
-            padding: 24,
-          }}
-        >
+        <div className="premium-card" style={{ marginTop: 32, padding: 24 }}>
           <h2
             style={{
               fontSize: 24,
