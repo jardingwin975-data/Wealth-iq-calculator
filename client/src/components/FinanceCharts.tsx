@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useMemo, useState } from "react";
 
 type FinanceChartsProps = {
   income: number;
@@ -32,9 +32,6 @@ export default function FinanceCharts({
     { name: "Other Expenses", value: otherExpenses, color: "#8b5cf6" },
   ].filter((item) => item.value > 0);
 
-  const maxBreakdown =
-    breakdown.reduce((max, item) => Math.max(max, item.value), 0) || 1;
-
   const cashFlow = [
     { name: "Income", value: income, color: "#22c55e" },
     { name: "Expenses", value: totalExpenses, color: "#3b82f6" },
@@ -43,6 +40,28 @@ export default function FinanceCharts({
 
   const maxCash =
     cashFlow.reduce((max, item) => Math.max(max, item.value), 0) || 1;
+
+  const totalBreakdownValue =
+    breakdown.reduce((sum, item) => sum + item.value, 0) || 1;
+
+  const donutData = useMemo(() => {
+    let runningOffset = 0;
+
+    return breakdown.map((item) => {
+      const percentage = item.value / totalBreakdownValue;
+      const dash = percentage * 100;
+      const gap = 100 - dash;
+
+      const result = {
+        ...item,
+        dashArray: `${dash} ${gap}`,
+        dashOffset: -runningOffset,
+      };
+
+      runningOffset += dash;
+      return result;
+    });
+  }, [breakdown, totalBreakdownValue]);
 
   return (
     <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
@@ -62,12 +81,12 @@ export default function FinanceCharts({
 
           <div
             className={`inline-flex items-center rounded-full border px-3 py-1 text-sm font-semibold ${
-              maxBreakdown > income * 0.35
+              totalBreakdownValue > income * 0.7
                 ? "border-amber-300 bg-amber-50 text-amber-700"
                 : "border-emerald-300 bg-emerald-50 text-emerald-700"
             }`}
           >
-            {maxBreakdown > income * 0.35 ? "Moderate Risk" : "Healthy"}
+            {totalBreakdownValue > income * 0.7 ? "Moderate Risk" : "Healthy"}
           </div>
         </div>
 
@@ -77,7 +96,70 @@ export default function FinanceCharts({
           </div>
         ) : (
           <>
-            <div className="mt-8 space-y-6">
+            <div className="mt-8 flex flex-col items-center">
+              <div className="relative flex items-center justify-center">
+                <svg viewBox="0 0 42 42" className="h-64 w-64 sm:h-72 sm:w-72 -rotate-90">
+                  <circle
+                    cx="21"
+                    cy="21"
+                    r="15.9155"
+                    fill="transparent"
+                    stroke="#e2e8f0"
+                    strokeWidth="4"
+                  />
+
+                  {donutData.map((item) => (
+                    <circle
+                      key={item.name}
+                      cx="21"
+                      cy="21"
+                      r="15.9155"
+                      fill="transparent"
+                      stroke={item.color}
+                      strokeWidth={activeBreakdown === item.name ? "5" : "4"}
+                      strokeDasharray={item.dashArray}
+                      strokeDashoffset={item.dashOffset}
+                      strokeLinecap="round"
+                      className="cursor-pointer transition-all duration-200"
+                      style={{
+                        filter:
+                          activeBreakdown === item.name
+                            ? "brightness(0.88)"
+                            : "none",
+                      }}
+                      onClick={() =>
+                        setActiveBreakdown((prev) =>
+                          prev === item.name ? null : item.name
+                        )
+                      }
+                    />
+                  ))}
+                </svg>
+
+                <div className="absolute text-center">
+                  <div className="text-sm uppercase tracking-[0.16em] text-slate-400 font-semibold">
+                    Total
+                  </div>
+                  <div className="mt-1 text-2xl sm:text-3xl font-bold text-slate-900">
+                    {currency(totalBreakdownValue)}
+                  </div>
+                </div>
+              </div>
+
+              {activeBreakdown && (
+                <div className="mt-4 rounded-2xl bg-slate-100/90 px-4 py-3 text-sm sm:text-base text-slate-600 shadow-inner">
+                  {
+                    breakdown.find((item) => item.name === activeBreakdown)?.name
+                  }
+                  :{" "}
+                  {currency(
+                    breakdown.find((item) => item.name === activeBreakdown)?.value || 0
+                  )}
+                </div>
+              )}
+            </div>
+
+            <div className="mt-8 flex flex-wrap gap-4 justify-center">
               {breakdown.map((item) => (
                 <button
                   key={item.name}
@@ -87,52 +169,18 @@ export default function FinanceCharts({
                       prev === item.name ? null : item.name
                     )
                   }
-                  className={`w-full rounded-2xl p-2 text-left transition-all ${
+                  className={`flex items-center gap-2 rounded-full px-3 py-2 text-sm sm:text-base transition-all ${
                     activeBreakdown === item.name
-                      ? "bg-slate-100/90 shadow-inner"
-                      : "bg-transparent"
+                      ? "bg-slate-100 shadow-inner text-slate-900"
+                      : "text-slate-600"
                   }`}
-                >
-                  <div className="mb-3 flex items-center justify-between text-base sm:text-lg">
-                    <span className="font-medium text-slate-700">{item.name}</span>
-                    <span className="text-slate-500">{currency(item.value)}</span>
-                  </div>
-
-                  <div className="h-5 rounded-full bg-slate-100 overflow-hidden">
-                    <div
-                      className="h-full rounded-full transition-all duration-200"
-                      style={{
-                        width: `${(item.value / maxBreakdown) * 100}%`,
-                        background: item.color,
-                        filter:
-                          activeBreakdown === item.name
-                            ? "brightness(0.88)"
-                            : "none",
-                      }}
-                    />
-                  </div>
-
-                  {activeBreakdown === item.name && (
-                    <div className="mt-3 text-sm sm:text-base text-slate-500">
-                      Amount: {currency(item.value)}
-                    </div>
-                  )}
-                </button>
-              ))}
-            </div>
-
-            <div className="mt-8 flex flex-wrap gap-4">
-              {breakdown.map((item) => (
-                <div
-                  key={item.name}
-                  className="flex items-center gap-2 text-sm sm:text-base text-slate-600"
                 >
                   <span
                     className="inline-block h-3.5 w-3.5 rounded-full"
                     style={{ background: item.color }}
                   />
                   {item.name}
-                </div>
+                </button>
               ))}
             </div>
           </>
