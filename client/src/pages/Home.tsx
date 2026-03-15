@@ -43,8 +43,7 @@ function WealthIQPage() {
   );
 
   const totalExpenses = useMemo(
-    () =>
-      rentValue + carPaymentValue + groceriesValue + otherExpensesValue,
+    () => rentValue + carPaymentValue + groceriesValue + otherExpensesValue,
     [rentValue, carPaymentValue, groceriesValue, otherExpensesValue]
   );
 
@@ -74,9 +73,7 @@ function WealthIQPage() {
 
   const transportRatio = useMemo(
     () =>
-      incomeValue > 0
-        ? Math.round((carPaymentValue / incomeValue) * 100)
-        : 0,
+      incomeValue > 0 ? Math.round((carPaymentValue / incomeValue) * 100) : 0,
     [incomeValue, carPaymentValue]
   );
 
@@ -202,7 +199,11 @@ function WealthIQPage() {
           </p>
         </section>
 
-        <section className="mt-10 grid gap-6">
+        <div className="mt-8">
+          <ScoreDisplay {...report} />
+        </div>
+
+        <section className="mt-8 grid gap-6">
           <div className="premium-card rounded-[2.5rem] p-7 sm:p-10">
             <h2 className="text-3xl sm:text-4xl font-black tracking-tight text-slate-950">
               Monthly Inputs
@@ -320,10 +321,6 @@ function WealthIQPage() {
         </section>
 
         <div className="mt-8">
-          <ScoreDisplay {...report} />
-        </div>
-
-        <div className="mt-8">
           <FinanceCharts
             income={incomeValue}
             rent={rentValue}
@@ -333,24 +330,24 @@ function WealthIQPage() {
           />
         </div>
 
-        <div className="mt-8 premium-card rounded-[2.5rem] p-7 sm:p-10">
-          <h2 className="text-3xl sm:text-4xl font-black text-slate-950">
-            Scenario Comparison
-          </h2>
-          <p className="mt-5 text-lg sm:text-xl leading-9 sm:leading-10 text-slate-500">
-            To hit a 20% savings rate, your target maximum monthly expenses would be:
-          </p>
-          <p className="mt-6 text-5xl sm:text-6xl font-black tracking-tight text-slate-950">
-            ${comparison.recommendedMaxExpenses.toLocaleString()}
-          </p>
-          <p className="mt-6 text-lg sm:text-xl leading-9 text-slate-500">
-            {comparison.improvementNeeded > 0
-              ? `You would need to cut about $${comparison.improvementNeeded.toLocaleString()} in monthly expenses to reach that target.`
-              : "You are already at or better than that target."}
-          </p>
-        </div>
+        <div className="mt-8 grid grid-cols-1 gap-6 xl:grid-cols-2">
+          <div className="premium-card rounded-[2.5rem] p-7 sm:p-10">
+            <h2 className="text-3xl sm:text-4xl font-black text-slate-950">
+              Scenario Comparison
+            </h2>
+            <p className="mt-5 text-lg sm:text-xl leading-9 sm:leading-10 text-slate-500">
+              To hit a 20% savings rate, your target maximum monthly expenses would be:
+            </p>
+            <p className="mt-6 text-5xl sm:text-6xl font-black tracking-tight text-slate-950">
+              ${comparison.recommendedMaxExpenses.toLocaleString()}
+            </p>
+            <p className="mt-6 text-lg sm:text-xl leading-9 text-slate-500">
+              {comparison.improvementNeeded > 0
+                ? `You would need to cut about $${comparison.improvementNeeded.toLocaleString()} in monthly expenses to reach that target.`
+                : "You are already at or better than that target."}
+            </p>
+          </div>
 
-        <div className="mt-8">
           <AIFinancialAdvisor report={report} />
         </div>
 
