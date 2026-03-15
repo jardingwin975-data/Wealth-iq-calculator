@@ -7,6 +7,7 @@ import {
   House,
   Car,
   ShieldAlert,
+  Share2,
 } from "lucide-react";
 
 interface ScoreDisplayProps {
@@ -29,6 +30,7 @@ export function ScoreDisplay({
   transportRatio,
 }: ScoreDisplayProps) {
   const [displayValue, setDisplayValue] = useState(0);
+  const [shareMessage, setShareMessage] = useState("");
 
   useEffect(() => {
     if (score !== null) {
@@ -174,6 +176,37 @@ export function ScoreDisplay({
     },
   ];
 
+  const handleShare = async () => {
+    if (score === null) return;
+
+    const shareText =
+      `My Wealth IQ score is ${score}/100.\n` +
+      `Expense Ratio: ${expenseRatio ?? 0}%\n` +
+      `Savings Rate: ${savingsRate ?? 0}%\n` +
+      `Disposable Income: $${disposableIncome?.toLocaleString() ?? "0"}\n` +
+      `Generated with Wealth IQ Financial Calculator by Gwin Analytics.`;
+
+    try {
+      if (navigator.share) {
+        await navigator.share({
+          title: "My Wealth IQ Score",
+          text: shareText,
+          url: window.location.href,
+        });
+        setShareMessage("Result shared.");
+        setTimeout(() => setShareMessage(""), 2500);
+        return;
+      }
+
+      await navigator.clipboard.writeText(shareText);
+      setShareMessage("Result copied to clipboard.");
+      setTimeout(() => setShareMessage(""), 2500);
+    } catch {
+      setShareMessage("Unable to share right now.");
+      setTimeout(() => setShareMessage(""), 2500);
+    }
+  };
+
   return (
     <div className="premium-card rounded-[2rem] p-7 sm:p-9 overflow-hidden relative">
       <div className="absolute inset-0 pointer-events-none">
@@ -190,17 +223,35 @@ export function ScoreDisplay({
       </div>
 
       <div className="relative z-10">
-        <div>
-          <p className="text-sm font-semibold uppercase tracking-[0.18em] text-slate-400">
-            Financial score
-          </p>
-          <h3 className="text-2xl md:text-3xl font-bold text-slate-900 font-display mt-1">
-            Your Wealth IQ
-          </h3>
-          <div
-            className={`inline-flex items-center rounded-full border px-3 py-1.5 text-sm font-semibold mt-4 ${details.badge}`}
-          >
-            {details.band}
+        <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
+          <div>
+            <p className="text-sm font-semibold uppercase tracking-[0.18em] text-slate-400">
+              Financial score
+            </p>
+            <h3 className="text-2xl md:text-3xl font-bold text-slate-900 font-display mt-1">
+              Your Wealth IQ
+            </h3>
+            <div
+              className={`inline-flex items-center rounded-full border px-3 py-1.5 text-sm font-semibold mt-4 ${details.badge}`}
+            >
+              {details.band}
+            </div>
+          </div>
+
+          <div className="flex flex-col items-start sm:items-end gap-2">
+            <button
+              type="button"
+              onClick={handleShare}
+              disabled={score === null}
+              className="inline-flex items-center gap-2 rounded-2xl border border-slate-200 bg-white px-4 py-2.5 text-sm font-semibold text-slate-700 shadow-sm transition hover:bg-slate-50 disabled:cursor-not-allowed disabled:opacity-50"
+            >
+              <Share2 className="h-4 w-4" />
+              Share Result
+            </button>
+
+            {shareMessage && (
+              <p className="text-xs text-slate-500">{shareMessage}</p>
+            )}
           </div>
         </div>
 
