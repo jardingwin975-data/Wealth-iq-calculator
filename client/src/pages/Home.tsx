@@ -17,11 +17,11 @@ import { useCreateCalculation } from "../hooks/use-calculations";
 const queryClient = new QueryClient();
 
 function WealthIQPage() {
-  const [income, setIncome] = useState("2100");
-  const [rent, setRent] = useState("350");
-  const [carPayment, setCarPayment] = useState("400");
-  const [groceries, setGroceries] = useState("250");
-  const [otherExpenses, setOtherExpenses] = useState("0");
+  const [income, setIncome] = useState("");
+  const [rent, setRent] = useState("");
+  const [carPayment, setCarPayment] = useState("");
+  const [groceries, setGroceries] = useState("");
+  const [otherExpenses, setOtherExpenses] = useState("");
 
   const [hasCalculated, setHasCalculated] = useState(false);
 
