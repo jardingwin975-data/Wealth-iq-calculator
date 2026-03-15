@@ -359,7 +359,7 @@ function WealthIQPage() {
         </div>
 
         <footer className="py-10 text-center text-base sm:text-lg text-slate-400">
-          Wealth IQ Financial Calculator • Created by Jardin Gwin • Financial analytics portfolio project
+          Wealth IQ Financial Calculator • Created By Jardin Gwin • Financial Analytics Application
         </footer>
       </div>
     </div>
