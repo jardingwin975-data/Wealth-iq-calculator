@@ -46,8 +46,8 @@ export default function FinanceCharts({
 
   return (
     <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
-      <div className="premium-card rounded-[2rem] p-6 sm:p-7">
-        <div className="mb-4 flex items-start justify-between gap-4">
+      <div className="premium-card rounded-[2rem] p-7 sm:p-8">
+        <div className="mb-5 flex items-start justify-between gap-4">
           <div>
             <p className="text-sm font-semibold uppercase tracking-[0.18em] text-slate-400">
               Analytics
@@ -77,7 +77,7 @@ export default function FinanceCharts({
           </div>
         ) : (
           <>
-            <div className="mt-6 space-y-5">
+            <div className="mt-8 space-y-6">
               {breakdown.map((item) => (
                 <button
                   key={item.name}
@@ -93,12 +93,12 @@ export default function FinanceCharts({
                       : "bg-transparent"
                   }`}
                 >
-                  <div className="mb-2 flex items-center justify-between text-sm sm:text-base">
+                  <div className="mb-3 flex items-center justify-between text-base sm:text-lg">
                     <span className="font-medium text-slate-700">{item.name}</span>
                     <span className="text-slate-500">{currency(item.value)}</span>
                   </div>
 
-                  <div className="h-4 rounded-full bg-slate-100 overflow-hidden">
+                  <div className="h-5 rounded-full bg-slate-100 overflow-hidden">
                     <div
                       className="h-full rounded-full transition-all duration-200"
                       style={{
@@ -113,7 +113,7 @@ export default function FinanceCharts({
                   </div>
 
                   {activeBreakdown === item.name && (
-                    <div className="mt-2 text-sm text-slate-500">
+                    <div className="mt-3 text-sm sm:text-base text-slate-500">
                       Amount: {currency(item.value)}
                     </div>
                   )}
@@ -128,7 +128,7 @@ export default function FinanceCharts({
                   className="flex items-center gap-2 text-sm sm:text-base text-slate-600"
                 >
                   <span
-                    className="inline-block h-3 w-3 rounded-full"
+                    className="inline-block h-3.5 w-3.5 rounded-full"
                     style={{ background: item.color }}
                   />
                   {item.name}
@@ -139,7 +139,7 @@ export default function FinanceCharts({
         )}
       </div>
 
-      <div className="premium-card rounded-[2rem] p-6 sm:p-7">
+      <div className="premium-card rounded-[2rem] p-7 sm:p-8">
         <p className="text-sm font-semibold uppercase tracking-[0.18em] text-slate-400">
           Cash Flow
         </p>
@@ -150,7 +150,7 @@ export default function FinanceCharts({
           Compare your income, spending, and remaining savings.
         </p>
 
-        <div className="mt-8 grid min-h-[280px] grid-cols-3 gap-4 sm:gap-6 items-end">
+        <div className="mt-8 grid min-h-[340px] sm:min-h-[380px] grid-cols-3 gap-4 sm:gap-6 items-end">
           {cashFlow.map((item) => (
             <button
               key={item.name}
@@ -168,9 +168,9 @@ export default function FinanceCharts({
                 {currency(item.value)}
               </div>
 
-              <div className="flex h-56 w-full items-end justify-center">
+              <div className="flex h-64 sm:h-72 w-full items-end justify-center">
                 <div
-                  className="w-10 sm:w-12 rounded-t-2xl shadow-sm transition-all duration-200"
+                  className="w-12 sm:w-14 rounded-t-[1.25rem] shadow-sm transition-all duration-200"
                   style={{
                     height: `${Math.max((item.value / maxCash) * 100, 4)}%`,
                     background: item.color,
