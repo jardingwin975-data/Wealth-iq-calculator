@@ -223,12 +223,7 @@ function WealthIQPage() {
   </div>
 </div>
         </section>
-
-        
-
-  
-
-        <section className="mt-8 grid gap-6">
+ <section className="mt-8 grid gap-6">
           <div className="premium-card rounded-[2.5rem] p-7 sm:p-10">
             <h2 className="text-3xl sm:text-4xl font-black tracking-tight text-slate-950">
               Monthly Inputs
