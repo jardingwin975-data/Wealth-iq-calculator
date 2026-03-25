@@ -205,27 +205,28 @@ function WealthIQPage() {
             into a simple health snapshot with visual insights, scoring, cash-flow
             clarity, AI guidance, and downloadable history.
           </p>
+          <div className="mt-8 flex flex-col items-start gap-4">
+  <div className="rounded-full border border-slate-200 bg-white px-6 py-4 text-base text-slate-700 shadow-sm">
+    Live score analysis
+  </div>
+
+  <div className="rounded-full border border-slate-200 bg-white px-6 py-4 text-base text-slate-700 shadow-sm">
+    Expense ratio tracking
+  </div>
+
+  <div className="rounded-full border border-slate-200 bg-white px-6 py-4 text-base text-slate-700 shadow-sm">
+    Savings health insights
+  </div>
+
+  <div className="rounded-full border border-slate-200 bg-white px-6 py-4 text-base text-slate-700 shadow-sm">
+    Calculation history
+  </div>
+</div>
         </section>
 
         
 
-  <div className="mt-8 flex flex-col items-start gap-4">
-    <div className="rounded-full border border-slate-200 bg-white px-6 py-4 text-base font-medium text-slate-700 shadow-sm">
-      Live score analysis
-    </div>
-
-    <div className="rounded-full border border-slate-200 bg-white px-6 py-4 text-base font-medium text-slate-700 shadow-sm">
-      Expense ratio tracking
-    </div>
-
-    <div className="rounded-full border border-slate-200 bg-white px-6 py-4 text-base font-medium text-slate-700 shadow-sm">
-      Savings health insights
-    </div>
-
-    <div className="rounded-full border border-slate-200 bg-white px-6 py-4 text-base font-medium text-slate-700 shadow-sm">
-      Calculation history
-    </div>
-  </div>
+  
 
         <section className="mt-8 grid gap-6">
           <div className="premium-card rounded-[2.5rem] p-7 sm:p-10">
