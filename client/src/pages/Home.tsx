@@ -209,20 +209,7 @@ function WealthIQPage() {
 
         <section className="mt-8">
   <div className="inline-flex items-center rounded-full border border-emerald-200 px-5 py-3 text-sm font-semibold text-emerald-700 sm:px-6 sm:text-base">
-    ✨ Financial health scoring, simplified
-  </div>
-
-  <h1 className="mt-8 text-[3.15rem] font-black leading-[0.95] sm:text-[4.5rem]">
-    <span className="text-slate-950">Wealth IQ Financial</span>
-    <br />
-    <span className="text-emerald-500">Calculator</span>
-  </h1>
-
-  <p className="mt-6 max-w-3xl text-lg leading-relaxed text-slate-500 sm:text-[2rem]">
-    A clean financial score tool that turns your monthly income and expenses into
-    a simple health snapshot with visual insights, scoring, cash-flow clarity,
-    AI guidance, and downloadable history.
-  </p>
+ 
 
   <div className="mt-8 flex flex-col items-start gap-4">
     <div className="rounded-full border border-slate-200 bg-white px-6 py-4 text-base font-medium text-slate-700 shadow-sm">
