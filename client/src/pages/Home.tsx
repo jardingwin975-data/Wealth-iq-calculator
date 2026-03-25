@@ -205,24 +205,46 @@ function WealthIQPage() {
             into a simple health snapshot with visual insights, scoring, cash-flow
             clarity, AI guidance, and downloadable history.
           </p>
-          <div className="mt-8 flex flex-col items-start gap-4">
-  <div className="rounded-full border border-slate-200 bg-white px-6 py-4 text-base text-slate-700 shadow-sm">
-    Live score analysis
+
+          <section className="premium-card mt-8">
+  <div className="inline-flex items-center rounded-full border border-emerald-200 px-4 py-2 text-sm font-semibold text-emerald-700">
+    Financial health scoring, simplified
   </div>
 
-  <div className="rounded-full border border-slate-200 bg-white px-6 py-4 text-base text-slate-700 shadow-sm">
-    Expense ratio tracking
-  </div>
+  <h1 className="mt-8 text-[3.15rem] leading-[0.95] font-black">
+    <span className="text-slate-950">Wealth IQ Financial</span>
+    <br />
+    <span className="text-emerald-500">Calculator</span>
+  </h1>
 
-  <div className="rounded-full border border-slate-200 bg-white px-6 py-4 text-base text-slate-700 shadow-sm">
-    Savings health insights
-  </div>
+  <p className="mt-6 max-w-3xl text-lg sm:text-[2rem] leading-[1.8] text-slate-500">
+    A clean financial score tool that turns your monthly income and expenses into
+    a simple health snapshot with visual insights, scoring, cash-flow clarity, AI
+    guidance, and downloadable history.
+  </p>
 
-  <div className="rounded-full border border-slate-200 bg-white px-6 py-4 text-base text-slate-700 shadow-sm">
-    Calculation history
+  <div className="mt-8 flex flex-col items-start gap-4">
+    <div className="rounded-full border border-slate-200 bg-slate-50 px-6 py-4 text-base text-slate-700 shadow-sm">
+      Live score analysis
+    </div>
+
+    <div className="rounded-full border border-slate-200 bg-slate-50 px-6 py-4 text-base text-slate-700 shadow-sm">
+      Expense ratio tracking
+    </div>
+
+    <div className="rounded-full border border-slate-200 bg-slate-50 px-6 py-4 text-base text-slate-700 shadow-sm">
+      Savings health insights
+    </div>
+
+    <div className="rounded-full border border-slate-200 bg-slate-50 px-6 py-4 text-base text-slate-700 shadow-sm">
+      Calculation history
+    </div>
   </div>
-</div>
-        </section>
+</section>
+      
+      
+
+
  <section className="mt-8 grid gap-6">
           <div className="premium-card rounded-[2.5rem] p-7 sm:p-10">
             <h2 className="text-3xl sm:text-4xl font-black tracking-tight text-slate-950">
