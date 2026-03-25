@@ -207,9 +207,7 @@ function WealthIQPage() {
           </p>
         </section>
 
-        <section className="mt-8">
-  <div className="inline-flex items-center rounded-full border border-emerald-200 px-5 py-3 text-sm font-semibold text-emerald-700 sm:px-6 sm:text-base">
- 
+        
 
   <div className="mt-8 flex flex-col items-start gap-4">
     <div className="rounded-full border border-slate-200 bg-white px-6 py-4 text-base font-medium text-slate-700 shadow-sm">
