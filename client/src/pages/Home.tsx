@@ -226,7 +226,6 @@ function WealthIQPage() {
       Calculation history
     </div>
   </div>
-</section>
 
         <section className="mt-8 grid gap-6">
           <div className="premium-card rounded-[2.5rem] p-7 sm:p-10">
