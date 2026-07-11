@@ -405,13 +405,13 @@ function WealthIQPage() {
           <HistoryList />
         </div>
 
-       <footer>
-  Wealth IQ Financial Calculator • Created By Jardin Gwin • Financial Analytics Application
-</footer>
-</section>
+            <footer>
+        Wealth IQ Financial Calculator • Created By Jardin Gwin • Financial Analytics Application
+      </footer>
+    </section>
+  </section>
 </div>
 );
-      
 }
 
 export default function Home() {
