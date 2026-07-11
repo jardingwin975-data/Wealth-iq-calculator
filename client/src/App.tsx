@@ -1,4 +1,5 @@
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { Analytics } from "@vercel/analytics/react";
 import Home from "./pages/Home";
 
 const queryClient = new QueryClient({
@@ -18,6 +19,7 @@ export default function App() {
   return (
     <QueryClientProvider client={queryClient}>
       <Home />
+      <Analytics />
     </QueryClientProvider>
   );
 }
