@@ -182,14 +182,8 @@ function WealthIQPage() {
   return (
     <div className="min-h-screen bg-[radial-gradient(circle_at_top_left,rgba(16,185,129,0.10),transparent_30%),radial-gradient(circle_at_top_right,rgba(59,130,246,0.08),transparent_32%),linear-gradient(180deg,#eef8f4_0%,#edf4fb_45%,#f7f9fc_100%)]">
       <div className="mx-auto max-w-5xl px-5 py-8 sm:px-6 sm:py-10">
-        <a
-          href="https://gwinanalytics.com"
-          className="inline-flex items-center rounded-2xl bg-slate-950 px-6 py-4 text-lg sm:text-xl font-semibold text-white shadow-lg"
-        >
-          ← Gwin Analytics
-        </a>
-
-        <section className="premium-card mt-8 rounded-[2.5rem] p-7 sm:p-10">
+        
+     <section className="premium-card mt-8 rounded-[2.5rem] p-7 sm:p-10">
           <div className="inline-flex items-center rounded-full border border-emerald-200 bg-emerald-50 px-5 py-2 text-base sm:text-lg font-semibold text-emerald-700">
             Financial health scoring, simplified
           </div>
