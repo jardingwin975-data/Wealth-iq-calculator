@@ -199,8 +199,9 @@ function WealthIQPage() {
             into a simple health snapshot with visual insights, scoring, cash-flow
             clarity, AI guidance, and downloadable history.
           </p>
-
-          <section className="premium-card mt-8">
+       
+       
+     <section className="premium-card mt-8">
   <div className="inline-flex items-center rounded-full border border-emerald-200 px-4 py-2 text-sm font-semibold text-emerald-700">
     Financial health scoring, simplified
   </div>
@@ -404,12 +405,13 @@ function WealthIQPage() {
           <HistoryList />
         </div>
 
-        <footer className="py-10 text-center text-base sm:text-lg text-slate-400">
-          Wealth IQ Financial Calculator • Created By Jardin Gwin • Financial Analytics Application
-        </footer>
-      </div>
-    </div>
-  );
+       <footer>
+  Wealth IQ Financial Calculator • Created By Jardin Gwin • Financial Analytics Application
+</footer>
+</section>
+</div>
+);
+      
 }
 
 export default function Home() {
