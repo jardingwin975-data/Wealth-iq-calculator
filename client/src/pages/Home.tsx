@@ -182,74 +182,49 @@ function WealthIQPage() {
   return (
     <div className="min-h-screen bg-[radial-gradient(circle_at_top_left,rgba(16,185,129,0.10),transparent_30%),radial-gradient(circle_at_top_right,rgba(59,130,246,0.08),transparent_32%),linear-gradient(180deg,#eef8f4_0%,#edf4fb_45%,#f7f9fc_100%)]">
       <div className="mx-auto max-w-5xl px-5 py-8 sm:px-6 sm:py-10">
-        
-     <section className="premium-card mt-8 rounded-[2.5rem] p-7 sm:p-10">
-          <div className="inline-flex items-center rounded-full border border-emerald-200 bg-emerald-50 px-5 py-2 text-base sm:text-lg font-semibold text-emerald-700">
+        <section className="premium-card mt-8 rounded-[2.5rem] p-7 sm:p-10">
+          <div className="inline-flex items-center rounded-full border border-emerald-200 bg-emerald-50 px-5 py-2 text-base font-semibold text-emerald-700 sm:text-lg">
             Financial health scoring, simplified
           </div>
 
-          <h1 className="mt-8 text-[3.15rem] leading-[0.95] font-black tracking-tight text-slate-950 sm:text-[4.5rem]">
+          <h1 className="mt-8 text-[3.15rem] font-black leading-[0.95] tracking-tight text-slate-950 sm:text-[4.5rem]">
             <span className="text-slate-950">Wealth IQ Financial</span>
             <br />
             <span className="text-emerald-500">Calculator</span>
           </h1>
 
-          <p className="mt-6 max-w-3xl text-lg sm:text-[2rem] leading-9 sm:leading-[3.25rem] text-slate-500">
+          <p className="mt-6 max-w-3xl text-lg leading-9 text-slate-500 sm:text-[2rem] sm:leading-[3.25rem]">
             A clean financial score tool that turns your monthly income and expenses
             into a simple health snapshot with visual insights, scoring, cash-flow
             clarity, AI guidance, and downloadable history.
           </p>
-       
-       
-     <section className="premium-card mt-8">
-  <div className="inline-flex items-center rounded-full border border-emerald-200 px-4 py-2 text-sm font-semibold text-emerald-700">
-    Financial health scoring, simplified
-  </div>
 
-  <h1 className="mt-8 text-[3.15rem] leading-[0.95] font-black">
-    <span className="text-slate-950">Wealth IQ Financial</span>
-    <br />
-    <span className="text-emerald-500">Calculator</span>
-  </h1>
+          <div className="mt-8 flex flex-col items-start gap-4">
+            <div className="rounded-full border border-slate-200 bg-slate-50 px-6 py-4 text-base text-slate-700 shadow-sm">
+              Live score analysis
+            </div>
+            <div className="rounded-full border border-slate-200 bg-slate-50 px-6 py-4 text-base text-slate-700 shadow-sm">
+              Expense ratio tracking
+            </div>
+            <div className="rounded-full border border-slate-200 bg-slate-50 px-6 py-4 text-base text-slate-700 shadow-sm">
+              Savings health insights
+            </div>
+            <div className="rounded-full border border-slate-200 bg-slate-50 px-6 py-4 text-base text-slate-700 shadow-sm">
+              Calculation history
+            </div>
+          </div>
+        </section>
 
-  <p className="mt-6 max-w-3xl text-lg sm:text-[2rem] leading-[1.8] text-slate-500">
-    A clean financial score tool that turns your monthly income and expenses into
-    a simple health snapshot with visual insights, scoring, cash-flow clarity, AI
-    guidance, and downloadable history.
-  </p>
-
-  <div className="mt-8 flex flex-col items-start gap-4">
-    <div className="rounded-full border border-slate-200 bg-slate-50 px-6 py-4 text-base text-slate-700 shadow-sm">
-      Live score analysis
-    </div>
-
-    <div className="rounded-full border border-slate-200 bg-slate-50 px-6 py-4 text-base text-slate-700 shadow-sm">
-      Expense ratio tracking
-    </div>
-
-    <div className="rounded-full border border-slate-200 bg-slate-50 px-6 py-4 text-base text-slate-700 shadow-sm">
-      Savings health insights
-    </div>
-
-    <div className="rounded-full border border-slate-200 bg-slate-50 px-6 py-4 text-base text-slate-700 shadow-sm">
-      Calculation history
-    </div>
-  </div>
-</section>
-      
-      
-
-
- <section className="mt-8 grid gap-6">
+        <section className="mt-8 grid gap-6">
           <div className="premium-card rounded-[2.5rem] p-7 sm:p-10">
-            <h2 className="text-3xl sm:text-4xl font-black tracking-tight text-slate-950">
+            <h2 className="text-3xl font-black tracking-tight text-slate-950 sm:text-4xl">
               Monthly Inputs
             </h2>
 
             <div className="mt-8 grid gap-6">
               <div className={inputWrap}>
                 <label className={labelClass}>
-                  <Wallet className="h-6 w-6 sm:h-7 sm:w-7 text-slate-500" />
+                  <Wallet className="h-6 w-6 text-slate-500 sm:h-7 sm:w-7" />
                   Monthly Income
                 </label>
                 <input
@@ -264,7 +239,7 @@ function WealthIQPage() {
 
               <div className={inputWrap}>
                 <label className={labelClass}>
-                  <House className="h-6 w-6 sm:h-7 sm:w-7 text-slate-500" />
+                  <House className="h-6 w-6 text-slate-500 sm:h-7 sm:w-7" />
                   Rent / Mortgage
                 </label>
                 <input
@@ -279,7 +254,7 @@ function WealthIQPage() {
 
               <div className={inputWrap}>
                 <label className={labelClass}>
-                  <Car className="h-6 w-6 sm:h-7 sm:w-7 text-slate-500" />
+                  <Car className="h-6 w-6 text-slate-500 sm:h-7 sm:w-7" />
                   Car Payment
                 </label>
                 <input
@@ -294,7 +269,7 @@ function WealthIQPage() {
 
               <div className={inputWrap}>
                 <label className={labelClass}>
-                  <ShoppingCart className="h-6 w-6 sm:h-7 sm:w-7 text-slate-500" />
+                  <ShoppingCart className="h-6 w-6 text-slate-500 sm:h-7 sm:w-7" />
                   Groceries
                 </label>
                 <input
@@ -309,7 +284,7 @@ function WealthIQPage() {
 
               <div className={inputWrap}>
                 <label className={labelClass}>
-                  <CreditCard className="h-6 w-6 sm:h-7 sm:w-7 text-slate-500" />
+                  <CreditCard className="h-6 w-6 text-slate-500 sm:h-7 sm:w-7" />
                   Other Expenses
                 </label>
                 <input
@@ -327,7 +302,7 @@ function WealthIQPage() {
               <button
                 type="button"
                 onClick={handleCalculate}
-                className="financial-button rounded-2xl px-8 py-5 text-lg sm:text-xl font-bold text-white shadow-[0_16px_40px_rgba(16,185,129,0.18)]"
+                className="financial-button rounded-2xl px-8 py-5 text-lg font-bold text-white shadow-[0_16px_40px_rgba(16,185,129,0.18)] sm:text-xl"
               >
                 Calculate Wealth IQ
               </button>
@@ -335,7 +310,7 @@ function WealthIQPage() {
               <button
                 type="button"
                 onClick={handleLoadDemo}
-                className="inline-flex items-center justify-center gap-2 rounded-2xl border border-emerald-200 bg-emerald-50 px-8 py-5 text-lg sm:text-xl font-bold text-emerald-700"
+                className="inline-flex items-center justify-center gap-2 rounded-2xl border border-emerald-200 bg-emerald-50 px-8 py-5 text-lg font-bold text-emerald-700 sm:text-xl"
               >
                 <Wand2 className="h-5 w-5" />
                 Load Demo
@@ -344,7 +319,7 @@ function WealthIQPage() {
               <button
                 type="button"
                 onClick={handleSave}
-                className="rounded-2xl bg-slate-950 px-8 py-5 text-lg sm:text-xl font-bold text-white"
+                className="rounded-2xl bg-slate-950 px-8 py-5 text-lg font-bold text-white sm:text-xl"
               >
                 Save Calculation
               </button>
@@ -352,7 +327,7 @@ function WealthIQPage() {
               <button
                 type="button"
                 onClick={handleReset}
-                className="inline-flex items-center justify-center gap-2 rounded-2xl border border-slate-200 bg-white px-8 py-5 text-lg sm:text-xl font-bold text-slate-700"
+                className="inline-flex items-center justify-center gap-2 rounded-2xl border border-slate-200 bg-white px-8 py-5 text-lg font-bold text-slate-700 sm:text-xl"
               >
                 <RotateCcw className="h-5 w-5" />
                 Reset Inputs
@@ -382,16 +357,16 @@ function WealthIQPage() {
 
         <div className="mt-8 grid grid-cols-1 gap-6 xl:grid-cols-2">
           <div className="premium-card rounded-[2.5rem] p-7 sm:p-10">
-            <h2 className="text-3xl sm:text-4xl font-black text-slate-950">
+            <h2 className="text-3xl font-black text-slate-950 sm:text-4xl">
               Scenario Comparison
             </h2>
-            <p className="mt-5 text-lg sm:text-xl leading-9 sm:leading-10 text-slate-500">
+            <p className="mt-5 text-lg leading-9 text-slate-500 sm:text-xl sm:leading-10">
               To hit a 20% savings rate, your target maximum monthly expenses would be:
             </p>
-            <p className="mt-6 text-5xl sm:text-6xl font-black tracking-tight text-slate-950">
+            <p className="mt-6 text-5xl font-black tracking-tight text-slate-950 sm:text-6xl">
               ${comparison.recommendedMaxExpenses.toLocaleString()}
             </p>
-            <p className="mt-6 text-lg sm:text-xl leading-9 text-slate-500">
+            <p className="mt-6 text-lg leading-9 text-slate-500 sm:text-xl">
               {comparison.improvementNeeded > 0
                 ? `You would need to cut about $${comparison.improvementNeeded.toLocaleString()} in monthly expenses to reach that target.`
                 : "You are already at or better than that target."}
@@ -405,13 +380,12 @@ function WealthIQPage() {
           <HistoryList />
         </div>
 
-            <footer>
-        Wealth IQ Financial Calculator • Created By Jardin Gwin • Financial Analytics Application
-      </footer>
-    </section>
-  </section>
-</div>
-);
+        <footer className="py-8 text-center text-sm text-slate-500 sm:text-base">
+          Wealth IQ Financial Calculator • Created By Jardin Gwin • Financial Analytics Application
+        </footer>
+      </div>
+    </div>
+  );
 }
 
 export default function Home() {
